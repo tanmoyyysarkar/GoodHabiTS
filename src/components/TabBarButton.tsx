@@ -72,15 +72,18 @@ const TabBarButton = ({
       onPress={onPress}
       onLongPress={onLongPress}
       className="flex-1 items-center justify-center gap-2">
-      <Animated.View style={animatedIconStyle}> {/* Animated wrapper for the tab icon. */}
+      {/* Animated wrapper for the tab icon. */}
+      <Animated.View style={animatedIconStyle}>
         <Ionicons name={iconName} size={24} color={color} />
       </Animated.View>
       {typeof label === 'string' || typeof label === 'number' ? (
-        <Animated.Text className="text-xs font-semibold" style={[{ color }, animatedTextStyle]}>{label}</Animated.Text> // Plain text/number labels render directly.
+        // Plain text/number labels render directly.
+        <Animated.Text className="text-xs font-semibold" style={[{ color }, animatedTextStyle]}>{label}</Animated.Text>
       ) : label && typeof label === 'object' && '$$typeof' in label ? (
         label // If label is already a React element, keep it as-is.
       ) : label ? (
-        <Animated.Text className="text-xs font-semibold" style={[{ color }, animatedTextStyle]}>{String(label)}</Animated.Text> // Safe fallback for unknown truthy values.
+        // Safe fallback for unknown truthy values.
+        <Animated.Text className="text-xs font-semibold" style={[{ color }, animatedTextStyle]}>{String(label)}</Animated.Text>
       ) : null}
     </PlatformPressable>
   );
