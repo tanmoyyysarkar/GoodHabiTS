@@ -52,6 +52,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   }); // Runs on UI thread for smooth 60fps transform updates.
 
   return (
+    // Floating-card shadow: iOS shadow + Android elevation.
     <View
       onLayout={onTabBarLayout}
       className="absolute bottom-7 mx-12 flex-row items-center justify-between rounded-[35] bg-white py-3"
@@ -61,15 +62,16 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
         shadowOpacity: 0.12,
         shadowRadius: 10,
         elevation: 8,
-      }}> {/* Floating-card shadow: iOS shadow + Android elevation. */}
+      }}>
       <Animated.View
+        // Active-tab highlight that slides behind icons/labels.
         className="absolute rounded-[30]"
         style={[animatedStyle, {
           backgroundColor: colors.primary,
           height: dimensions.height - INDICATOR_VERTICAL_PADDING,
           width: indicatorWidth,
         }]}
-      /> {/* Active-tab highlight that slides behind icons/labels. */}
+      />
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label =
