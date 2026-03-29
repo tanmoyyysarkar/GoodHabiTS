@@ -55,13 +55,15 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
     // Floating-card shadow: iOS shadow + Android elevation.
     <View
       onLayout={onTabBarLayout}
-      className="absolute bottom-7 mx-12 flex-row items-center justify-between rounded-[35] bg-white py-3"
+      className="absolute bottom-7 mx-12 flex-row items-center justify-between rounded-[35] py-3"
       style={{
-        shadowColor: '#000',
+        shadowColor: colors.secondary,
         shadowOffset: { width: 0, height: 10 },
-        shadowOpacity: 0.12,
-        shadowRadius: 10,
-        elevation: 8,
+        shadowOpacity: 0.10,
+        elevation: 5,
+        backgroundColor: colors.card,
+        borderColor: colors.border,
+        borderWidth: 1,
       }}>
       <Animated.View
         // Active-tab highlight that slides behind icons/labels.
