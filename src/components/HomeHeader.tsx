@@ -18,7 +18,7 @@ const HomeHeader = ({
 }: HomeHeaderProps) => {
 
   return (
-    <View className="my-8 flex-row items-center justify-between">
+    <View className="flex-row items-center justify-between">
       <View className="flex-1">
         <Text
           className={`text-lg ${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} opacity-70`}

@@ -16,11 +16,11 @@ const HomeScreen = () => {
       colors={tokens.pageBg as unknown as [string, string, ...string[]]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
-      className="flex-1">
-      <View className="flex-1 px-6">
+      className="flex-1 pt-8">
+      <View className="flex-1 px-6 gap-8">
         <HomeHeader isDark={isDark} tokens={tokens} />
         <StreakBox isDark={isDark} tokens={tokens} />
-        <SummaryCard />
+        <SummaryCard isDark={isDark} tokens={tokens} />
       </View>
     </LinearGradient>
   );

@@ -9,7 +9,7 @@ interface StreakBoxProps {
 const StreakBox = ({ isDark, tokens }: StreakBoxProps) => {
   return (
     <View
-      className="flex-row items-center gap-4 rounded-3xl p-4"
+      className="flex-row items-center gap-4 rounded-2xl p-4"
       style={{
         backgroundColor: tokens.buttonPrimaryTint,
         borderWidth: 0.5,
