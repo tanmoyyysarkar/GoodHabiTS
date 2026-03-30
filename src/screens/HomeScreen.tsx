@@ -1,10 +1,12 @@
-import StreakBox from '@/components/StreakBox';
-import HomeHeader from '@/components/HomeHeader';
+import StreakBox from '@/components/Home/StreakBox';
+import HomeHeader from '@/components/Home/HomeHeader';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeTokens } from '@/hooks/useThemeTokens';
 import { useColorScheme } from 'nativewind';
-import { View } from 'react-native';
-import SummaryCard from '@/components/SummaryCard';
+import { ScrollView, Text, View } from 'react-native';
+import SummaryCard from '@/components/Home/SummaryCard';
+import MyHobbyCard from '@/components/Home/MyHobbyCards';
+import LogASessionButton from '@/components/Home/LogASessionButton';
 
 const HomeScreen = () => {
   const tokens = useThemeTokens();
@@ -17,11 +19,14 @@ const HomeScreen = () => {
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       className="flex-1 pt-8">
-      <View className="flex-1 px-6 gap-8">
+      <ScrollView className="flex-1" contentContainerClassName="gap-8 px-6">
         <HomeHeader isDark={isDark} tokens={tokens} />
         <StreakBox isDark={isDark} tokens={tokens} />
         <SummaryCard isDark={isDark} tokens={tokens} />
-      </View>
+        <MyHobbyCard isDark={isDark} tokens={tokens} />
+        <LogASessionButton isDark={isDark} />
+        <View className='h-24 w-max'></View>
+      </ScrollView>
     </LinearGradient>
   );
 };

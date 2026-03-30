@@ -13,10 +13,10 @@ const colorPalette = {
   // ── Surfaces
   'card-bg': '#2b2f29',         // Flat, elevated surface off the background
   'card-bg-elevated': '#343831',// Floating elements (dropdowns, modals)
-  'tabbar-bg': '#2a2d2a',       // Special floating tab bar at bottom
+  'tabbar-bg': '#3a3f3a',       // Special floating tab bar at bottom
 
   // ── Borders
-  'border': '#40473c',          // Subtle structural lines
+  'border': '#626560',          // Subtle structural lines
 
   // ── Buttons & Accents
   'button-primary': '#e05330',       // Energetic terracotta/coral (The "Campfire")
