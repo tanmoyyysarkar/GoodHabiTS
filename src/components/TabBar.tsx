@@ -1,10 +1,11 @@
 import { LayoutChangeEvent, View } from 'react-native';
-import { useLinkBuilder, useTheme } from '@react-navigation/native';
+import { useLinkBuilder } from '@react-navigation/native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import TabBarButton from './TabBarButton';
 import { useEffect, useState } from 'react';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import { useThemeTokens } from '@/hooks/useThemeTokens';
 
 type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
 
@@ -24,7 +25,7 @@ const INDICATOR_SPRING_CONFIG = {
 }; // Controls smoothness/bounce of highlight movement.
 
 export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
-  const { colors } = useTheme(); // Theme-aware colors (light/dark safe).
+  const theme = useThemeTokens(); // Load custom theme tokens first.
   const { buildHref } = useLinkBuilder(); // Supports links on web and deep links.
   const [dimensions, setDimensions] = useState({ height: 20, width: 100 }); // Fallback before onLayout runs.
 
@@ -55,22 +56,27 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
     // Floating-card shadow: iOS shadow + Android elevation.
     <View
       onLayout={onTabBarLayout}
-      className="absolute bottom-7 mx-12 flex-row items-center justify-between rounded-[35] bg-white py-3"
+      className="absolute bottom-7 mx-12 flex-row items-center justify-between rounded-[35] py-3"
       style={{
-        shadowColor: '#000',
+        shadowColor: theme.border,
         shadowOffset: { width: 0, height: 10 },
-        shadowOpacity: 0.12,
-        shadowRadius: 10,
-        elevation: 8,
+        shadowOpacity: 0.1,
+        elevation: 4,
+        backgroundColor: theme.tabbarBg,
+        borderColor: theme.border,
+        borderWidth: 0.5,
       }}>
       <Animated.View
         // Active-tab highlight that slides behind icons/labels.
         className="absolute rounded-[30]"
-        style={[animatedStyle, {
-          backgroundColor: colors.primary,
-          height: dimensions.height - INDICATOR_VERTICAL_PADDING,
-          width: indicatorWidth,
-        }]}
+        style={[
+          animatedStyle,
+          {
+            backgroundColor: theme.buttonPrimary,
+            height: dimensions.height - INDICATOR_VERTICAL_PADDING,
+            width: indicatorWidth,
+          },
+        ]}
       />
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
@@ -82,7 +88,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
               : route.name; // Default label fallback.
 
         const isFocused = state.index === index;
-        const color = isFocused ? colors.background : colors.text; // Contrast color on active highlight.
+        const color = isFocused ? '#fff5ec' : theme.textSecondary; // Contrast color on active highlight.
         const iconName = ICONS_BY_ROUTE[route.name] ?? 'ellipse'; // Safe fallback icon.
         const labelContent =
           typeof label === 'function'
@@ -126,6 +132,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
             testID={options.tabBarButtonTestID}
             onPress={onPress}
             onLongPress={onLongPress}
+            theme={theme}
           />
         );
       })}
