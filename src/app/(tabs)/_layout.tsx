@@ -3,7 +3,7 @@ import { Tabs } from 'expo-router';
 
 export default function TabLayout() {
   return (
-    <Tabs tabBar={(props) => <TabBar {...props} />} screenOptions={{headerShown: false}}>
+    <Tabs tabBar={(props) => <TabBar {...props} />} screenOptions={{ headerShown: false }}>
       <Tabs.Screen name="index" options={{ title: 'Home' }} />
       <Tabs.Screen name="hobbies" options={{ title: 'Hobbies' }} />
       <Tabs.Screen name="insights" options={{ title: 'Insights' }} />

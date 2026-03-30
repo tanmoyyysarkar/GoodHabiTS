@@ -11,7 +11,7 @@ export default function Hobbies() {
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       className="flex-1">
-      <ScrollView className="flex-1" contentContainerClassName="items-center justify-center">
+      <ScrollView className="flex-1" contentContainerClassName="flex-1 items-center justify-center">
         <Text style={{ color: tokens.textPrimary }} className="text-xl font-semibold">
           Hobbies
         </Text>

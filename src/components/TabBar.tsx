@@ -60,7 +60,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
       style={{
         shadowColor: theme.border,
         shadowOffset: { width: 0, height: 10 },
-        shadowOpacity: 0.10,
+        shadowOpacity: 0.1,
         elevation: 4,
         backgroundColor: theme.tabbarBg,
         borderColor: theme.border,
@@ -69,11 +69,14 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
       <Animated.View
         // Active-tab highlight that slides behind icons/labels.
         className="absolute rounded-[30]"
-        style={[animatedStyle, {
-          backgroundColor: theme.buttonPrimary,
-          height: dimensions.height - INDICATOR_VERTICAL_PADDING,
-          width: indicatorWidth,
-        }]}
+        style={[
+          animatedStyle,
+          {
+            backgroundColor: theme.buttonPrimary,
+            height: dimensions.height - INDICATOR_VERTICAL_PADDING,
+            width: indicatorWidth,
+          },
+        ]}
       />
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
@@ -85,7 +88,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
               : route.name; // Default label fallback.
 
         const isFocused = state.index === index;
-        const color = isFocused ? "#fff5ec" : theme.textSecondary; // Contrast color on active highlight.
+        const color = isFocused ? '#fff5ec' : theme.textSecondary; // Contrast color on active highlight.
         const iconName = ICONS_BY_ROUTE[route.name] ?? 'ellipse'; // Safe fallback icon.
         const labelContent =
           typeof label === 'function'

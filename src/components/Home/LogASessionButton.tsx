@@ -1,10 +1,11 @@
-import { View, Text } from 'react-native';
-const LogASessionButton = ({ isDark }: { isDark: boolean }) => {
+import { View, Text, Pressable } from 'react-native';
+const LogASessionButton = ({ isDark, onPress }: { isDark: boolean; onPress?: () => void }) => {
   return (
-    <View
-      className={`${!isDark ? 'bg-card-bg' : 'bg-card-bg-light'} mx-4 flex h-16 items-center justify-center rounded-3xl`}>
-      <Text className='text-xl'>+ Log a session</Text>
-    </View>
+    <Pressable
+      onPress={onPress}
+      className={`${isDark ? 'bg-button-primary' : 'bg-button-primary-light'} mx-10 flex h-16 items-center justify-center rounded-3xl active:opacity-70`}>
+      <Text className={`${isDark ? "text-text-primary-light" : "text-text-primary"} text-xl font-bold`}>+ Log a session</Text>
+    </Pressable>
   );
 };
 

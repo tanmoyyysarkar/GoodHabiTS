@@ -1,9 +1,10 @@
-import { Text, View } from 'react-native';
+import { Text, View, Pressable } from 'react-native';
 import { ThemeTokens } from '@/theme/tokens';
 
 interface SummaryCardProps {
   isDark: boolean;
   tokens: ThemeTokens;
+  onAddPress?: () => void;
 }
 
 const myHobbyList = [
@@ -24,7 +25,7 @@ const myHobbyList = [
   },
 ];
 
-const MyHobbyCard = ({ isDark, tokens }: SummaryCardProps) => {
+const MyHobbyCard = ({ isDark, tokens, onAddPress }: SummaryCardProps) => {
   const hobbyCards = myHobbyList.map((hobby) => (
     <View
       key={hobby.name}
@@ -49,11 +50,12 @@ const MyHobbyCard = ({ isDark, tokens }: SummaryCardProps) => {
       </Text>
       <View className="flex flex-row justify-between">
         {hobbyCards}
-        <View
-          className={`${isDark ? 'bg-card-bg border-border' : 'bg-card-bg-light border-border-light'} flex h-28 w-20 items-center justify-center gap-1 rounded-2xl border`}>
+        <Pressable
+          onPress={onAddPress}
+          className={`${isDark ? 'bg-card-bg border-border' : 'bg-card-bg-light border-border-light'} flex h-28 w-20 items-center justify-center gap-1 rounded-2xl border active:opacity-70`}>
           <Text className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'}`}>+</Text>
           <Text className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'}`}>Add</Text>
-        </View>
+        </Pressable>
       </View>
     </View>
   );
