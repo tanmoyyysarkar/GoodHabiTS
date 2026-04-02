@@ -1,13 +1,13 @@
-import StreakBox from '@/components/Home/StreakBox';
-import HomeHeader from '@/components/Home/HomeHeader';
+import { ScrollView, Text, View, Modal, Pressable } from 'react-native';
+import { useState } from 'react';
+import { useColorScheme } from 'nativewind';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeTokens } from '@/hooks/useThemeTokens';
-import { useColorScheme } from 'nativewind';
-import { ScrollView, Text, View, Modal, Pressable } from 'react-native';
+import HomeHeader from '@/components/Home/HomeHeader';
+import StreakBox from '@/components/Home/StreakBox';
 import SummaryCard from '@/components/Home/SummaryCard';
 import MyHobbyCard from '@/components/Home/MyHobbyCards';
 import LogASessionButton from '@/components/Home/LogASessionButton';
-import { useState } from 'react';
 
 const HomeScreen = () => {
   const tokens = useThemeTokens();

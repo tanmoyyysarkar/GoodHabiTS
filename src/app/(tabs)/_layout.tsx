@@ -1,6 +1,10 @@
 import { TabBar } from '@/components/TabBar';
 import { withLayoutContext } from 'expo-router';
-import { createMaterialTopTabNavigator, MaterialTopTabNavigationOptions, MaterialTopTabNavigationEventMap } from '@react-navigation/material-top-tabs';
+import {
+  createMaterialTopTabNavigator,
+  MaterialTopTabNavigationOptions,
+  MaterialTopTabNavigationEventMap,
+} from '@react-navigation/material-top-tabs';
 import { ParamListBase, TabNavigationState } from '@react-navigation/native';
 
 // Material Top Tabs uses react-native-pager-view under the hood, which enables

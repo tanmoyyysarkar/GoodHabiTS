@@ -20,11 +20,11 @@ const StreakBox = ({ isDark, tokens }: StreakBoxProps) => {
         shadowRadius: 12,
         elevation: 6,
       }}>
-      <Text className="text-4xl">🔥</Text>
+      <Text className="text-4xl font">🔥</Text>
       <Text
-        className={`font-base flex-1 text-lg font-semibold ${
+        className={`flex-1 text-lg ${
           isDark ? 'text-text-primary' : 'text-text-primary-light'
-        }`}>
+        } font-jetbrains-mono-semibold`}>
         12-day streak! Log a session today to keep it going.
       </Text>
     </View>

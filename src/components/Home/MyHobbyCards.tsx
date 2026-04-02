@@ -31,11 +31,11 @@ const MyHobbyCard = ({ isDark, tokens, onAddPress }: SummaryCardProps) => {
       key={hobby.name}
       className={`${isDark ? 'bg-card-bg border-border' : 'bg-card-bg-light border-border-light'} flex h-28 w-[85px] items-center justify-center gap-1 rounded-2xl border`}>
       <Text className="text-3xl">{hobby.emoji}</Text>
-      <Text className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'}`}>
+      <Text className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-light text-sm`}>
         {hobby.name}
       </Text>
       <View className={`${isDark ? ' bg-purple-700' : 'bg-card-bg-elevated-light'} rounded-full px-1`}>
-        <Text className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} text-xs`}>
+        <Text className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} text-xs font-jetbrains-mono-light`}>
           {hobby.StreakScore}d 🔥
         </Text>
       </View>
@@ -45,7 +45,7 @@ const MyHobbyCard = ({ isDark, tokens, onAddPress }: SummaryCardProps) => {
   return (
     <View>
       <Text
-        className={`${isDark ? `text-text-secondary` : `text-text-tertiary-light`} pb-4 opacity-70`}>
+        className={`${isDark ? `text-text-secondary` : `text-text-tertiary-light`} pb-4 opacity-70 font-jetbrains-mono`}>
         MY HOBBIES
       </Text>
       <View className="flex flex-row justify-between">

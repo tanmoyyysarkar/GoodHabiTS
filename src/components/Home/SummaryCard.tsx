@@ -45,12 +45,20 @@ const hobbyProgressData = [
 const SummaryCard = ({ isDark, tokens }: SummaryCardProps) => {
   const statsCards = todayStatsData.map((data) => (
     <View
+      style={{
+        shadowColor: tokens.border,
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.50,
+        shadowRadius: 12,
+        elevation: 3,
+      }}
       key={data.name}
       className={`${isDark ? 'border-border bg-card-bg-elevated' : 'border-border-light bg-card-bg-elevated-light'} flex h-20 w-[105px] items-center justify-center rounded-2xl border p-2`}>
-      <Text className={`${isDark ? `text-white` : `text-black`} text-2xl font-bold`}>
+      <Text className={`${isDark ? `text-white` : `text-black`} font-jetbrains-mono-bold text-2xl`}>
         {data.value}
       </Text>
-      <Text className={`${isDark ? `text-text-secondary` : `text-text-secondary-light`} text-sm`}>
+      <Text
+        className={`${isDark ? `text-text-secondary` : `text-text-secondary-light`} font-jetbrains-mono text-sm`}>
         {data.name}
       </Text>
     </View>
@@ -62,10 +70,12 @@ const SummaryCard = ({ isDark, tokens }: SummaryCardProps) => {
       <View key={data.name} className="gap-2 pb-4">
         <View className="flex-row items-center gap-2">
           <View className="h-3 w-3 rounded-full" style={{ backgroundColor: data.color }} />
-          <Text className={`flex-1 font-medium ${isDark ? 'text-text-primary' : 'text-text-primary-light'}`}>
+          <Text
+            className={`flex-1 font-medium ${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-semibold`}>
             {data.name}
           </Text>
-          <Text className={`text-sm ${isDark ? 'text-text-secondary' : 'text-text-secondary-light'}`}>
+          <Text
+            className={`text-sm ${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} font-jetbrains-mono`}>
             {data.timeDone} / {data.totalTime} min
           </Text>
         </View>
@@ -88,15 +98,24 @@ const SummaryCard = ({ isDark, tokens }: SummaryCardProps) => {
   return (
     <View>
       <Text
-        className={`${isDark ? `text-text-secondary` : `text-text-tertiary-light`} pb-4 opacity-70`}>
+        className={`${isDark ? `text-text-secondary` : `text-text-tertiary-light`} font-jetbrains-mono pb-4 opacity-70`}>
         TODAY'S SUMMARY
       </Text>
       <View
-        className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} rounded-2xl border p-4`}>
-        <Text className={`${isDark ? `text-text-secondary` : `text-text-secondary-light`} pb-4`}>
+        className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} rounded-2xl border p-4`}
+        style={{
+          borderWidth: 0.5,
+          shadowColor: tokens.border,
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.25,
+          shadowRadius: 12,
+          elevation: 6,
+        }}>
+        <Text
+          className={`${isDark ? `text-text-secondary` : `text-text-secondary-light`} font-jetbrains-mono-semibold pb-4`}>
           Sunday, March 29
         </Text>
-        <View className="flex-row flex-wrap justify-between mb-2">{statsCards}</View>
+        <View className="mb-2 flex-row flex-wrap justify-between">{statsCards}</View>
         {progressBars}
       </View>
     </View>
