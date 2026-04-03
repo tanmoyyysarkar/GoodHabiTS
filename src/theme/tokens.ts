@@ -12,7 +12,7 @@ const colorPalette = {
 
   // ── Surfaces
   'card-bg': '#2b2f29',         // Flat, elevated surface off the background
-  'card-bg-elevated': '#343831',// Floating elements (dropdowns, modals)
+  'card-bg-elevated': '#3f413e',// Floating elements (dropdowns, modals)
   'tabbar-bg': '#3a3f3a',       // Special floating tab bar at bottom
 
   // ── Borders

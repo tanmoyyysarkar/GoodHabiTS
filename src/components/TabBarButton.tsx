@@ -81,7 +81,7 @@ const TabBarButton = ({
       </Animated.View>
       {typeof label === 'string' || typeof label === 'number' ? (
         // Plain text/number labels render directly.
-        <Animated.Text className="text-xs font-semibold" style={[{ color }, animatedTextStyle]}>
+        <Animated.Text className="text-xs font-jetbrains-mono-light" style={[{ color }, animatedTextStyle]}>
           {label}
         </Animated.Text>
       ) : label && typeof label === 'object' && '$$typeof' in label ? (

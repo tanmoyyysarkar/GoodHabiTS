@@ -29,13 +29,23 @@ const MyHobbyCard = ({ isDark, tokens, onAddPress }: SummaryCardProps) => {
   const hobbyCards = myHobbyList.map((hobby) => (
     <View
       key={hobby.name}
-      className={`${isDark ? 'bg-card-bg border-border' : 'bg-card-bg-light border-border-light'} flex h-28 w-[85px] items-center justify-center gap-1 rounded-2xl border`}>
+      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} flex h-28 w-[85px] items-center justify-center gap-1 rounded-2xl border`}
+      style={{
+        shadowColor: tokens.border,
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.25,
+        shadowRadius: 12,
+        elevation: 6,
+      }}>
       <Text className="text-3xl">{hobby.emoji}</Text>
-      <Text className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'}`}>
+      <Text
+        className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-light text-sm`}>
         {hobby.name}
       </Text>
-      <View className={`${isDark ? ' bg-purple-700' : 'bg-card-bg-elevated-light'} rounded-full px-1`}>
-        <Text className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} text-xs`}>
+      <View
+        className={`${isDark ? ' bg-purple-700' : 'bg-card-bg-elevated-light'} rounded-full px-1`}>
+        <Text
+          className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-light text-xs`}>
           {hobby.StreakScore}d 🔥
         </Text>
       </View>
@@ -45,14 +55,14 @@ const MyHobbyCard = ({ isDark, tokens, onAddPress }: SummaryCardProps) => {
   return (
     <View>
       <Text
-        className={`${isDark ? `text-text-secondary` : `text-text-tertiary-light`} pb-4 opacity-70`}>
+        className={`${isDark ? `text-text-secondary` : `text-text-tertiary-light`} font-jetbrains-mono pb-4 opacity-70`}>
         MY HOBBIES
       </Text>
       <View className="flex flex-row justify-between">
         {hobbyCards}
         <Pressable
           onPress={onAddPress}
-          className={`${isDark ? 'bg-card-bg border-border' : 'bg-card-bg-light border-border-light'} flex h-28 w-20 items-center justify-center gap-1 rounded-2xl border active:opacity-70`}>
+          className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} flex h-28 w-20 items-center justify-center gap-1 rounded-2xl border active:opacity-70`}>
           <Text className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'}`}>+</Text>
           <Text className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'}`}>Add</Text>
         </Pressable>

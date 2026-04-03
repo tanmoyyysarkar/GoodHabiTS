@@ -8,12 +8,12 @@ import { useThemeTokens } from '@/hooks/useThemeTokens';
 
 type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
 
-const ICONS_BY_ROUTE: Partial<Record<string, IoniconName>> = {
-  index: 'home',
-  hobbies: 'barbell',
-  insights: 'bar-chart',
-  profile: 'person',
-}; // Map each route to the icon shown in the custom tab bar.
+const ICONS_BY_ROUTE: Partial<Record<string, { active: IoniconName; inactive: IoniconName }>> = {
+  index: { active: 'home', inactive: 'home-outline' },
+  hobbies: { active: 'barbell', inactive: 'barbell-outline' },
+  insights: { active: 'bar-chart', inactive: 'bar-chart-outline' },
+  profile: { active: 'person', inactive: 'person-outline' },
+}; // Map each route to filled/outline icons for focused and unfocused states.
 
 const INDICATOR_HORIZONTAL_PADDING = 20; // Makes highlight narrower than tab width.
 const INDICATOR_VERTICAL_PADDING = 15; // Makes highlight slightly shorter than bar height.
@@ -73,7 +73,11 @@ export function TabBar({ state, descriptors, navigation, position }: MaterialTop
 
         const isFocused = state.index === index;
         const color = isFocused ? '#fff5ec' : theme.textSecondary; // Contrast color on active highlight.
-        const iconName = ICONS_BY_ROUTE[route.name] ?? 'ellipse'; // Safe fallback icon.
+        const iconPair = ICONS_BY_ROUTE[route.name] ?? {
+          active: 'ellipse',
+          inactive: 'ellipse-outline',
+        };
+        const iconName = isFocused ? iconPair.active : iconPair.inactive;
         const labelContent =
           typeof label === 'function'
             ? label({

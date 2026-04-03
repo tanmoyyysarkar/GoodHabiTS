@@ -4,7 +4,7 @@ const LogASessionButton = ({ isDark, onPress }: { isDark: boolean; onPress?: () 
     <Pressable
       onPress={onPress}
       className={`${isDark ? 'bg-button-primary' : 'bg-button-primary-light'} mx-10 flex h-16 items-center justify-center rounded-3xl active:opacity-70`}>
-      <Text className={`${isDark ? "text-text-primary-light" : "text-text-primary"} text-xl font-bold`}>+ Log a session</Text>
+      <Text className={`${isDark ? "text-text-primary" : "text-text-primary"} text-xl font-jetbrains-mono-bold`}>+ Log a session</Text>
     </Pressable>
   );
 };
