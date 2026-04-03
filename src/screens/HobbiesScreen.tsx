@@ -5,6 +5,7 @@ import { useColorScheme } from 'nativewind';
 import HobbiesHeader from '@/components/Hobbies/HobbiesHeader';
 import SearchBox from '@/components/Hobbies/SearchBox';
 import CategoryPills from '@/components/Hobbies/CategoryPills';
+import HobbyWithMiniHeatMap from '@/components/Hobbies/HobbyWithMiniHeatMap';
 
 const HobbiesScreen = () => {
   const tokens = useThemeTokens();
@@ -20,6 +21,7 @@ const HobbiesScreen = () => {
         <HobbiesHeader isDark={isDark} tokens={tokens} activeHobbies={3} totalTime={147} />
         <SearchBox isDark={isDark} tokens={tokens}/>
         <CategoryPills isDark={isDark}/>
+        <HobbyWithMiniHeatMap isDark={isDark} tokens={tokens}/>
       </ScrollView>
     </LinearGradient>
   );
