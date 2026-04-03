@@ -2,6 +2,7 @@ import { getHeatMapColor } from '@/lib/colorsAndShades/getHeatMapColor';
 import { ThemeTokens } from '@/theme/tokens';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text, View } from 'react-native';
+import { ProgressRing } from './ProgressRing';
 
 interface HobbyWithMiniHeatMapProps {
   isDark: boolean;
@@ -50,9 +51,19 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens }: HobbyWithMiniHeatMapProps) => 
         borderWidth: 0.5,
         borderColor: HobbyData.color,
       }}
-      className={`${isDark ? 'border-border' : 'border-border-light'} h-5 w-5 rounded-md`}
+      className={`${isDark ? 'border-border' : 'border-border-light'} h-6 w-6 rounded-md`}
     />
   ));
+
+  const emptyHeats = Array.from({ length: HobbyData.startDay - 1 }, (_, index) => (
+    <View
+      key={`empty-${index}`}
+      className="h-6 w-6 rounded-md"
+      style={{ borderWidth: 0.5, borderColor: HobbyData.color, backgroundColor: 'transparent' }}
+    />
+  ));
+
+  const heatMapAligned = [...emptyHeats, ...heatMap];
 
   return (
     <View
@@ -86,7 +97,7 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens }: HobbyWithMiniHeatMapProps) => 
               🔥{HobbyData.streakCount}d
             </Text>
           </View>
-          <Pressable className="flex-1">
+          <Pressable className="mt-2 flex-1">
             <Ionicons name="chevron-down-outline" size={24} color={'white'} />
           </Pressable>
         </View>
@@ -104,15 +115,41 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens }: HobbyWithMiniHeatMapProps) => 
           {HobbyData.timeDoneToday}/{HobbyData.totalTimePerDay} min today
         </Text>
       </View>
-      <View className="flex-row gap-2">
-        {days.map((day) => (
-          <Text
-            className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} font-jetbrains-mono-light text-sm`}>
-            {day}
-          </Text>
-        ))}
+      <View className="flex-row items-center justify-between pr-6">
+        <View className="gap-2">
+          <View className="flex-row gap-1">
+            {days.map((day) => (
+              <View key={day} className="flex h-6 w-6 items-center justify-center">
+                <Text
+                  className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} font-jetbrains-mono-light text-sm`}>
+                  {day}
+                </Text>
+              </View>
+            ))}
+          </View>
+          <View className="w-[192px] flex-row flex-wrap gap-1">{heatMapAligned}</View>
+        </View>
+        <View className="flex items-center justify-between p-1">
+          <ProgressRing
+            progress={75}   //TODO: add logic
+            size={90}
+            strokeWidth={15}
+            mainColor={HobbyData.color}
+            isDark={isDark}
+          />
+          <View className="mt-2 flex items-center justify-center gap-1">
+            <Text
+              className={`${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} font-jetbrains-mono-semibold text-[10px]`}>
+              WEEKLY AVG
+            </Text>
+            <Text
+              className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold text-xs`}  //TODO: Add login
+              >
+              42 min
+            </Text>
+          </View>
+        </View>
       </View>
-      <View>{heatMap}</View>
     </View>
   );
 };
