@@ -23,7 +23,7 @@ export const ProgressRing = ({ progress, size, strokeWidth, mainColor, isDark }:
             {/* Start color: A lighter or more vibrant version */}
             <Stop offset="0%" stopColor={mainColor} stopOpacity="1" />
             {/* End color: A slightly darker/different hue for the gradient effect */}
-            <Stop offset="100%" stopColor="#818cf8" stopOpacity="1" />
+            <Stop offset="100%" stopColor="#ffffff" stopOpacity="1" />
           </LinearGradient>
         </Defs>
 
