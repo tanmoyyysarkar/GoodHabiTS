@@ -4,7 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text, View } from 'react-native';
 import { ProgressRing } from './ProgressRing';
 import { HobbyHeatmapItem } from '@/types/HobbyHeatMapItem';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Animated, { Easing, interpolate, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 interface HobbyWithMiniHeatMapProps {
   isDark: boolean;
@@ -39,9 +40,34 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
 
   const heatMapAligned = [...emptyHeats, ...heatMap];
 
-  const [collapsed, setCollapsed] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const animatedProgress = useSharedValue(0);
+
+  const contentStyle = useAnimatedStyle(() => {
+    const maxHeight = interpolate(animatedProgress.value, [0, 1], [0, 320]);
+    return {
+      maxHeight,
+      opacity: animatedProgress.value,
+      overflow: 'hidden',
+    };
+  });
+
+  const iconStyle = useAnimatedStyle(() => {
+    const rotate = interpolate(animatedProgress.value, [0, 1], [180, 0]);
+    return {
+      transform: [{ rotate: `${rotate}deg` }],
+    };
+  });
+
+  useEffect(() => {
+    animatedProgress.value = withTiming(isExpanded ? 1 : 0, {
+      duration: 500,
+      easing: Easing.out(Easing.cubic),
+    });
+  }, [isExpanded, animatedProgress]);
+
   const handlePress = () => {
-    setCollapsed((prev) => !prev);
+    setIsExpanded((prev) => !prev);
   };
 
   return (
@@ -67,7 +93,7 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
             </Text>
           </View>
         </View>
-        <Pressable onPress={handlePress} className="items-center self-start">
+        <Pressable onPress={handlePress} accessibilityState={{ expanded: isExpanded }} className="items-center self-start">
           <View
             style={{ backgroundColor: data.color }}
             className="flex h-6 items-center justify-center rounded-full px-2">
@@ -77,16 +103,14 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
             </Text>
           </View>
           <View className="mt-2 h-6 w-6 items-center justify-center">
-            <Ionicons
-              name={collapsed ? 'chevron-down-outline' : 'chevron-up-outline'}
-              size={24}
-              color={'white'}
-            />
+            <Animated.View style={iconStyle}>
+              <Ionicons name="chevron-down-outline" size={24} color={'white'} />
+            </Animated.View>
           </View>
         </Pressable>
       </View>
-      {collapsed ? (
-        <>
+      <Animated.View style={contentStyle}>
+        <View>
           <View className="flex-row items-center justify-between gap-4">
             <View
               className={`${isDark ? 'bg-card-bg-elevated' : 'bg-card-bg-elevated-light'} h-2 flex-1 rounded-full`}>
@@ -135,8 +159,8 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
               </View>
             </View>
           </View>
-        </>
-      ) : null}
+        </View>
+      </Animated.View>
     </View>
   );
 };
