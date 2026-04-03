@@ -19,17 +19,21 @@ const HobbiesHeader = ({
   return (
     <View className="flex-row items-center justify-between">
       <View className="flex-1">
-        <Text className={`text-3xl font-semibold ${isDark ? 'text-white' : 'text-black'} font-jetbrains-mono`}>
+        <Text
+          className={`text-3xl font-semibold ${isDark ? 'text-white' : 'text-black'} font-jetbrains-mono`}>
           My Hobbies
         </Text>
-        <Text className={`text-md ${isDark ? 'text-text-primary' : 'text-text-primary-light'} opacity-60 font-jetbrains-mono`}>
+        <Text
+          className={`text-md ${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono opacity-60`}>
           {activeHobbies} active • {totalTime} total hours
         </Text>
       </View>
       <Pressable
         onPress={onPlusPress}
-        className="flex h-14 w-14 items-center justify-center  rounded-full bg-text-primary active:opacity-70">
-        <Text className="text-3xl text-text-primary-light">+</Text>
+        className={`${isDark ? 'bg-white' : 'bg-card-bg'} flex h-14 w-14 items-center justify-center rounded-full active:opacity-70`}>
+        <Text className={`${isDark ? 'text-text-primary-light' : 'text-text-primary'} text-3xl`}>
+          +
+        </Text>
       </Pressable>
     </View>
   );
