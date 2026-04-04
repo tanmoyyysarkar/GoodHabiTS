@@ -55,7 +55,7 @@ const HomeScreen = () => {
           <View
             className={`h-[90%] w-[100%] rounded-t-3xl ${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} border`}>
             {activeModal === 'profile' && <ProfileModalContent isDark={isDark} onClose={closeModal} />}
-            {activeModal === 'addHobby' && <AddHobbyModalContent isDark={isDark} onClose={closeModal} />}
+            {activeModal === 'addHobby' && <AddHobbyModalContent tokens={tokens} isDark={isDark} onClose={closeModal} />}
             {activeModal === 'logSession' && <LogSessionModalContent isDark={isDark} onClose={closeModal} />}
           </View>
         </View>
