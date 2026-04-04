@@ -19,7 +19,7 @@ export const getHeatMapColor = (
   value: number,
   maxValue: number,
   baseHex: string,
-  isDark: boolean,
+  isDark: boolean
 ) => {
   const target = hexToRBG(baseHex);
   const start = isDark ? { r: 255, g: 255, b: 255 } : { r: 70, g: 70, b: 70 };

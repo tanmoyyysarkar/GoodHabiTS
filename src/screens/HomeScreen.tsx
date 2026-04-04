@@ -46,11 +46,18 @@ const HomeScreen = () => {
         </ScrollView>
       </LinearGradient>
 
-      <Modal transparent visible={activeModal !== null} onRequestClose={closeModal} animationType='slide'>
-        <View className="flex-1 items-center justify-center bg-card-bg">
-          {activeModal === 'profile' && <ProfileModalContent onClose={closeModal} />}
-          {activeModal === 'addHobby' && <AddHobbyModalContent onClose={closeModal} />}
-          {activeModal === 'logSession' && <LogSessionModalContent onClose={closeModal} />}
+      <Modal
+        transparent
+        visible={activeModal !== null}
+        onRequestClose={closeModal}
+        animationType="slide">
+        <View className="flex-1 items-center justify-end bg-black/35">
+          <View
+            className={`h-[90%] w-[100%] rounded-t-3xl ${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} border`}>
+            {activeModal === 'profile' && <ProfileModalContent isDark={isDark} onClose={closeModal} />}
+            {activeModal === 'addHobby' && <AddHobbyModalContent isDark={isDark} onClose={closeModal} />}
+            {activeModal === 'logSession' && <LogSessionModalContent isDark={isDark} onClose={closeModal} />}
+          </View>
         </View>
       </Modal>
     </>
