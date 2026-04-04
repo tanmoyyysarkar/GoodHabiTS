@@ -4,6 +4,8 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef, useState } from 'react';
 import { ThemeTokens } from '@/theme/tokens';
+import { ScrollView } from 'react-native-gesture-handler';
+import Slider from '@react-native-community/slider';
 
 interface AddHobbyModalContentProps {
   onClose: () => void;
@@ -16,7 +18,14 @@ interface AddHobbyModalContentProps {
 const schema = z.object({
   name: z.string().min(1, 'Name is required'),
   category: z.string().min(1, 'Category is requred'), //later move to misc if not provided
-  minutesPerDay: z.coerce.number().int().positive('Must be > 0'),
+  color: z.string().min(1, 'Color is required'),
+  icon: z.string().min(1, 'Icon is required'),
+  minutesPerDay: z.coerce
+    .number()
+    .int()
+    .min(15, 'Must be at least 15m')
+    .max(360, 'Must be at most 6h')
+    .multipleOf(15, 'Must be in 15m intervals'),
 });
 
 type FormInput = z.input<typeof schema>;
@@ -46,6 +55,21 @@ interface IconProp {
   tokens: ThemeTokens;
 }
 
+const formatMinutes = (minutes: number) => {
+  if (minutes < 60) {
+    return `${minutes}m`;
+  }
+
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+
+  if (remainingMinutes === 0) {
+    return `${hours}h`;
+  }
+
+  return `${hours}h ${remainingMinutes}m`;
+};
+
 const ColorBall = ({ name, isSelected, onPress }: ColorProp) => {
   return (
     <Pressable onPress={onPress}>
@@ -66,18 +90,32 @@ const CategoryPills = ({
   selectedColor,
   tokens,
 }: CategoryProp) => {
+  const scaleAnim = useRef(new Animated.Value(isSelected ? 1.06 : 1)).current;
+
+  useEffect(() => {
+    Animated.spring(scaleAnim, {
+      toValue: isSelected ? 1.06 : 1,
+      useNativeDriver: true,
+      friction: 7,
+      tension: 120,
+    }).start();
+  }, [isSelected, scaleAnim]);
+
   return (
     <Pressable onPress={onPress}>
-      <View
-        className={`${isDark ? 'border-border' : 'border-border-light'} flex h-10 items-center justify-center rounded-full border px-3`}
-        style={{
-          backgroundColor: isSelected ? selectedColor : tokens.cardBgElevated,
-        }}>
-        <Text
-          className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} text-md font-jetbrains-mono-light`}>
-          {name}
-        </Text>
-      </View>
+      <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+        <View
+          className="flex h-10 items-center justify-center rounded-full border px-3"
+          style={{
+            backgroundColor: isSelected ? `${selectedColor}70` : tokens.cardBgElevated,
+            borderColor: isSelected ? selectedColor : tokens.border,
+          }}>
+          <Text
+            className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} text-md font-jetbrains-mono-light`}>
+            {name}
+          </Text>
+        </View>
+      </Animated.View>
     </Pressable>
   );
 };
@@ -114,10 +152,17 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<FormInput, unknown, FormOutput>({
     resolver: zodResolver(schema),
-    defaultValues: { name: '', category: '', minutesPerDay: 20 },
+    defaultValues: {
+      name: '',
+      category: 'Creative',
+      color: '#ff7b00',
+      icon: '🎨',
+      minutesPerDay: 30,
+    },
   });
 
   const onSubmit = async (data: FormOutput) => {
@@ -143,6 +188,7 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
       prevColors.map((prevColor) => {
         if (prevColor.name === color) {
           setSelectedColor(color);
+          setValue('color', color, { shouldValidate: true });
         }
         return {
           name: prevColor.name,
@@ -165,6 +211,7 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
   const [selectedCategory, setSelectedCategory] = useState(categories[0].name);
 
   const handleCategoryPillPress = (name: string) => {
+    setValue('category', name, { shouldValidate: true });
     setCategories((prevCategories) =>
       prevCategories.map((prevCategory) => {
         if (prevCategory.name === name) {
@@ -200,6 +247,7 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
       prevIcons.map((prevIcon) => {
         if (prevIcon.name === name) {
           setSelectedIcon(name);
+          setValue('icon', name, { shouldValidate: true });
         }
         return {
           name: prevIcon.name,
@@ -212,7 +260,7 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
   return (
     <View className="flex h-full w-full">
       <View
-        className={`${isDark ? 'border-b-border' : 'border-b-border-light'} w-full flex-row border border-x-0 border-t-0 p-3`}>
+        className={`${isDark ? 'border-b-border' : 'border-b-border-light'} w-full flex-row border border-x-0 border-t-0 p-4`}>
         <View
           className="h-16 w-16 items-center justify-center rounded-3xl"
           style={{ backgroundColor: selectedColor }}>
@@ -230,106 +278,161 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
           </Text>
         </View>
       </View>
-      <View className="p-3">
-        <Text
-          className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} text-md mb-3 font-jetbrains-mono-bold`}>
-          NAME
-        </Text>
-        <Controller
-          control={control}
-          name="name"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              placeholder="eg. Guitar"
-              placeholderTextColor={tokens.textPrimary}
-              value={value}
-              onChangeText={onChange}
-              className={`${isDark ? 'border-border bg-card-bg-elevated text-text-primary' : 'border-border-light bg-card-bg-elevated-light text-text-primary-light'}
+      <ScrollView>
+        <View className="p-4">
+          <Text
+            className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} text-md mb-3 font-jetbrains-mono-bold`}>
+            NAME
+          </Text>
+          <Controller
+            control={control}
+            name="name"
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                placeholder="eg. Guitar"
+                placeholderTextColor={tokens.textPrimary}
+                value={value}
+                onChangeText={onChange}
+                className={`${isDark ? 'border-border bg-card-bg-elevated text-text-primary' : 'border-border-light bg-card-bg-elevated-light text-text-primary-light'}
                  mb-6 h-16 w-full rounded-2xl border px-2 font-jetbrains-mono-bold text-xl`}
-            />
-          )}
-        />
+              />
+            )}
+          />
 
-        {errors.name && <Text>{errors.name.message}</Text>}
-        <Text
-          className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} text-md mb-3 font-jetbrains-mono-bold`}>
-          CATEGORY
-        </Text>
-        <View className="mb-6 flex-row flex-wrap gap-2">
-          {categories.map((category) => (
-            <CategoryPills
-              key={category.name}
-              name={category.name}
-              isSelected={category.isSelected}
-              isDark={isDark}
-              tokens={tokens}
-              selectedColor={selectedColor}
-              onPress={() => handleCategoryPillPress(category.name)}
+          {errors.name && <Text>{errors.name.message}</Text>}
+          <Text
+            className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} text-md mb-3 font-jetbrains-mono-bold`}>
+            CATEGORY
+          </Text>
+          <View className="mb-6 flex-row flex-wrap gap-2">
+            {categories.map((category) => (
+              <CategoryPills
+                key={category.name}
+                name={category.name}
+                isSelected={category.isSelected}
+                isDark={isDark}
+                tokens={tokens}
+                selectedColor={selectedColor}
+                onPress={() => handleCategoryPillPress(category.name)}
+              />
+            ))}
+          </View>
+
+          <Text
+            className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} text-md mb-3 font-jetbrains-mono-bold`}>
+            ICON
+          </Text>
+          <View className="mb-6 flex-row flex-wrap justify-between gap-2">
+            {icons.map((icon) => (
+              <IconPills
+                key={icon.name}
+                name={icon.name}
+                isSelected={icon.isSelected}
+                isDark={isDark}
+                tokens={tokens}
+                selectedColor={selectedColor}
+                onPress={() => handleIconPillPress(icon.name)}
+              />
+            ))}
+          </View>
+
+          <Text
+            className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} text-md mb-3 font-jetbrains-mono-bold`}>
+            COLOR
+          </Text>
+          <View className="mb-6 flex-row">
+            {colors.map((color) => (
+              <ColorBall
+                key={color.name}
+                name={color.name}
+                isSelected={color.isSelected}
+                onPress={() => handleColorBallPress(color.name)}
+              />
+            ))}
+          </View>
+
+          <Text
+            className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} text-md mb-3 font-jetbrains-mono-bold`}>
+            TIME PER DAY
+          </Text>
+          <View
+            className={`${isDark ? 'border-border' : 'border-border-light'} rounded-2xl border p-4`}>
+            <Controller
+              control={control}
+              name="minutesPerDay"
+              render={({ field: { onChange, value } }) => {
+                const minutesPerDay = typeof value === 'number' ? value : 30;
+
+                return (
+                  <View>
+                    <View
+                      className="mb-4 flex h-20 items-center justify-center rounded-xl"
+                      style={{
+                        backgroundColor: `${selectedColor}70`,
+                        borderWidth: 1,
+                        borderColor: selectedColor,
+                      }}>
+                      <Text
+                        className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold text-4xl`}>
+                        {formatMinutes(minutesPerDay)}
+                      </Text>
+                    </View>
+
+                    <View className="flex-row items-center gap-3">
+                      <Text
+                        className={`${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} w-10 font-jetbrains-mono-light text-sm`}>
+                        15m
+                      </Text>
+                      <Slider
+                        minimumValue={15}
+                        maximumValue={360}
+                        step={15}
+                        value={minutesPerDay}
+                        onValueChange={onChange}
+                        minimumTrackTintColor={selectedColor}
+                        maximumTrackTintColor={tokens.border}
+                        thumbTintColor={selectedColor}
+                        style={{ flex: 1 }}
+                      />
+                      <Text
+                        className={`${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} w-10 text-right font-jetbrains-mono-light text-sm`}>
+                        6h
+                      </Text>
+                    </View>
+                  </View>
+                );
+              }}
             />
-          ))}
+          </View>
+          {errors.minutesPerDay && <Text>{errors.minutesPerDay.message}</Text>}
         </View>
-
-        <Controller
-          control={control}
-          name="category"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              placeholder="Learnings"
-              placeholderTextColor={tokens.textPrimary}
-              value={value}
-              onChangeText={onChange}
-            />
-          )}
-        />
-        {errors.category && <Text>{errors.category.message}</Text>}
-
-        <Text
-          className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} text-md mb-3 font-jetbrains-mono-bold`}>
-          ICON
-        </Text>
-        <View className="mb-6 flex-row flex-wrap justify-between gap-2">
-          {icons.map((icon) => (
-            <IconPills
-              key={icon.name}
-              name={icon.name}
-              isSelected={icon.isSelected}
-              isDark={isDark}
-              tokens={tokens}
-              selectedColor={selectedColor}
-              onPress={() => handleIconPillPress(icon.name)}
-            />
-          ))}
+      </ScrollView>
+      <View
+        className={`${isDark ? 'border-border' : 'border-border-light'} flex-row gap-4 border border-x-0 border-b-0 p-4`}>
+        <View
+          className={`${isDark ? 'border-border bg-card-bg-elevated' : 'bg-card-bg-elevated-lightr border-border-light'} flex h-16 w-36 flex-row items-center justify-center rounded-2xl border`}>
+          <Pressable onPress={onClose}>
+            <Text
+              className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-semibold text-xl`}>
+              Cancle
+            </Text>
+          </Pressable>
         </View>
-
-        <View className="flex-row">
-          {colors.map((color) => (
-            <ColorBall
-              key={color.name}
-              name={color.name}
-              isSelected={color.isSelected}
-              onPress={() => handleColorBallPress(color.name)}
-            />
-          ))}
+        <View
+          className="flex h-16 flex-1 items-center justify-center rounded-2xl"
+          style={{
+            backgroundColor: `${selectedColor}70`,
+            borderColor: selectedColor,
+            borderWidth: 1,
+          }}>
+          <Pressable onPress={handleSubmit(onSubmit)} disabled={isSubmitting}>
+            <Text
+              className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-semibold text-xl`}>
+              {isSubmitting ? 'Saving...' : 'Save Hobby'}
+            </Text>
+          </Pressable>
         </View>
-
-        <Controller
-          control={control}
-          name="minutesPerDay"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              placeholder="Minutes/day"
-              placeholderTextColor={tokens.textPrimary}
-              keyboardType="numeric"
-              value={String(value ?? '')}
-              onChangeText={onChange}
-            />
-          )}
-        />
-        {errors.minutesPerDay && <Text>{errors.minutesPerDay.message}</Text>}
       </View>
-      <Pressable onPress={handleSubmit(onSubmit)} disabled={isSubmitting}>
-        <Text>{isSubmitting ? 'Saving...' : 'Save Hobby'}</Text>
-      </Pressable>
     </View>
   );
 };
