@@ -1,6 +1,10 @@
 import { Text, View } from 'react-native';
 
-const LogSessionModalContent = () => {
+interface LogSessionModalContentProps {
+  onClose: () => void;
+}
+
+const LogSessionModalContent = ({onClose}: LogSessionModalContentProps) => {
   return (
     <View>
       <Text>Log Session Modal Content</Text>

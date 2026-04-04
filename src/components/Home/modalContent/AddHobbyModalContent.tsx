@@ -1,6 +1,10 @@
 import { Text, View } from 'react-native';
 
-const AddHobbyModalContent = () => {
+interface AddHobbyModalContentProps {
+  onClose: () => void;
+}
+
+const AddHobbyModalContent = ({ onClose }: AddHobbyModalContentProps) => {
   return (
     <View>
       <Text>Add Hobby Modal Content</Text>

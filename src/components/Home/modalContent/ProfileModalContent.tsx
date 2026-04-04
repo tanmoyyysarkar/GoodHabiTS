@@ -1,6 +1,10 @@
 import { Text, View } from 'react-native';
 
-const ProfileModalContent = () => {
+interface ProfileModalContentProps {
+  onClose: () => void;
+}
+
+const ProfileModalContent = ({onClose}: ProfileModalContentProps) => {
   return (
     <View>
       <Text>Profile Modal Content</Text>
