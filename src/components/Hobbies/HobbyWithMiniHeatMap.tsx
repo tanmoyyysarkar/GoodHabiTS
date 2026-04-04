@@ -5,7 +5,13 @@ import { Pressable, Text, View } from 'react-native';
 import { ProgressRing } from './ProgressRing';
 import { HobbyHeatmapItem } from '@/types/HobbyHeatMapItem';
 import { useEffect, useState } from 'react';
-import Animated, { Easing, interpolate, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, {
+  Easing,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 interface HobbyWithMiniHeatMapProps {
   isDark: boolean;
@@ -93,7 +99,11 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
             </Text>
           </View>
         </View>
-        <Pressable onPress={handlePress} accessibilityState={{ expanded: isExpanded }} className="items-center self-start">
+        
+        <Pressable
+          onPress={handlePress}
+          accessibilityState={{ expanded: isExpanded }}
+          className="items-center self-start">
           <View
             style={{ backgroundColor: data.color }}
             className="flex h-6 items-center justify-center rounded-full px-2">
@@ -108,22 +118,24 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
             </Animated.View>
           </View>
         </Pressable>
+
       </View>
+      <View className="flex-row items-center justify-between gap-4">
+        <View
+          className={`${isDark ? 'bg-card-bg-elevated' : 'bg-card-bg-elevated-light'} h-2 flex-1 rounded-full`}>
+          <View
+            style={{ backgroundColor: data.color, width: `${progress}%` }}
+            className="h-2 rounded-full"
+          />
+        </View>
+        <Text
+          className={`${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} font-jetbrains-mono-light text-xs`}>
+          {data.timeDoneToday}/{data.totalTimePerDay} min today
+        </Text>
+      </View>
+
       <Animated.View style={contentStyle}>
         <View>
-          <View className="flex-row items-center justify-between gap-4">
-            <View
-              className={`${isDark ? 'bg-card-bg-elevated' : 'bg-card-bg-elevated-light'} h-2 flex-1 rounded-full`}>
-              <View
-                style={{ backgroundColor: data.color, width: `${progress}%` }}
-                className="h-2 rounded-full"
-              />
-            </View>
-            <Text
-              className={`${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} font-jetbrains-mono-light text-xs`}>
-              {data.timeDoneToday}/{data.totalTimePerDay} min today
-            </Text>
-          </View>
           <View className="flex-row items-center justify-between pr-6">
             <View className="gap-2">
               <View className="flex-row gap-1">

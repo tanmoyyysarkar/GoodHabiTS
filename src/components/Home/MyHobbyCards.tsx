@@ -1,4 +1,4 @@
-import { Text, View, Pressable } from 'react-native';
+import { Text, View, Pressable, ScrollView } from 'react-native';
 import { ThemeTokens } from '@/theme/tokens';
 
 interface SummaryCardProps {
@@ -23,12 +23,27 @@ const myHobbyList = [
     name: 'Sketching',
     StreakScore: 2,
   },
+  {
+    emoji: '🎸',
+    name: 'Guitar',
+    StreakScore: 12,
+  },
+  {
+    emoji: '🏃‍♂️',
+    name: 'Running',
+    StreakScore: 5,
+  },
+  {
+    emoji: '✏️',
+    name: 'Sketching',
+    StreakScore: 2,
+  },
 ];
 
 const MyHobbyCard = ({ isDark, tokens, onAddPress }: SummaryCardProps) => {
-  const hobbyCards = myHobbyList.map((hobby) => (
+  const hobbyCards = myHobbyList.map((hobby, index) => (
     <View
-      key={hobby.name}
+      key={index}
       className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} flex h-28 w-[85px] items-center justify-center gap-1 rounded-2xl border`}
       style={{
         shadowColor: tokens.border,
@@ -58,11 +73,18 @@ const MyHobbyCard = ({ isDark, tokens, onAddPress }: SummaryCardProps) => {
         className={`${isDark ? `text-text-secondary` : `text-text-tertiary-light`} font-jetbrains-mono pb-4 opacity-70`}>
         MY HOBBIES
       </Text>
-      <View className="flex flex-row justify-between">
-        {hobbyCards}
+      <View className="flex-row items-center">
+        <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerClassName='flex-row gap-3 pr-3'
+        className='flex-1'
+        >
+          {hobbyCards}
+        </ScrollView>
         <Pressable
           onPress={onAddPress}
-          className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} flex h-28 w-20 items-center justify-center gap-1 rounded-2xl border active:opacity-70`}>
+          className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} flex h-28 w-[85px] items-center justify-center gap-1 rounded-2xl border active:opacity-70`}>
           <Text className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'}`}>+</Text>
           <Text className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'}`}>Add</Text>
         </Pressable>
