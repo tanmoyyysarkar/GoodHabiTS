@@ -99,7 +99,7 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
             </Text>
           </View>
         </View>
-        
+
         <Pressable
           onPress={handlePress}
           accessibilityState={{ expanded: isExpanded }}
@@ -114,7 +114,7 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
           </View>
           <View className="mt-2 h-6 w-6 items-center justify-center">
             <Animated.View style={iconStyle}>
-              <Ionicons name="chevron-down-outline" size={24} color={'white'} />
+              <Ionicons name="chevron-up-outline" size={24} color={'white'} />
             </Animated.View>
           </View>
         </Pressable>

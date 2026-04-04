@@ -27,8 +27,8 @@ const HomeScreen = () => {
         colors={tokens.pageBg as unknown as [string, string, ...string[]]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        className="flex-1 pt-8">
-        <ScrollView className="flex-1" contentContainerClassName="gap-8 px-6">
+        className="flex-1 pt-6">
+        <ScrollView className="flex-1" contentContainerClassName="gap-8 px-6" showsVerticalScrollIndicator={false}>
           <HomeHeader
             isDark={isDark}
             tokens={tokens}

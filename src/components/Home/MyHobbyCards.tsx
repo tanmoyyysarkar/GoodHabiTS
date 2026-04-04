@@ -70,24 +70,23 @@ const MyHobbyCard = ({ isDark, tokens, onAddPress }: SummaryCardProps) => {
   return (
     <View>
       <Text
-        className={`${isDark ? `text-text-secondary` : `text-text-tertiary-light`} font-jetbrains-mono pb-4 opacity-70`}>
+        className={`${isDark ? `text-text-secondary` : `text-text-tertiary-light`} pb-4 font-jetbrains-mono opacity-70`}>
         MY HOBBIES
       </Text>
       <View className="flex-row items-center">
-        <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerClassName='flex-row gap-3 pr-3'
-        className='flex-1'
-        >
-          {hobbyCards}
-        </ScrollView>
         <Pressable
           onPress={onAddPress}
-          className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} flex h-28 w-[85px] items-center justify-center gap-1 rounded-2xl border active:opacity-70`}>
+          className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} flex h-28 w-[85px] items-center justify-center gap-1 rounded-3xl border active:opacity-70 mr-3`}>
           <Text className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'}`}>+</Text>
           <Text className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'}`}>Add</Text>
         </Pressable>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerClassName="flex-row gap-3"
+          className="flex-1">
+          {hobbyCards}
+        </ScrollView>
       </View>
     </View>
   );
