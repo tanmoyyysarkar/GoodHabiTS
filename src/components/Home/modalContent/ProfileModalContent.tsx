@@ -1,6 +1,11 @@
 import { Text, View } from 'react-native';
 
-const ProfileModalContent = () => {
+interface ProfileModalContentProps {
+  onClose: () => void;
+  isDark: boolean;
+}
+
+const ProfileModalContent = ({onClose, isDark}: ProfileModalContentProps) => {
   return (
     <View>
       <Text>Profile Modal Content</Text>
