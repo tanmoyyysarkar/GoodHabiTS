@@ -16,6 +16,10 @@ interface HeaderProps {
   onClose: () => void;
 }
 
+interface AddSessionHeaderProps extends HeaderProps {
+  hobby: HobbyItem;
+}
+
 interface HobbyItem {
   name: string;
   icon: string;
@@ -28,6 +32,22 @@ interface HobbyDetail extends HobbyItem {
   isDark: boolean;
   baseColor: string;
   onPress: () => void;
+  tokens: ThemeTokens;
+}
+
+interface Mood {
+  emoji: string;
+  color: string;
+  name: string;
+}
+
+interface MoodPillProp {
+  emoji: string;
+  color: string;
+  name: string;
+  tokens: ThemeTokens;
+  onPress: () => void;
+  isSelected: boolean;
 }
 
 //============================HOBBY-LIST-HEADER===============================
@@ -45,9 +65,9 @@ const HobbyListHeader = ({ isDark, tokens, onClose }: HeaderProps) => {
           Which one today?
         </Text>
       </View>
-      <Pressable className="mx-4 active:opacity-70" onPress={onClose}>
+      <Pressable className="ml-4 active:opacity-70" onPress={onClose}>
         <View
-          className={`${isDark ? 'border-border bg-card-bg-elevated' : 'border-border-light bg-card-bg-elevated-light'} flex h-8 w-8 items-center justify-center rounded-full border`}>
+          className={`${isDark ? 'border-border bg-card-bg-elevated' : 'border-border-light bg-card-bg-elevated-light'} flex h-10 w-10 items-center justify-center rounded-full border`}>
           <Ionicons name="close-outline" size={24} color={tokens.textPrimary} />
         </View>
       </Pressable>
@@ -90,7 +110,7 @@ const HobbyListItem = ({
                   🎯 {minutesPerDay}m/day
                 </Text>
               </View>
-              <Text className="font-jetbrains-mono text-xs" style={{ color: baseColor }}>
+              <Text className="ml-2 font-jetbrains-mono text-xs" style={{ color: baseColor }}>
                 🔥{streakCount}day streak
               </Text>
             </View>
@@ -106,27 +126,68 @@ const HobbyListItem = ({
 
 //=======================ADD-SESSION-MENU-HEADER=======================
 
-const AddSessionMenuHeader = ({ isDark, tokens, onClose }: HeaderProps) => {
+const AddSessionMenuHeader = ({ isDark, tokens, onClose, hobby }: AddSessionHeaderProps) => {
   return (
     <View
       className={`${isDark ? 'border-border' : 'border-border-light'} flex-row items-center justify-between border border-x-0 border-t-0 p-4`}>
-      <View className="flex-col justify-between">
+      <View className="flex-row justify-between">
+        <View
+          className="flex h-16 w-16 items-center justify-center rounded-2xl"
+          style={{
+            backgroundColor: `${hobby.color}70`,
+            borderColor: hobby.color,
+            borderWidth: 2,
+          }}>
+          <Text className="text-3xl">{hobby.icon}</Text>
+        </View>
+        <View className="flex justify-end px-3">
+          <Text
+            className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} font-jetbrains-mono text-xs`}>
+            LOG SESSION
+          </Text>
+          <Text
+            className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold text-xl`}>
+            {hobby.name}
+          </Text>
+        </View>
+      </View>
+      <View className="flex-row items-start">
+        <View className="flex h-6 items-center justify-center rounded-full border border-orange-600 bg-orange-600/60 px-2">
+          <Text
+            className={`${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} font-jetbrains-mono-light text-sm`}>
+            🔥{hobby.streakCount}d
+          </Text>
+        </View>
+        <Pressable className="ml-4 active:opacity-70" onPress={onClose}>
+          <View
+            className={`${isDark ? 'border-border bg-card-bg-elevated' : 'border-border-light bg-card-bg-elevated-light'} flex h-10 w-12 items-center justify-center rounded-full border`}>
+            <Ionicons name="arrow-back-outline" size={24} color={tokens.textPrimary} />
+          </View>
+        </Pressable>
+      </View>
+    </View>
+  );
+};
+
+//=================================================MOOD-PILLS=============================================
+const MoodPills = ({ emoji, color, name, tokens, onPress, isSelected }: MoodPillProp) => {
+  return (
+    <Pressable onPress={onPress}>
+      <View
+        className="flex h-[60px] w-[60px] items-center justify-center rounded-2xl"
+        style={{
+          backgroundColor: isSelected ? `${color}70` : tokens.cardBgElevated,
+          borderColor: isSelected ? color : tokens.border,
+          borderWidth: 1,
+        }}>
+        <Text className="text-3xl">{emoji}</Text>
         <Text
-          className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} font-jetbrains-mono text-sm`}>
-          LOG SESSION
-        </Text>
-        <Text
-          className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold text-3xl`}>
-          Which one today?
+          className="font-jetbrains-mono-light text-xs "
+          style={{ color: isSelected ? color : tokens.textSecondary }}>
+          {name}
         </Text>
       </View>
-      <Pressable className="mx-4 active:opacity-70" onPress={onClose}>
-        <View
-          className={`${isDark ? 'border-border bg-card-bg-elevated' : 'border-border-light bg-card-bg-elevated-light'} flex h-8 w-8 items-center justify-center rounded-full border`}>
-          <Ionicons name="close-outline" size={24} color={tokens.textPrimary} />
-        </View>
-      </Pressable>
-    </View>
+    </Pressable>
   );
 };
 
@@ -140,10 +201,105 @@ const AddSessionMenu = ({
   isDark,
   baseColor,
   onPress,
+  tokens,
 }: HobbyDetail) => {
+  const moods: Mood[] = [
+    { emoji: '😫', color: '#ff6565', name: 'Rough' },
+    { emoji: '😕', color: '#ffb667', name: 'Meh' },
+    { emoji: '🙂', color: '#fff643', name: 'Okay' },
+    { emoji: '😁', color: '#a8ff50', name: 'Good' },
+    { emoji: '🤩', color: '#73deff', name: 'Amazing' },
+  ];
+
+  const [renderedColor, setRenderedColor] = useState<string>(baseColor);
+  const [selectedMood, setSelectedMood] = useState<Mood | null>(null);
+
+  const [doneForToday, setDoneForToday] = useState<boolean>(false);
+
+  const onMoodPillPress = (color: string, mood: Mood) => {
+    setRenderedColor(color);
+    setSelectedMood(mood);
+  };
+
   return (
-    <View>
-      <Text>{name}</Text>
+    <View className="px-3">
+      <View
+        className=" h-20 w-full flex-row items-center justify-between rounded-2xl p-3"
+        style={{
+          backgroundColor: doneForToday
+            ? selectedMood
+              ? `${selectedMood.color}70`
+              : `${color}70`
+            : tokens.cardBgElevated,
+          borderWidth: 1,
+          borderColor: doneForToday ? (selectedMood ? selectedMood.color : color) : tokens.border,
+        }}>
+        <View>
+          <Text
+            className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold text-xl`}>
+            Done For Today!
+          </Text>
+          <Text
+            className={`${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} font-jetbrains-mono text-sm`}>
+            Mark {minutesPerDay}m - Your daily goal
+          </Text>
+        </View>
+        <Pressable onPress={() => setDoneForToday(!doneForToday)} className="px-2">
+          <Ionicons
+            name={doneForToday ? 'checkmark-circle-outline' : 'ellipse-outline'}
+            size={40}
+            color={
+              doneForToday ? (selectedMood ? selectedMood.color : color) : tokens.textSecondary
+            }
+          />
+        </Pressable>
+      </View>
+
+      <Text className="py-3 font-jetbrains-mono text-sm" style={{ color: tokens.textTertiary }}>
+        HOW DID IT FEEL?
+      </Text>
+      <View className="flex-row items-center justify-between">
+        {moods.map((mood) => {
+          return (
+            <MoodPills
+              key={mood.name}
+              emoji={mood.emoji}
+              color={mood.color}
+              tokens={tokens}
+              name={mood.name}
+              onPress={() => onMoodPillPress(mood.color, mood)}
+              isSelected={mood.name === selectedMood?.name}
+            />
+          );
+        })}
+      </View>
+
+      <View //======================================================FOOTER=======================================================
+        className="flex-row gap-4 pt-4">
+        <View
+          className={`${isDark ? 'border-border bg-card-bg-elevated' : 'bg-card-bg-elevated-lightr border-border-light'} flex h-16 w-36 flex-row items-center justify-center rounded-2xl border`}>
+          <Pressable className="active:opacity-70">
+            <Text
+              className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-semibold text-xl`}>
+              Cancle
+            </Text>
+          </Pressable>
+        </View>
+        <View
+          className="flex h-16 flex-1 items-center justify-center rounded-2xl"
+          style={{
+            backgroundColor: `${renderedColor}70`,
+            borderColor: renderedColor,
+            borderWidth: 1,
+          }}>
+          <Pressable>
+            <Text
+              className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-semibold text-xl`}>
+              Log Session →
+            </Text>
+          </Pressable>
+        </View>
+      </View>
     </View>
   );
 };
@@ -309,6 +465,7 @@ const LogSessionModalContent = ({ onClose, isDark, tokens }: LogSessionModalCont
               isDark={isDark}
               tokens={tokens}
               onClose={() => setSelectedHobby(null)}
+              hobby={selectedHobby}
             />
             <AddSessionMenu
               onPress={() => handleHobbyListItemPress(selectedHobby.name)}
@@ -320,6 +477,7 @@ const LogSessionModalContent = ({ onClose, isDark, tokens }: LogSessionModalCont
               icon={selectedHobby.icon}
               isDark={isDark}
               baseColor={tokens.textTertiary}
+              tokens={tokens}
             />
           </View>
         ) : (
@@ -336,6 +494,7 @@ const LogSessionModalContent = ({ onClose, isDark, tokens }: LogSessionModalCont
                 icon={hobbyDetails.icon}
                 isDark={isDark}
                 baseColor={tokens.textTertiary}
+                tokens={tokens}
               />
             ))}
           </View>
