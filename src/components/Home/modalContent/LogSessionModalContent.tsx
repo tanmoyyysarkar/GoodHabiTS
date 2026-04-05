@@ -10,6 +10,12 @@ interface LogSessionModalContentProps {
   tokens: ThemeTokens;
 }
 
+interface HeaderProps {
+  isDark: boolean;
+  tokens: ThemeTokens;
+  onClose: () => void;
+}
+
 interface HobbyItem {
   name: string;
   icon: string;
@@ -23,6 +29,31 @@ interface HobbyDetail extends HobbyItem {
   baseColor: string;
   onPress: () => void;
 }
+
+//============================HOBBY-LIST-HEADER===============================
+const HobbyListHeader = ({ isDark, tokens, onClose }: HeaderProps) => {
+  return (
+    <View
+      className={`${isDark ? 'border-border' : 'border-border-light'} flex-row items-center justify-between border border-x-0 border-t-0 p-4`}>
+      <View className="flex-col justify-between">
+        <Text
+          className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} font-jetbrains-mono text-sm`}>
+          SELECT HOBBY
+        </Text>
+        <Text
+          className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold text-3xl`}>
+          Which one today?
+        </Text>
+      </View>
+      <Pressable className="mx-4 active:opacity-70" onPress={onClose}>
+        <View
+          className={`${isDark ? 'border-border bg-card-bg-elevated' : 'border-border-light bg-card-bg-elevated-light'} flex h-8 w-8 items-center justify-center rounded-full border`}>
+          <Ionicons name="close-outline" size={24} color={tokens.textPrimary} />
+        </View>
+      </Pressable>
+    </View>
+  );
+};
 
 //============================HOBBY-LIST===============================
 const HobbyListItem = ({
@@ -56,7 +87,7 @@ const HobbyListItem = ({
             <View className="flex-row items-center gap-1">
               <View style={{ backgroundColor: `${color}60` }} className="rounded-full p-1">
                 <Text className="font-jetbrains-mono text-xs" style={{ color: color }}>
-                  {minutesPerDay}m/day
+                  🎯 {minutesPerDay}m/day
                 </Text>
               </View>
               <Text className="font-jetbrains-mono text-xs" style={{ color: baseColor }}>
@@ -70,6 +101,50 @@ const HobbyListItem = ({
         </View>
       </View>
     </Pressable>
+  );
+};
+
+//=======================ADD-SESSION-MENU-HEADER=======================
+
+const AddSessionMenuHeader = ({ isDark, tokens, onClose }: HeaderProps) => {
+  return (
+    <View
+      className={`${isDark ? 'border-border' : 'border-border-light'} flex-row items-center justify-between border border-x-0 border-t-0 p-4`}>
+      <View className="flex-col justify-between">
+        <Text
+          className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} font-jetbrains-mono text-sm`}>
+          LOG SESSION
+        </Text>
+        <Text
+          className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold text-3xl`}>
+          Which one today?
+        </Text>
+      </View>
+      <Pressable className="mx-4 active:opacity-70" onPress={onClose}>
+        <View
+          className={`${isDark ? 'border-border bg-card-bg-elevated' : 'border-border-light bg-card-bg-elevated-light'} flex h-8 w-8 items-center justify-center rounded-full border`}>
+          <Ionicons name="close-outline" size={24} color={tokens.textPrimary} />
+        </View>
+      </Pressable>
+    </View>
+  );
+};
+
+//=========================ADD-SESSION-MENU============================
+const AddSessionMenu = ({
+  name,
+  icon,
+  streakCount,
+  color,
+  minutesPerDay,
+  isDark,
+  baseColor,
+  onPress,
+}: HobbyDetail) => {
+  return (
+    <View>
+      <Text>{name}</Text>
+    </View>
   );
 };
 
@@ -221,54 +296,49 @@ const LogSessionModalContent = ({ onClose, isDark, tokens }: LogSessionModalCont
 
   const handleHobbyListItemPress = (name: string) => {
     const foundHobby = hobbyDetailsList.find((hobby) => hobby.name === name) ?? null;
-    console.log(foundHobby)
-    // setSelectedHobby(foundHobby);
+    console.log(foundHobby);
+    setSelectedHobby(foundHobby);
   };
 
   return (
     <View className="flex h-full w-full">
-      <View
-        className={`${isDark ? 'border-border' : 'border-border-light'} flex-row items-center justify-between border border-x-0 border-t-0 p-4`} //======HEADER=======
-      >
-        <View className="flex-col justify-between">
-          <Text
-            className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} font-jetbrains-mono text-sm`}>
-            SELECT HOBBY
-          </Text>
-          <Text
-            className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold text-3xl`}>
-            Which one today?
-          </Text>
-        </View>
-        <Pressable className="mx-4 active:opacity-70" onPress={onClose}>
-          <View
-            className={`${isDark ? 'border-border bg-card-bg-elevated' : 'border-border-light bg-card-bg-elevated-light'} flex h-8 w-8 items-center justify-center rounded-full border`}>
-            <Ionicons name="close-outline" size={24} color={tokens.textPrimary} />
-          </View>
-        </Pressable>
-      </View>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        className="flex-1"
-        contentContainerClassName="gap-8 p-3">
+      <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
         {selectedHobby ? (
-          <View>
-            <Text>Help</Text>
-          </View>
-        ) : (
-          hobbyDetailsList.map((hobbyDetails) => (
-            <HobbyListItem
-              onPress={() => handleHobbyListItemPress(hobbyDetails.name)}
-              key={hobbyDetails.name}
-              name={hobbyDetails.name}
-              minutesPerDay={hobbyDetails.minutesPerDay}
-              streakCount={hobbyDetails.streakCount}
-              color={hobbyDetails.color}
-              icon={hobbyDetails.icon}
+          <View className="gap-8 p-3">
+            <AddSessionMenuHeader
+              isDark={isDark}
+              tokens={tokens}
+              onClose={() => setSelectedHobby(null)}
+            />
+            <AddSessionMenu
+              onPress={() => handleHobbyListItemPress(selectedHobby.name)}
+              key={selectedHobby.name}
+              name={selectedHobby.name}
+              minutesPerDay={selectedHobby.minutesPerDay}
+              streakCount={selectedHobby.streakCount}
+              color={selectedHobby.color}
+              icon={selectedHobby.icon}
               isDark={isDark}
               baseColor={tokens.textTertiary}
             />
-          ))
+          </View>
+        ) : (
+          <View className="gap-8 p-3">
+            <HobbyListHeader isDark={isDark} tokens={tokens} onClose={onClose} />
+            {hobbyDetailsList.map((hobbyDetails) => (
+              <HobbyListItem
+                onPress={() => handleHobbyListItemPress(hobbyDetails.name)}
+                key={hobbyDetails.name}
+                name={hobbyDetails.name}
+                minutesPerDay={hobbyDetails.minutesPerDay}
+                streakCount={hobbyDetails.streakCount}
+                color={hobbyDetails.color}
+                icon={hobbyDetails.icon}
+                isDark={isDark}
+                baseColor={tokens.textTertiary}
+              />
+            ))}
+          </View>
         )}
       </ScrollView>
     </View>
