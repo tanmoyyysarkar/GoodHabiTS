@@ -13,11 +13,9 @@ interface AddHobbyModalContentProps {
   tokens: ThemeTokens;
 }
 
-//TODO: name, category, emoji/icon, color, time per day
-
 const schema = z.object({
   name: z.string().min(1, 'Name is required'),
-  category: z.string().min(1, 'Category is requred'), //later move to misc if not provided
+  category: z.string().min(1, 'Category is requred'),
   color: z.string().min(1, 'Color is required'),
   icon: z.string().min(1, 'Icon is required'),
   minutesPerDay: z.coerce
@@ -70,6 +68,7 @@ const formatMinutes = (minutes: number) => {
   return `${hours}h ${remainingMinutes}m`;
 };
 
+//===================================================COLOR-BALL==========================================================
 const ColorBall = ({ name, isSelected, onPress }: ColorProp) => {
   return (
     <Pressable onPress={onPress}>
@@ -82,6 +81,7 @@ const ColorBall = ({ name, isSelected, onPress }: ColorProp) => {
   );
 };
 
+//=============================================SELECT-CATEGORY-PILL======================================================
 const CategoryPills = ({
   name,
   isSelected,
@@ -120,6 +120,7 @@ const CategoryPills = ({
   );
 };
 
+//====================================================SELECT-ICON-PILL==============================================
 const IconPills = ({ name, isSelected, onPress, isDark, selectedColor, tokens }: IconProp) => {
   const scaleAnim = useRef(new Animated.Value(isSelected ? 1.08 : 1)).current;
 
@@ -148,6 +149,7 @@ const IconPills = ({ name, isSelected, onPress, isDark, selectedColor, tokens }:
   );
 };
 
+//=================================================MAIN-MODEL=========================================================
 const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentProps) => {
   const {
     control,
@@ -259,7 +261,7 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
 
   return (
     <View className="flex h-full w-full">
-      <View
+      <View //============================================HEADER===================================================
         className={`${isDark ? 'border-b-border' : 'border-b-border-light'} w-full flex-row border border-x-0 border-t-0 p-4`}>
         <View
           className="h-16 w-16 items-center justify-center rounded-3xl"
@@ -278,13 +280,14 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
           </Text>
         </View>
       </View>
-      <ScrollView>
+      <ScrollView //=======================================SCROLLABLE-SECTION=======================================
+      >
         <View className="p-4">
           <Text
             className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} text-md mb-3 font-jetbrains-mono-bold`}>
             NAME
           </Text>
-          <Controller
+          <Controller //======================================NAME-OF-HOBBY=========================================
             control={control}
             name="name"
             render={({ field: { onChange, value } }) => (
@@ -304,7 +307,9 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
             className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} text-md mb-3 font-jetbrains-mono-bold`}>
             CATEGORY
           </Text>
-          <View className="mb-6 flex-row flex-wrap gap-2">
+          <View
+            className="mb-6 flex-row flex-wrap gap-2" //===============================CATEGORY-SELECTION-PILLS==============================
+          >
             {categories.map((category) => (
               <CategoryPills
                 key={category.name}
@@ -322,7 +327,9 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
             className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} text-md mb-3 font-jetbrains-mono-bold`}>
             ICON
           </Text>
-          <View className="mb-6 flex-row flex-wrap justify-between gap-2">
+          <View
+            className="mb-6 flex-row flex-wrap justify-between gap-2" //==========================ICON-SELECTION-MENU=======================
+          >
             {icons.map((icon) => (
               <IconPills
                 key={icon.name}
@@ -340,7 +347,9 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
             className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} text-md mb-3 font-jetbrains-mono-bold`}>
             COLOR
           </Text>
-          <View className="mb-6 flex-row">
+          <View
+            className="mb-6 flex-row" //=====================================COLOR-SELECTION-BALLS==========================================
+          >
             {colors.map((color) => (
               <ColorBall
                 key={color.name}
@@ -355,7 +364,7 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
             className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} text-md mb-3 font-jetbrains-mono-bold`}>
             TIME PER DAY
           </Text>
-          <View
+          <View //==============================================TIME-SELECTION-SLIDER========================================================
             className={`${isDark ? 'border-border' : 'border-border-light'} rounded-2xl border p-4`}>
             <Controller
               control={control}
@@ -407,11 +416,11 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
           {errors.minutesPerDay && <Text>{errors.minutesPerDay.message}</Text>}
         </View>
       </ScrollView>
-      <View
+      <View //======================================================FOOTER=======================================================
         className={`${isDark ? 'border-border' : 'border-border-light'} flex-row gap-4 border border-x-0 border-b-0 p-4`}>
         <View
           className={`${isDark ? 'border-border bg-card-bg-elevated' : 'bg-card-bg-elevated-lightr border-border-light'} flex h-16 w-36 flex-row items-center justify-center rounded-2xl border`}>
-          <Pressable onPress={onClose}>
+          <Pressable onPress={onClose} className="active:opacity-70">
             <Text
               className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-semibold text-xl`}>
               Cancle
