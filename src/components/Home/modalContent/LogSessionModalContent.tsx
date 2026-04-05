@@ -1,13 +1,15 @@
 import { ThemeTokens } from '@/theme/tokens';
 import { Ionicons } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { ScrollView } from 'react-native';
+import { SessionProgressRing } from './SessionProgressRing';
 
 interface LogSessionModalContentProps {
   onClose: () => void;
   isDark: boolean;
   tokens: ThemeTokens;
+  onSelectedHobbyViewChange: (isSelectedHobbyView: boolean) => void;
 }
 
 interface HeaderProps {
@@ -48,6 +50,11 @@ interface MoodPillProp {
   tokens: ThemeTokens;
   onPress: () => void;
   isSelected: boolean;
+}
+
+interface Time {
+  hours: number;
+  minutes: number;
 }
 
 //============================HOBBY-LIST-HEADER===============================
@@ -221,6 +228,62 @@ const AddSessionMenu = ({
     setSelectedMood(mood);
   };
 
+  const [timeDone, setTimeDone] = useState<Time>({
+    hours: 0,
+    minutes: 0,
+  });
+
+  const [timeDoneToday, setTimeDoneToday] = useState(0);
+
+  const incHour = () => {
+    setTimeDone((prev) => {
+      return { hours: prev.hours < 24 ? prev.hours + 1 : 0, minutes: prev.minutes };
+    });
+  };
+
+  const decHour = () => {
+    setTimeDone((prev) => {
+      return { hours: prev.hours < 1 ? 24 : prev.hours - 1, minutes: prev.minutes };
+    });
+  };
+
+  const incMin = () => {
+    setTimeDone((prev) => {
+      return { hours: prev.hours, minutes: prev.minutes > 50 ? 0 : prev.minutes + 5 };
+    });
+  };
+
+  const decMin = () => {
+    setTimeDone((prev) => {
+      return { hours: prev.hours, minutes: prev.minutes < 5 ? 55 : prev.minutes - 5 };
+    });
+  };
+
+  const normalizeTime = (time: Time) => {
+    return time.hours * 60 + time.minutes;
+  };
+
+  useEffect(() => {
+    setTimeDoneToday(normalizeTime(timeDone));
+  }, [timeDone]);
+
+  const doneForTodayPressed = () => {
+    setDoneForToday(!doneForToday);
+    setTimeDone({
+      hours: Math.floor(minutesPerDay / 60),
+      minutes: minutesPerDay % 60,
+    });
+  };
+
+  const handleLogSessionPress = () => {
+    const data = {
+      name: name,
+      timeDoneToday: timeDoneToday,
+      feeling: selectedMood?.name,
+    };
+    console.log(data);
+  };
+
   return (
     <View className="px-3">
       <View
@@ -244,7 +307,7 @@ const AddSessionMenu = ({
             Mark {minutesPerDay}m - Your daily goal
           </Text>
         </View>
-        <Pressable onPress={() => setDoneForToday(!doneForToday)} className="px-2">
+        <Pressable onPress={doneForTodayPressed} className="px-2">
           <Ionicons
             name={doneForToday ? 'checkmark-circle-outline' : 'ellipse-outline'}
             size={40}
@@ -254,7 +317,97 @@ const AddSessionMenu = ({
           />
         </Pressable>
       </View>
-
+      <View className="mx-7 mt-3 flex-row items-center justify-between p-3">
+        <SessionProgressRing
+          isDark={isDark}
+          mainColor={selectedMood ? selectedMood.color : color}
+          progress={
+            (timeDoneToday / minutesPerDay) * 100 <= 100
+              ? (timeDoneToday / minutesPerDay) * 100
+              : 100
+          }
+          size={100}
+          strokeWidth={10}
+          text="Help"
+        />
+        <View className="flex-row items-center justify-center gap-2">
+          <View className="flex items-center justify-center gap-2">
+            <Pressable
+              onPress={incHour}
+              className="flex h-8 w-12 items-center justify-center rounded-xl"
+              style={{
+                backgroundColor: tokens.cardBg,
+                borderColor: tokens.border,
+                borderWidth: 1,
+              }}>
+              <Ionicons name="chevron-up-outline" size={24} color={tokens.textTertiary} />
+            </Pressable>
+            <View
+              className="flex h-12 w-16 items-center justify-center rounded-2xl"
+              style={{
+                backgroundColor: tokens.cardBg,
+                borderColor: selectedMood ? selectedMood.color : tokens.border,
+                borderWidth: 1,
+              }}>
+              <Text
+                className="font-jetbrains-mono-bold text-2xl"
+                style={{ color: tokens.textPrimary }}>
+                {timeDone.hours}
+              </Text>
+            </View>
+            <Pressable
+              className="flex h-8 w-12 items-center justify-center rounded-xl"
+              onPress={decHour}
+              style={{
+                backgroundColor: tokens.cardBg,
+                borderColor: tokens.border,
+                borderWidth: 1,
+              }}>
+              <Ionicons name="chevron-down-outline" size={24} color={tokens.textTertiary} />
+            </Pressable>
+          </View>
+          <Text
+            className="font-jetbrains-mono-bold text-4xl"
+            style={{ color: tokens.textTertiary }}>
+            :
+          </Text>
+          <View className="flex items-center justify-center gap-2">
+            <Pressable
+              className="flex h-8 w-12 items-center justify-center rounded-xl"
+              onPress={incMin}
+              style={{
+                backgroundColor: tokens.cardBg,
+                borderColor: tokens.border,
+                borderWidth: 1,
+              }}>
+              <Ionicons name="chevron-up-outline" size={24} color={tokens.textTertiary} />
+            </Pressable>
+            <View
+              className="flex h-12 w-16 items-center justify-center rounded-2xl"
+              style={{
+                backgroundColor: tokens.cardBg,
+                borderColor: selectedMood ? selectedMood.color : tokens.border,
+                borderWidth: 1,
+              }}>
+              <Text
+                className="font-jetbrains-mono-bold text-2xl"
+                style={{ color: tokens.textPrimary }}>
+                {timeDone.minutes}
+              </Text>
+            </View>
+            <Pressable
+              onPress={decMin}
+              className="flex h-8 w-12 items-center justify-center rounded-xl"
+              style={{
+                backgroundColor: tokens.cardBg,
+                borderColor: tokens.border,
+                borderWidth: 1,
+              }}>
+              <Ionicons name="chevron-down-outline" size={24} color={tokens.textTertiary} />
+            </Pressable>
+          </View>
+        </View>
+      </View>
       <Text className="py-3 font-jetbrains-mono text-sm" style={{ color: tokens.textTertiary }}>
         HOW DID IT FEEL?
       </Text>
@@ -278,7 +431,7 @@ const AddSessionMenu = ({
         className="flex-row gap-4 pt-4">
         <View
           className={`${isDark ? 'border-border bg-card-bg-elevated' : 'bg-card-bg-elevated-lightr border-border-light'} flex h-16 w-36 flex-row items-center justify-center rounded-2xl border`}>
-          <Pressable className="active:opacity-70">
+          <Pressable className="active:opacity-70" onPress={onPress}>
             <Text
               className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-semibold text-xl`}>
               Cancle
@@ -292,7 +445,7 @@ const AddSessionMenu = ({
             borderColor: renderedColor,
             borderWidth: 1,
           }}>
-          <Pressable>
+          <Pressable disabled={selectedMood ? false : true} onPress={handleLogSessionPress}>
             <Text
               className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-semibold text-xl`}>
               Log Session →
@@ -304,7 +457,12 @@ const AddSessionMenu = ({
   );
 };
 
-const LogSessionModalContent = ({ onClose, isDark, tokens }: LogSessionModalContentProps) => {
+const LogSessionModalContent = ({
+  onClose,
+  isDark,
+  tokens,
+  onSelectedHobbyViewChange,
+}: LogSessionModalContentProps) => {
   const hobbyDetailsList: HobbyItem[] = [
     {
       name: 'Morning Sketching',
@@ -450,6 +608,10 @@ const LogSessionModalContent = ({ onClose, isDark, tokens }: LogSessionModalCont
 
   const [selectedHobby, setSelectedHobby] = useState<HobbyItem | null>(null);
 
+  useEffect(() => {
+    onSelectedHobbyViewChange(selectedHobby !== null);
+  }, [selectedHobby, onSelectedHobbyViewChange]);
+
   const handleHobbyListItemPress = (name: string) => {
     const foundHobby = hobbyDetailsList.find((hobby) => hobby.name === name) ?? null;
     console.log(foundHobby);
@@ -468,7 +630,7 @@ const LogSessionModalContent = ({ onClose, isDark, tokens }: LogSessionModalCont
               hobby={selectedHobby}
             />
             <AddSessionMenu
-              onPress={() => handleHobbyListItemPress(selectedHobby.name)}
+              onPress={() => setSelectedHobby(null)}
               key={selectedHobby.name}
               name={selectedHobby.name}
               minutesPerDay={selectedHobby.minutesPerDay}

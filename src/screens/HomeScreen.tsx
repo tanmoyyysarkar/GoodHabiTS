@@ -22,9 +22,16 @@ const HomeScreen = () => {
   const isDark = colorScheme === 'dark';
 
   const [activeModal, setActiveModal] = useState<ModalType>(null);
+  const [isLogSessionCompact, setIsLogSessionCompact] = useState(false);
 
   const openModal = (type: Exclude<ModalType, null>) => setActiveModal(type);
-  const closeModal = () => setActiveModal(null);
+  const closeModal = () => {
+    setActiveModal(null);
+    setIsLogSessionCompact(false);
+  };
+
+  const modalHeightClass =
+    activeModal === 'logSession' && isLogSessionCompact ? 'h-[63%]' : 'h-[90%]';
 
   return (
     <>
@@ -53,10 +60,21 @@ const HomeScreen = () => {
         animationType="slide">
         <View className="flex-1 items-center justify-end bg-black/35">
           <View
-            className={`h-[90%] w-[100%] rounded-t-3xl ${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} border`}>
-            {activeModal === 'profile' && <ProfileModalContent isDark={isDark} onClose={closeModal} />}
-            {activeModal === 'addHobby' && <AddHobbyModalContent tokens={tokens} isDark={isDark} onClose={closeModal} />}
-            {activeModal === 'logSession' && <LogSessionModalContent tokens={tokens} isDark={isDark} onClose={closeModal} />}
+            className={`${modalHeightClass} w-[100%] rounded-t-3xl ${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} border`}>
+            {activeModal === 'profile' && (
+              <ProfileModalContent isDark={isDark} onClose={closeModal} />
+            )}
+            {activeModal === 'addHobby' && (
+              <AddHobbyModalContent tokens={tokens} isDark={isDark} onClose={closeModal} />
+            )}
+            {activeModal === 'logSession' && (
+              <LogSessionModalContent
+                tokens={tokens}
+                isDark={isDark}
+                onClose={closeModal}
+                onSelectedHobbyViewChange={setIsLogSessionCompact}
+              />
+            )}
           </View>
         </View>
       </Modal>
