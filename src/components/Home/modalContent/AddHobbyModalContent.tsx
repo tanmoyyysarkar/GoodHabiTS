@@ -416,7 +416,7 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
           {errors.minutesPerDay && <Text>{errors.minutesPerDay.message}</Text>}
         </View>
       </ScrollView>
-     ` <View //======================================================FOOTER=======================================================
+      <View //======================================================FOOTER=======================================================
         className={`${isDark ? 'border-border' : 'border-border-light'} flex-row gap-4 border border-x-0 border-b-0 p-4`}>
         <View
           className={`${isDark ? 'border-border bg-card-bg-elevated' : 'bg-card-bg-elevated-lightr border-border-light'} flex h-16 w-36 flex-row items-center justify-center rounded-2xl border`}>
