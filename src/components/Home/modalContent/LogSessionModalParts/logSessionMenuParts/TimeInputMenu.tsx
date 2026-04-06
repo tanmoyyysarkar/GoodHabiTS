@@ -1,0 +1,100 @@
+import { View, Text, Pressable } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { ThemeTokens } from '@/theme/tokens';
+import { Mood, SessionDuration } from '@/types/logSessionModalTypes';
+
+interface TimeInputMenuProps {
+  incrementHours: () => void;
+  decrementHours: () => void;
+  incrementMinutes: () => void;
+  decrementMinutes: () => void;
+  tokens: ThemeTokens;
+  selectedMood: Mood | null;
+  timeLogged: SessionDuration;
+}
+
+const TimeInputMenu = ({
+  decrementHours,
+  decrementMinutes,
+  incrementHours,
+  incrementMinutes,
+  selectedMood,
+  tokens,
+  timeLogged,
+}: TimeInputMenuProps) => {
+  return (
+    <View className="flex-row items-center justify-center gap-2">
+      <View className="flex items-center justify-center gap-2">
+        <Pressable
+          onPress={incrementHours}
+          className="flex h-8 w-12 items-center justify-center rounded-xl"
+          style={{
+            backgroundColor: tokens.cardBg,
+            borderColor: tokens.border,
+            borderWidth: 1,
+          }}>
+          <Ionicons name="chevron-up-outline" size={24} color={tokens.textTertiary} />
+        </Pressable>
+        <View
+          className="flex h-12 w-16 items-center justify-center rounded-2xl"
+          style={{
+            backgroundColor: tokens.cardBg,
+            borderColor: selectedMood ? selectedMood.color : tokens.border,
+            borderWidth: 1,
+          }}>
+          <Text className="font-jetbrains-mono-bold text-2xl" style={{ color: tokens.textPrimary }}>
+            {timeLogged.hours}
+          </Text>
+        </View>
+        <Pressable
+          className="flex h-8 w-12 items-center justify-center rounded-xl"
+          onPress={decrementHours}
+          style={{
+            backgroundColor: tokens.cardBg,
+            borderColor: tokens.border,
+            borderWidth: 1,
+          }}>
+          <Ionicons name="chevron-down-outline" size={24} color={tokens.textTertiary} />
+        </Pressable>
+      </View>
+      <Text className="font-jetbrains-mono-bold text-4xl" style={{ color: tokens.textTertiary }}>
+        :
+      </Text>
+      <View className="flex items-center justify-center gap-2">
+        <Pressable
+          className="flex h-8 w-12 items-center justify-center rounded-xl"
+          onPress={incrementMinutes}
+          style={{
+            backgroundColor: tokens.cardBg,
+            borderColor: tokens.border,
+            borderWidth: 1,
+          }}>
+          <Ionicons name="chevron-up-outline" size={24} color={tokens.textTertiary} />
+        </Pressable>
+        <View
+          className="flex h-12 w-16 items-center justify-center rounded-2xl"
+          style={{
+            backgroundColor: tokens.cardBg,
+            borderColor: selectedMood ? selectedMood.color : tokens.border,
+            borderWidth: 1,
+          }}>
+          <Text className="font-jetbrains-mono-bold text-2xl" style={{ color: tokens.textPrimary }}>
+            {timeLogged.minutes}
+          </Text>
+        </View>
+        <Pressable
+          onPress={decrementMinutes}
+          className="flex h-8 w-12 items-center justify-center rounded-xl"
+          style={{
+            backgroundColor: tokens.cardBg,
+            borderColor: tokens.border,
+            borderWidth: 1,
+          }}>
+          <Ionicons name="chevron-down-outline" size={24} color={tokens.textTertiary} />
+        </Pressable>
+      </View>
+    </View>
+  );
+};
+
+export default TimeInputMenu;

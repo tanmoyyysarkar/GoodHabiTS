@@ -8,7 +8,7 @@ interface SessionProgressRingProps {
   strokeWidth: number;
   mainColor: string; // The primary color from your HobbyData
   isDark: boolean;
-  text: string;
+  statusLabel: string;
 }
 
 export const SessionProgressRing = ({
@@ -17,7 +17,7 @@ export const SessionProgressRing = ({
   strokeWidth,
   mainColor,
   isDark,
-  text,
+  statusLabel,
 }: SessionProgressRingProps) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
@@ -62,7 +62,7 @@ export const SessionProgressRing = ({
       <View style={{ position: 'absolute' }}>
         <Text
           className={`${isDark ? 'text-white' : 'text-black'} font-jetbrains-mono-bold text-[10px]`}>
-          {text}
+          {statusLabel}
         </Text>
       </View>
     </View>
