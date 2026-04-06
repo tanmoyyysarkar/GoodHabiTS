@@ -1,0 +1,29 @@
+import { ThemeTokens } from '@/theme/tokens';
+import { Text, View } from 'react-native';
+
+interface QuickProfileInsightsCardProps {
+  name: string;
+  value: number;
+  tokens: ThemeTokens;
+  isDark: boolean;
+}
+
+const QuickProfileInsightsCard = ({
+  name,
+  value,
+  isDark,
+  tokens,
+}: QuickProfileInsightsCardProps) => {
+  return (
+    <View
+      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-elevated'} h-20 w-32 rounded-2xl flex justify-center items-center`}
+      style={{ borderWidth: 0.5 }}>
+      <Text className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold text-3xl`}>{value}</Text>
+      <Text className={`${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} font-jakarta-sans-light text-sm`}>
+        {name}
+      </Text>
+    </View>
+  );
+};
+
+export default QuickProfileInsightsCard;
