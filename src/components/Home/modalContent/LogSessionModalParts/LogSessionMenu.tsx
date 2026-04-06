@@ -15,7 +15,7 @@ export const LogSessionMenu = ({
   color,
   minutesPerDay,
   isDark,
-  baseColor,
+  tertiaryTextColor,
   onPress,
   tokens,
 }: HobbyDetail) => {
@@ -27,7 +27,7 @@ export const LogSessionMenu = ({
     { emoji: '🤩', color: '#73deff', name: 'Amazing' },
   ];
 
-  const [renderedColor, setRenderedColor] = useState<string>(baseColor);
+  const [renderedColor, setRenderedColor] = useState<string>(tertiaryTextColor);
   const [selectedMood, setSelectedMood] = useState<Mood | null>(null);
 
   const [doneForToday, setDoneForToday] = useState<boolean>(false);
@@ -37,33 +37,33 @@ export const LogSessionMenu = ({
     setSelectedMood(mood);
   };
 
-  const [timeDone, setTimeDone] = useState<Time>({
+  const [timeLogged, setTimeLogged] = useState<Time>({
     hours: 0,
     minutes: 0,
   });
 
-  const [timeDoneToday, setTimeDoneToday] = useState(0);
+  const [totalMinutesLogged, setTotalMinutesLogged] = useState(0);
 
   const incHour = () => {
-    setTimeDone((prev) => {
+    setTimeLogged((prev) => {
       return { hours: prev.hours < 24 ? prev.hours + 1 : 0, minutes: prev.minutes };
     });
   };
 
   const decHour = () => {
-    setTimeDone((prev) => {
+    setTimeLogged((prev) => {
       return { hours: prev.hours < 1 ? 24 : prev.hours - 1, minutes: prev.minutes };
     });
   };
 
   const incMin = () => {
-    setTimeDone((prev) => {
+    setTimeLogged((prev) => {
       return { hours: prev.hours, minutes: prev.minutes > 50 ? 0 : prev.minutes + 5 };
     });
   };
 
   const decMin = () => {
-    setTimeDone((prev) => {
+    setTimeLogged((prev) => {
       return { hours: prev.hours, minutes: prev.minutes < 5 ? 55 : prev.minutes - 5 };
     });
   };
@@ -73,12 +73,12 @@ export const LogSessionMenu = ({
   };
 
   useEffect(() => {
-    setTimeDoneToday(normalizeTime(timeDone));
-  }, [timeDone]);
+    setTotalMinutesLogged(normalizeTime(timeLogged));
+  }, [timeLogged]);
 
   const doneForTodayPressed = () => {
     setDoneForToday(!doneForToday);
-    setTimeDone({
+    setTimeLogged({
       hours: Math.floor(minutesPerDay / 60),
       minutes: minutesPerDay % 60,
     });
@@ -87,7 +87,7 @@ export const LogSessionMenu = ({
   const handleLogSessionPress = () => {
     const data = {
       name: name,
-      timeDoneToday: timeDoneToday,
+      totalMinutesLogged: totalMinutesLogged,
       feeling: selectedMood?.name,
     };
     console.log(data);
@@ -110,13 +110,13 @@ export const LogSessionMenu = ({
           isDark={isDark}
           mainColor={selectedMood ? selectedMood.color : color}
           progress={
-            (timeDoneToday / minutesPerDay) * 100 <= 100
-              ? (timeDoneToday / minutesPerDay) * 100
+            (totalMinutesLogged / minutesPerDay) * 100 <= 100
+              ? (totalMinutesLogged / minutesPerDay) * 100
               : 100
           }
           size={100}
           strokeWidth={10}
-          text="Help"
+          statusLabel="Help"
         />
 
         <TimeInputMenu //=======================TIME-INPUT-MENU-WITH-DISPLAY================================
@@ -125,7 +125,7 @@ export const LogSessionMenu = ({
           incHour={incHour}
           incMin={incMin}
           selectedMood={selectedMood}
-          timeDone={timeDone}
+          timeLogged={timeLogged}
           tokens={tokens}
         />
       </View>

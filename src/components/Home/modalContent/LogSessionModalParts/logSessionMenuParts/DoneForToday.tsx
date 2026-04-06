@@ -3,7 +3,7 @@ import { Mood } from '@/types/logSessionModalTypes';
 import { Ionicons } from '@expo/vector-icons';
 import { View, Text, Pressable } from 'react-native';
 
-interface props {
+interface DoneForTodayProps {
   doneForToday: boolean;
   selectedMood: Mood | null;
   color: string;
@@ -21,7 +21,7 @@ const DoneForToday = ({
   selectedMood,
   tokens,
   minutesPerDay,
-}: props) => {
+}: DoneForTodayProps) => {
   return (
     <View
       className=" h-20 w-full flex-row items-center justify-between rounded-2xl p-3"

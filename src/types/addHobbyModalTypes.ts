@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 export const addHobbySchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  category: z.string().min(1, 'Category is requred'),
+  category: z.string().min(1, 'Category is required'),
   color: z.string().min(1, 'Color is required'),
   icon: z.string().min(1, 'Icon is required'),
   minutesPerDay: z.coerce

@@ -9,7 +9,7 @@ export const HobbyListItem = ({
   color,
   minutesPerDay,
   isDark,
-  baseColor,
+  tertiaryTextColor,
   onPress,
 }: HobbyDetail) => {
   return (
@@ -36,14 +36,14 @@ export const HobbyListItem = ({
                   🎯 {minutesPerDay}m/day
                 </Text>
               </View>
-              <Text className="ml-2 font-jetbrains-mono text-xs" style={{ color: baseColor }}>
+              <Text className="ml-2 font-jetbrains-mono text-xs" style={{ color: tertiaryTextColor }}>
                 🔥{streakCount}day streak
               </Text>
             </View>
           </View>
         </View>
         <View>
-          <Ionicons name="chevron-forward-outline" size={24} color={baseColor}></Ionicons>
+          <Ionicons name="chevron-forward-outline" size={24} color={tertiaryTextColor}></Ionicons>
         </View>
       </View>
     </Pressable>

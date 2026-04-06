@@ -3,14 +3,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { ThemeTokens } from '@/theme/tokens';
 import { Mood, Time } from '@/types/logSessionModalTypes';
 
-interface props {
+interface TimeInputMenuProps {
   incHour: () => void;
   decHour: () => void;
   incMin: () => void;
   decMin: () => void;
   tokens: ThemeTokens;
   selectedMood: Mood | null;
-  timeDone: Time;
+  timeLogged: Time;
 }
 
 const TimeInputMenu = ({
@@ -20,8 +20,8 @@ const TimeInputMenu = ({
   incMin,
   selectedMood,
   tokens,
-  timeDone,
-}: props) => {
+  timeLogged,
+}: TimeInputMenuProps) => {
   return (
     <View className="flex-row items-center justify-center gap-2">
       <View className="flex items-center justify-center gap-2">
@@ -43,7 +43,7 @@ const TimeInputMenu = ({
             borderWidth: 1,
           }}>
           <Text className="font-jetbrains-mono-bold text-2xl" style={{ color: tokens.textPrimary }}>
-            {timeDone.hours}
+            {timeLogged.hours}
           </Text>
         </View>
         <Pressable
@@ -79,7 +79,7 @@ const TimeInputMenu = ({
             borderWidth: 1,
           }}>
           <Text className="font-jetbrains-mono-bold text-2xl" style={{ color: tokens.textPrimary }}>
-            {timeDone.minutes}
+            {timeLogged.minutes}
           </Text>
         </View>
         <Pressable

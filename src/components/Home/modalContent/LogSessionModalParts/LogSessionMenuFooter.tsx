@@ -15,7 +15,7 @@ export const LogSessionMenuFooter = ({
         <Pressable className="active:opacity-70" onPress={onCancel}>
           <Text
             className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-semibold text-xl`}>
-            Cancle
+            Cancel
           </Text>
         </Pressable>
       </View>

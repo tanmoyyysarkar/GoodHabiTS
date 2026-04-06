@@ -20,7 +20,7 @@ export interface LogSessionHeaderProps extends HeaderProps {
 
 export interface HobbyDetail extends HobbyItem {
   isDark: boolean;
-  baseColor: string;
+  tertiaryTextColor: string;
   onPress: () => void;
   tokens: ThemeTokens;
 }

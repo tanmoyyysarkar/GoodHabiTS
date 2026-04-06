@@ -10,7 +10,7 @@ export const AddHobbyFooter = ({ isDark, selectedColor, isSubmitting, onClose, o
         <Pressable onPress={onClose} className="active:opacity-70">
           <Text
             className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-semibold text-xl`}>
-            Cancle
+            Cancel
           </Text>
         </Pressable>
       </View>

@@ -56,7 +56,7 @@ const LogSessionModalContent = ({
               color={selectedHobby.color}
               icon={selectedHobby.icon}
               isDark={isDark}
-              baseColor={tokens.textTertiary}
+              tertiaryTextColor={tokens.textTertiary}
               tokens={tokens}
             />
           </View>
@@ -73,7 +73,7 @@ const LogSessionModalContent = ({
                 color={hobbyDetails.color}
                 icon={hobbyDetails.icon}
                 isDark={isDark}
-                baseColor={tokens.textTertiary}
+                tertiaryTextColor={tokens.textTertiary}
                 tokens={tokens}
               />
             ))}
