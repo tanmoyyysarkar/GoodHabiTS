@@ -1,11 +1,15 @@
 import { Text, View, TextInput } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { ThemeTokens } from '@/theme/tokens';
 import { ScrollView } from 'react-native-gesture-handler';
 import Slider from '@react-native-community/slider';
+import {
+  addHobbySchema,
+  AddHobbyFormInput,
+  AddHobbyFormOutput,
+} from '@/types/addHobbyModalTypes';
 import {
   AddHobbyFooter,
   AddHobbyHeader,
@@ -13,29 +17,15 @@ import {
   ColorBall,
   formatMinutes,
   IconPills,
-} from './AddHobbyModalParts/index';
+} from './addHobbyModalParts/index';
+import SubHeadingText from './addHobbyModalParts/SubHeadingText';
+import TimeSelectionSlider from './addHobbyModalParts/TimeSelectionSlider';
 
 interface AddHobbyModalContentProps {
   onClose: () => void;
   isDark: boolean;
   tokens: ThemeTokens;
 }
-
-const schema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  category: z.string().min(1, 'Category is requred'),
-  color: z.string().min(1, 'Color is required'),
-  icon: z.string().min(1, 'Icon is required'),
-  minutesPerDay: z.coerce
-    .number()
-    .int()
-    .min(15, 'Must be at least 15m')
-    .max(360, 'Must be at most 6h')
-    .multipleOf(15, 'Must be in 15m intervals'),
-});
-
-type FormInput = z.input<typeof schema>;
-type FormOutput = z.output<typeof schema>;
 
 //=================================================MAIN-MODEL=========================================================
 const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentProps) => {
@@ -44,8 +34,8 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<FormInput, unknown, FormOutput>({
-    resolver: zodResolver(schema),
+  } = useForm<AddHobbyFormInput, unknown, AddHobbyFormOutput>({
+    resolver: zodResolver(addHobbySchema),
     defaultValues: {
       name: '',
       category: 'Creative',
@@ -55,7 +45,7 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
     },
   });
 
-  const onSubmit = async (data: FormOutput) => {
+  const onSubmit = async (data: AddHobbyFormOutput) => {
     //TODO implement later
     console.log(data);
   };
@@ -149,14 +139,16 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
 
   return (
     <View className="flex h-full w-full">
-      <AddHobbyHeader isDark={isDark} selectedColor={selectedColor} selectedIcon={selectedIcon} />
+      <AddHobbyHeader
+        isDark={isDark}
+        selectedColor={selectedColor}
+        selectedIcon={selectedIcon} //===============HEADER==================
+      />
+
       <ScrollView //=======================================SCROLLABLE-SECTION=======================================
       >
         <View className="p-4">
-          <Text
-            className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} text-md mb-3 font-jetbrains-mono-bold`}>
-            NAME
-          </Text>
+          <SubHeadingText isDark={isDark} text="NAME" />
           <Controller //======================================NAME-OF-HOBBY=========================================
             control={control}
             name="name"
@@ -171,12 +163,9 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
               />
             )}
           />
-
           {errors.name && <Text>{errors.name.message}</Text>}
-          <Text
-            className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} text-md mb-3 font-jetbrains-mono-bold`}>
-            CATEGORY
-          </Text>
+
+          <SubHeadingText isDark={isDark} text="CATEGORY" />
           <View
             className="mb-6 flex-row flex-wrap gap-2" //===============================CATEGORY-SELECTION-PILLS==============================
           >
@@ -193,10 +182,7 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
             ))}
           </View>
 
-          <Text
-            className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} text-md mb-3 font-jetbrains-mono-bold`}>
-            ICON
-          </Text>
+          <SubHeadingText isDark={isDark} text="ICON" />
           <View
             className="mb-6 flex-row flex-wrap justify-between gap-2" //==========================ICON-SELECTION-MENU=======================
           >
@@ -213,10 +199,7 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
             ))}
           </View>
 
-          <Text
-            className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} text-md mb-3 font-jetbrains-mono-bold`}>
-            COLOR
-          </Text>
+          <SubHeadingText isDark={isDark} text="COLOR" />
           <View
             className="mb-6 flex-row" //=====================================COLOR-SELECTION-BALLS==========================================
           >
@@ -230,63 +213,18 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
             ))}
           </View>
 
-          <Text
-            className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} text-md mb-3 font-jetbrains-mono-bold`}>
-            TIME PER DAY
-          </Text>
-          <View //==============================================TIME-SELECTION-SLIDER========================================================
-            className={`${isDark ? 'border-border' : 'border-border-light'} rounded-2xl border p-4`}>
-            <Controller
-              control={control}
-              name="minutesPerDay"
-              render={({ field: { onChange, value } }) => {
-                const minutesPerDay = typeof value === 'number' ? value : 30;
-
-                return (
-                  <View>
-                    <View
-                      className="mb-4 flex h-20 items-center justify-center rounded-xl"
-                      style={{
-                        backgroundColor: `${selectedColor}70`,
-                        borderWidth: 1,
-                        borderColor: selectedColor,
-                      }}>
-                      <Text
-                        className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold text-4xl`}>
-                        {formatMinutes(minutesPerDay)}
-                      </Text>
-                    </View>
-
-                    <View className="flex-row items-center gap-3">
-                      <Text
-                        className={`${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} w-10 font-jetbrains-mono-light text-sm`}>
-                        15m
-                      </Text>
-                      <Slider
-                        minimumValue={15}
-                        maximumValue={360}
-                        step={15}
-                        value={minutesPerDay}
-                        onValueChange={onChange}
-                        minimumTrackTintColor={selectedColor}
-                        maximumTrackTintColor={tokens.border}
-                        thumbTintColor={selectedColor}
-                        style={{ flex: 1 }}
-                      />
-                      <Text
-                        className={`${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} w-10 text-right font-jetbrains-mono-light text-sm`}>
-                        6h
-                      </Text>
-                    </View>
-                  </View>
-                );
-              }}
-            />
-          </View>
+          <SubHeadingText isDark={isDark} text="TIME PER DAY" />
+          <TimeSelectionSlider //==============================================TIME-SELECTION-SLIDER========================================
+            control={control}
+            isDark={isDark}
+            selectedColor={selectedColor}
+            tokens={tokens}
+          />
           {errors.minutesPerDay && <Text>{errors.minutesPerDay.message}</Text>}
         </View>
       </ScrollView>
-      <AddHobbyFooter
+
+      <AddHobbyFooter //=======================================FOOTER=================================
         isDark={isDark}
         selectedColor={selectedColor}
         isSubmitting={isSubmitting}

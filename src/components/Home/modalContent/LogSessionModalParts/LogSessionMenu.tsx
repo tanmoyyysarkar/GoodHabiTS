@@ -5,6 +5,8 @@ import { SessionProgressRing } from './SessionProgressRing';
 import { LogSessionMenuFooter } from './LogSessionMenuFooter';
 import { MoodPill } from './MoodPill';
 import { HobbyDetail, Mood, Time } from '../../../../types/logSessionModalTypes';
+import DoneForToday from './logSessionMenuParts/DoneForToday';
+import TimeInputMenu from './logSessionMenuParts/TimeInputMenu';
 
 export const LogSessionMenu = ({
   name,
@@ -93,39 +95,18 @@ export const LogSessionMenu = ({
 
   return (
     <View className="px-3">
-      <View
-        className=" h-20 w-full flex-row items-center justify-between rounded-2xl p-3"
-        style={{
-          backgroundColor: doneForToday
-            ? selectedMood
-              ? `${selectedMood.color}70`
-              : `${color}70`
-            : tokens.cardBgElevated,
-          borderWidth: 1,
-          borderColor: doneForToday ? (selectedMood ? selectedMood.color : color) : tokens.border,
-        }}>
-        <View>
-          <Text
-            className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold text-xl`}>
-            Done For Today!
-          </Text>
-          <Text
-            className={`${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} font-jetbrains-mono text-sm`}>
-            Mark {minutesPerDay}m - Your daily goal
-          </Text>
-        </View>
-        <Pressable onPress={doneForTodayPressed} className="px-2">
-          <Ionicons
-            name={doneForToday ? 'checkmark-circle-outline' : 'ellipse-outline'}
-            size={40}
-            color={
-              doneForToday ? (selectedMood ? selectedMood.color : color) : tokens.textSecondary
-            }
-          />
-        </Pressable>
-      </View>
+      <DoneForToday //===============================DONE-FOR-TODAY-BUTTON=================================
+        color={color}
+        doneForToday={doneForToday}
+        isDark={isDark}
+        minutesPerDay={minutesPerDay}
+        onPress={doneForTodayPressed}
+        selectedMood={selectedMood}
+        tokens={tokens}
+      />
+
       <View className="mx-7 mt-3 flex-row items-center justify-between p-3">
-        <SessionProgressRing
+        <SessionProgressRing //==========================SESSION-PROGRESS-RING==============================
           isDark={isDark}
           mainColor={selectedMood ? selectedMood.color : color}
           progress={
@@ -137,84 +118,18 @@ export const LogSessionMenu = ({
           strokeWidth={10}
           text="Help"
         />
-        <View className="flex-row items-center justify-center gap-2">
-          <View className="flex items-center justify-center gap-2">
-            <Pressable
-              onPress={incHour}
-              className="flex h-8 w-12 items-center justify-center rounded-xl"
-              style={{
-                backgroundColor: tokens.cardBg,
-                borderColor: tokens.border,
-                borderWidth: 1,
-              }}>
-              <Ionicons name="chevron-up-outline" size={24} color={tokens.textTertiary} />
-            </Pressable>
-            <View
-              className="flex h-12 w-16 items-center justify-center rounded-2xl"
-              style={{
-                backgroundColor: tokens.cardBg,
-                borderColor: selectedMood ? selectedMood.color : tokens.border,
-                borderWidth: 1,
-              }}>
-              <Text
-                className="font-jetbrains-mono-bold text-2xl"
-                style={{ color: tokens.textPrimary }}>
-                {timeDone.hours}
-              </Text>
-            </View>
-            <Pressable
-              className="flex h-8 w-12 items-center justify-center rounded-xl"
-              onPress={decHour}
-              style={{
-                backgroundColor: tokens.cardBg,
-                borderColor: tokens.border,
-                borderWidth: 1,
-              }}>
-              <Ionicons name="chevron-down-outline" size={24} color={tokens.textTertiary} />
-            </Pressable>
-          </View>
-          <Text
-            className="font-jetbrains-mono-bold text-4xl"
-            style={{ color: tokens.textTertiary }}>
-            :
-          </Text>
-          <View className="flex items-center justify-center gap-2">
-            <Pressable
-              className="flex h-8 w-12 items-center justify-center rounded-xl"
-              onPress={incMin}
-              style={{
-                backgroundColor: tokens.cardBg,
-                borderColor: tokens.border,
-                borderWidth: 1,
-              }}>
-              <Ionicons name="chevron-up-outline" size={24} color={tokens.textTertiary} />
-            </Pressable>
-            <View
-              className="flex h-12 w-16 items-center justify-center rounded-2xl"
-              style={{
-                backgroundColor: tokens.cardBg,
-                borderColor: selectedMood ? selectedMood.color : tokens.border,
-                borderWidth: 1,
-              }}>
-              <Text
-                className="font-jetbrains-mono-bold text-2xl"
-                style={{ color: tokens.textPrimary }}>
-                {timeDone.minutes}
-              </Text>
-            </View>
-            <Pressable
-              onPress={decMin}
-              className="flex h-8 w-12 items-center justify-center rounded-xl"
-              style={{
-                backgroundColor: tokens.cardBg,
-                borderColor: tokens.border,
-                borderWidth: 1,
-              }}>
-              <Ionicons name="chevron-down-outline" size={24} color={tokens.textTertiary} />
-            </Pressable>
-          </View>
-        </View>
+
+        <TimeInputMenu //=======================TIME-INPUT-MENU-WITH-DISPLAY================================
+          decHour={decHour}
+          decMin={decMin}
+          incHour={incHour}
+          incMin={incMin}
+          selectedMood={selectedMood}
+          timeDone={timeDone}
+          tokens={tokens}
+        />
       </View>
+
       <Text className="py-3 font-jetbrains-mono text-sm" style={{ color: tokens.textTertiary }}>
         HOW DID IT FEEL?
       </Text>
@@ -234,7 +149,7 @@ export const LogSessionMenu = ({
         })}
       </View>
 
-      <LogSessionMenuFooter
+      <LogSessionMenuFooter //=======================FOOTER==================================
         isDark={isDark}
         renderedColor={renderedColor}
         selectedMoodName={selectedMood?.name}

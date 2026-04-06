@@ -8,7 +8,7 @@ import {
   HobbyItem,
   HobbyListHeader,
   HobbyListItem,
-} from './LogSessionModalParts/index';
+} from './logSessionModalParts/index';
 import { hobbyDetailsList } from './LogSessionModalData';
 
 interface LogSessionModalContentProps {
