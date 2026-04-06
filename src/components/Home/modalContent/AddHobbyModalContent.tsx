@@ -1,11 +1,19 @@
-import { Text, View, TextInput, Pressable, Animated } from 'react-native';
+import { Text, View, TextInput } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { ThemeTokens } from '@/theme/tokens';
 import { ScrollView } from 'react-native-gesture-handler';
 import Slider from '@react-native-community/slider';
+import {
+  AddHobbyFooter,
+  AddHobbyHeader,
+  CategoryPills,
+  ColorBall,
+  formatMinutes,
+  IconPills,
+} from './AddHobbyModalParts/index';
 
 interface AddHobbyModalContentProps {
   onClose: () => void;
@@ -28,126 +36,6 @@ const schema = z.object({
 
 type FormInput = z.input<typeof schema>;
 type FormOutput = z.output<typeof schema>;
-
-interface ColorProp {
-  name: string;
-  isSelected: boolean;
-  onPress: () => void;
-}
-
-interface CategoryProp {
-  name: string;
-  isSelected: boolean;
-  onPress: () => void;
-  isDark: boolean;
-  selectedColor: string;
-  tokens: ThemeTokens;
-}
-
-interface IconProp {
-  name: string;
-  isSelected: boolean;
-  onPress: () => void;
-  isDark: boolean;
-  selectedColor: string;
-  tokens: ThemeTokens;
-}
-
-const formatMinutes = (minutes: number) => {
-  if (minutes < 60) {
-    return `${minutes}m`;
-  }
-
-  const hours = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
-
-  if (remainingMinutes === 0) {
-    return `${hours}h`;
-  }
-
-  return `${hours}h ${remainingMinutes}m`;
-};
-
-//===================================================COLOR-BALL==========================================================
-const ColorBall = ({ name, isSelected, onPress }: ColorProp) => {
-  return (
-    <Pressable onPress={onPress}>
-      <View
-        className="flex h-12 w-12 items-center justify-center rounded-full"
-        style={{ borderColor: name, borderWidth: isSelected ? 4 : 0 }}>
-        <View className="h-8 w-8 rounded-full" style={{ backgroundColor: name }} />
-      </View>
-    </Pressable>
-  );
-};
-
-//=============================================SELECT-CATEGORY-PILL======================================================
-const CategoryPills = ({
-  name,
-  isSelected,
-  onPress,
-  isDark,
-  selectedColor,
-  tokens,
-}: CategoryProp) => {
-  const scaleAnim = useRef(new Animated.Value(isSelected ? 1.06 : 1)).current;
-
-  useEffect(() => {
-    Animated.spring(scaleAnim, {
-      toValue: isSelected ? 1.06 : 1,
-      useNativeDriver: true,
-      friction: 7,
-      tension: 120,
-    }).start();
-  }, [isSelected, scaleAnim]);
-
-  return (
-    <Pressable onPress={onPress}>
-      <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
-        <View
-          className="flex h-10 items-center justify-center rounded-full border px-3"
-          style={{
-            backgroundColor: isSelected ? `${selectedColor}70` : tokens.cardBgElevated,
-            borderColor: isSelected ? selectedColor : tokens.border,
-          }}>
-          <Text
-            className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} text-md font-jetbrains-mono-light`}>
-            {name}
-          </Text>
-        </View>
-      </Animated.View>
-    </Pressable>
-  );
-};
-
-//====================================================SELECT-ICON-PILL==============================================
-const IconPills = ({ name, isSelected, onPress, isDark, selectedColor, tokens }: IconProp) => {
-  const scaleAnim = useRef(new Animated.Value(isSelected ? 1.08 : 1)).current;
-
-  useEffect(() => {
-    Animated.spring(scaleAnim, {
-      toValue: isSelected ? 1.08 : 1,
-      useNativeDriver: true,
-      friction: 7,
-      tension: 120,
-    }).start();
-  }, [isSelected, scaleAnim]);
-
-  return (
-    <Pressable onPress={onPress}>
-      <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
-        <View
-          className="h-16 w-16 items-center justify-center rounded-2xl border"
-          style={{
-            backgroundColor: isSelected ? `${selectedColor}70` : tokens.cardBgElevated,
-            borderColor: isSelected ? selectedColor : tokens.border,
-          }}>
-          <Text className="text-2xl">{name}</Text>
-        </View>
-      </Animated.View>
-    </Pressable>
-  );
-};
 
 //=================================================MAIN-MODEL=========================================================
 const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentProps) => {
@@ -261,25 +149,7 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
 
   return (
     <View className="flex h-full w-full">
-      <View //============================================HEADER===================================================
-        className={`${isDark ? 'border-b-border' : 'border-b-border-light'} w-full flex-row border border-x-0 border-t-0 p-4`}>
-        <View
-          className="h-16 w-16 items-center justify-center rounded-3xl"
-          style={{ backgroundColor: selectedColor }}>
-          <Text className="text-center text-3xl">{selectedIcon}</Text>
-        </View>
-
-        <View className="ml-3 flex justify-center">
-          <Text
-            className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold text-xl`}>
-            New Hobby
-          </Text>
-          <Text
-            className={`${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} font-jetbrains-mono-light text-sm`}>
-            Build a habit you'll love
-          </Text>
-        </View>
-      </View>
+      <AddHobbyHeader isDark={isDark} selectedColor={selectedColor} selectedIcon={selectedIcon} />
       <ScrollView //=======================================SCROLLABLE-SECTION=======================================
       >
         <View className="p-4">
@@ -416,32 +286,13 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
           {errors.minutesPerDay && <Text>{errors.minutesPerDay.message}</Text>}
         </View>
       </ScrollView>
-      <View //======================================================FOOTER=======================================================
-        className={`${isDark ? 'border-border' : 'border-border-light'} flex-row gap-4 border border-x-0 border-b-0 p-4`}>
-        <View
-          className={`${isDark ? 'border-border bg-card-bg-elevated' : 'bg-card-bg-elevated-lightr border-border-light'} flex h-16 w-36 flex-row items-center justify-center rounded-2xl border`}>
-          <Pressable onPress={onClose} className="active:opacity-70">
-            <Text
-              className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-semibold text-xl`}>
-              Cancle
-            </Text>
-          </Pressable>
-        </View>
-        <View
-          className="flex h-16 flex-1 items-center justify-center rounded-2xl"
-          style={{
-            backgroundColor: `${selectedColor}70`,
-            borderColor: selectedColor,
-            borderWidth: 1,
-          }}>
-          <Pressable onPress={handleSubmit(onSubmit)} disabled={isSubmitting}>
-            <Text
-              className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-semibold text-xl`}>
-              {isSubmitting ? 'Saving...' : 'Save Hobby'}
-            </Text>
-          </Pressable>
-        </View>
-      </View>
+      <AddHobbyFooter
+        isDark={isDark}
+        selectedColor={selectedColor}
+        isSubmitting={isSubmitting}
+        onClose={onClose}
+        onSave={handleSubmit(onSubmit)}
+      />
     </View>
   );
 };
