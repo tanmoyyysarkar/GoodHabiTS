@@ -4,20 +4,20 @@ import { Ionicons } from '@expo/vector-icons';
 import { View, Text, Pressable } from 'react-native';
 
 interface DoneForTodayProps {
-  doneForToday: boolean;
+  isDoneForToday: boolean;
   selectedMood: Mood | null;
   color: string;
   tokens: ThemeTokens;
   isDark: boolean;
-  onPress: () => void;
+  onToggle: () => void;
   minutesPerDay: number;
 }
 
 const DoneForToday = ({
-  doneForToday,
+  isDoneForToday,
   color,
   isDark,
-  onPress,
+  onToggle,
   selectedMood,
   tokens,
   minutesPerDay,
@@ -26,13 +26,13 @@ const DoneForToday = ({
     <View
       className=" h-20 w-full flex-row items-center justify-between rounded-2xl p-3"
       style={{
-        backgroundColor: doneForToday
+        backgroundColor: isDoneForToday
           ? selectedMood
             ? `${selectedMood.color}70`
             : `${color}70`
           : tokens.cardBgElevated,
         borderWidth: 1,
-        borderColor: doneForToday ? (selectedMood ? selectedMood.color : color) : tokens.border,
+        borderColor: isDoneForToday ? (selectedMood ? selectedMood.color : color) : tokens.border,
       }}>
       <View>
         <Text
@@ -44,11 +44,11 @@ const DoneForToday = ({
           Mark {minutesPerDay}m - Your daily goal
         </Text>
       </View>
-      <Pressable onPress={onPress} className="px-2">
+      <Pressable onPress={onToggle} className="px-2">
         <Ionicons
-          name={doneForToday ? 'checkmark-circle-outline' : 'ellipse-outline'}
+          name={isDoneForToday ? 'checkmark-circle-outline' : 'ellipse-outline'}
           size={40}
-          color={doneForToday ? (selectedMood ? selectedMood.color : color) : tokens.textSecondary}
+          color={isDoneForToday ? (selectedMood ? selectedMood.color : color) : tokens.textSecondary}
         />
       </Pressable>
     </View>

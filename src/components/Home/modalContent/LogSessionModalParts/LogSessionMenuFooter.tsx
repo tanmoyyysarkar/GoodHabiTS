@@ -3,7 +3,7 @@ import { LogSessionMenuFooterProps } from '../../../../types/logSessionModalType
 
 export const LogSessionMenuFooter = ({
   isDark,
-  renderedColor,
+  accentColor,
   selectedMoodName,
   onCancel,
   onSubmit,
@@ -22,8 +22,8 @@ export const LogSessionMenuFooter = ({
       <View
         className="flex h-16 flex-1 items-center justify-center rounded-2xl"
         style={{
-          backgroundColor: `${renderedColor}70`,
-          borderColor: renderedColor,
+          backgroundColor: `${accentColor}70`,
+          borderColor: accentColor,
           borderWidth: 1,
         }}>
         <Pressable disabled={selectedMoodName ? false : true} onPress={onSubmit}>

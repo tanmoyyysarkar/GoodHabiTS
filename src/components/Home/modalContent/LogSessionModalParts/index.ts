@@ -3,4 +3,4 @@ export { LogSessionMenuHeader } from './LogSessionMenuHeader';
 export { LogSessionMenuFooter } from './LogSessionMenuFooter';
 export { HobbyListHeader } from './HobbyListHeader';
 export { HobbyListItem } from './HobbyListItem';
-export type { HobbyItem } from '../../../../types/logSessionModalTypes';
+export type { HobbySession } from '../../../../types/logSessionModalTypes';

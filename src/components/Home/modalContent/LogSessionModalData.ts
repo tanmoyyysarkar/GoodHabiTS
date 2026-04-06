@@ -1,6 +1,6 @@
-import { HobbyItem } from '../../../types/logSessionModalTypes';
+import { HobbySession } from '../../../types/logSessionModalTypes';
 
-export const hobbyDetailsList: HobbyItem[] = [
+export const hobbySessions: HobbySession[] = [
   {
     name: 'Morning Sketching',
     icon: '🎨',

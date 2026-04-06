@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text, View } from 'react-native';
-import { HobbyDetail } from '../../../../types/logSessionModalTypes';
+import { HobbyListItemProps } from '../../../../types/logSessionModalTypes';
 
 export const HobbyListItem = ({
   name,
@@ -11,7 +11,7 @@ export const HobbyListItem = ({
   isDark,
   tertiaryTextColor,
   onPress,
-}: HobbyDetail) => {
+}: HobbyListItemProps) => {
   return (
     <Pressable onPress={onPress}>
       <View className="mx-3 flex-row items-center justify-between gap-2">

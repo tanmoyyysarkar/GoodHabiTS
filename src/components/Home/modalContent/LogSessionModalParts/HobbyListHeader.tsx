@@ -1,8 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text, View } from 'react-native';
-import { HeaderProps } from '../../../../types/logSessionModalTypes';
+import { ModalHeaderProps } from '../../../../types/logSessionModalTypes';
 
-export const HobbyListHeader = ({ isDark, tokens, onClose }: HeaderProps) => {
+export const HobbyListHeader = ({ isDark, tokens, onClose }: ModalHeaderProps) => {
   return (
     <View
       className={`${isDark ? 'border-border' : 'border-border-light'} flex-row items-center justify-between border border-x-0 border-t-0 p-4`}>

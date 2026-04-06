@@ -1,7 +1,7 @@
 import { Pressable, Text, View } from 'react-native';
-import { MoodPillProp } from '../../../../types/logSessionModalTypes';
+import { MoodPillProps } from '../../../../types/logSessionModalTypes';
 
-export const MoodPill = ({ emoji, color, name, tokens, onPress, isSelected }: MoodPillProp) => {
+export const MoodPill = ({ emoji, color, name, tokens, onPress, isSelected }: MoodPillProps) => {
   return (
     <Pressable onPress={onPress}>
       <View

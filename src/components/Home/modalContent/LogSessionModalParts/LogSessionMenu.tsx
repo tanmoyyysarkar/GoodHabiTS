@@ -1,25 +1,22 @@
-import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { SessionProgressRing } from './SessionProgressRing';
 import { LogSessionMenuFooter } from './LogSessionMenuFooter';
 import { MoodPill } from './MoodPill';
-import { HobbyDetail, Mood, Time } from '../../../../types/logSessionModalTypes';
+import { LogSessionMenuProps, Mood, SessionDuration } from '../../../../types/logSessionModalTypes';
 import DoneForToday from './logSessionMenuParts/DoneForToday';
 import TimeInputMenu from './logSessionMenuParts/TimeInputMenu';
 
 export const LogSessionMenu = ({
   name,
-  icon,
-  streakCount,
   color,
   minutesPerDay,
   isDark,
   tertiaryTextColor,
-  onPress,
+  onBackToList,
   tokens,
-}: HobbyDetail) => {
-  const moods: Mood[] = [
+}: LogSessionMenuProps) => {
+  const moodOptions: Mood[] = [
     { emoji: '😫', color: '#ff6565', name: 'Rough' },
     { emoji: '😕', color: '#ffb667', name: 'Meh' },
     { emoji: '🙂', color: '#fff643', name: 'Okay' },
@@ -27,57 +24,57 @@ export const LogSessionMenu = ({
     { emoji: '🤩', color: '#73deff', name: 'Amazing' },
   ];
 
-  const [renderedColor, setRenderedColor] = useState<string>(tertiaryTextColor);
+  const [accentColor, setAccentColor] = useState<string>(tertiaryTextColor);
   const [selectedMood, setSelectedMood] = useState<Mood | null>(null);
 
-  const [doneForToday, setDoneForToday] = useState<boolean>(false);
+  const [isDoneForToday, setIsDoneForToday] = useState<boolean>(false);
 
-  const onMoodPillPress = (nextColor: string, mood: Mood) => {
-    setRenderedColor(nextColor);
+  const handleMoodSelect = (nextColor: string, mood: Mood) => {
+    setAccentColor(nextColor);
     setSelectedMood(mood);
   };
 
-  const [timeLogged, setTimeLogged] = useState<Time>({
+  const [timeLogged, setTimeLogged] = useState<SessionDuration>({
     hours: 0,
     minutes: 0,
   });
 
   const [totalMinutesLogged, setTotalMinutesLogged] = useState(0);
 
-  const incHour = () => {
+  const incrementHours = () => {
     setTimeLogged((prev) => {
       return { hours: prev.hours < 24 ? prev.hours + 1 : 0, minutes: prev.minutes };
     });
   };
 
-  const decHour = () => {
+  const decrementHours = () => {
     setTimeLogged((prev) => {
       return { hours: prev.hours < 1 ? 24 : prev.hours - 1, minutes: prev.minutes };
     });
   };
 
-  const incMin = () => {
+  const incrementMinutes = () => {
     setTimeLogged((prev) => {
       return { hours: prev.hours, minutes: prev.minutes > 50 ? 0 : prev.minutes + 5 };
     });
   };
 
-  const decMin = () => {
+  const decrementMinutes = () => {
     setTimeLogged((prev) => {
       return { hours: prev.hours, minutes: prev.minutes < 5 ? 55 : prev.minutes - 5 };
     });
   };
 
-  const normalizeTime = (time: Time) => {
-    return time.hours * 60 + time.minutes;
+  const toTotalMinutes = (duration: SessionDuration) => {
+    return duration.hours * 60 + duration.minutes;
   };
 
   useEffect(() => {
-    setTotalMinutesLogged(normalizeTime(timeLogged));
+    setTotalMinutesLogged(toTotalMinutes(timeLogged));
   }, [timeLogged]);
 
-  const doneForTodayPressed = () => {
-    setDoneForToday(!doneForToday);
+  const handleDoneForTodayToggle = () => {
+    setIsDoneForToday(!isDoneForToday);
     setTimeLogged({
       hours: Math.floor(minutesPerDay / 60),
       minutes: minutesPerDay % 60,
@@ -85,22 +82,22 @@ export const LogSessionMenu = ({
   };
 
   const handleLogSessionPress = () => {
-    const data = {
-      name: name,
-      totalMinutesLogged: totalMinutesLogged,
+    const sessionLogPayload = {
+      name,
+      totalMinutesLogged,
       feeling: selectedMood?.name,
     };
-    console.log(data);
+    console.log(sessionLogPayload);
   };
 
   return (
     <View className="px-3">
       <DoneForToday //===============================DONE-FOR-TODAY-BUTTON=================================
         color={color}
-        doneForToday={doneForToday}
+        isDoneForToday={isDoneForToday}
         isDark={isDark}
         minutesPerDay={minutesPerDay}
-        onPress={doneForTodayPressed}
+        onToggle={handleDoneForTodayToggle}
         selectedMood={selectedMood}
         tokens={tokens}
       />
@@ -120,10 +117,10 @@ export const LogSessionMenu = ({
         />
 
         <TimeInputMenu //=======================TIME-INPUT-MENU-WITH-DISPLAY================================
-          decHour={decHour}
-          decMin={decMin}
-          incHour={incHour}
-          incMin={incMin}
+          decrementHours={decrementHours}
+          decrementMinutes={decrementMinutes}
+          incrementHours={incrementHours}
+          incrementMinutes={incrementMinutes}
           selectedMood={selectedMood}
           timeLogged={timeLogged}
           tokens={tokens}
@@ -134,7 +131,7 @@ export const LogSessionMenu = ({
         HOW DID IT FEEL?
       </Text>
       <View className="flex-row items-center justify-between">
-        {moods.map((mood) => {
+        {moodOptions.map((mood) => {
           return (
             <MoodPill
               key={mood.name}
@@ -142,7 +139,7 @@ export const LogSessionMenu = ({
               color={mood.color}
               tokens={tokens}
               name={mood.name}
-              onPress={() => onMoodPillPress(mood.color, mood)}
+              onPress={() => handleMoodSelect(mood.color, mood)}
               isSelected={mood.name === selectedMood?.name}
             />
           );
@@ -151,9 +148,9 @@ export const LogSessionMenu = ({
 
       <LogSessionMenuFooter //=======================FOOTER==================================
         isDark={isDark}
-        renderedColor={renderedColor}
+        accentColor={accentColor}
         selectedMoodName={selectedMood?.name}
-        onCancel={onPress}
+        onCancel={onBackToList}
         onSubmit={handleLogSessionPress}
       />
     </View>

@@ -1,12 +1,12 @@
 import { ThemeTokens } from '@/theme/tokens';
 
-export interface HeaderProps {
+export interface ModalHeaderProps {
   isDark: boolean;
   tokens: ThemeTokens;
   onClose: () => void;
 }
 
-export interface HobbyItem {
+export interface HobbySession {
   name: string;
   icon: string;
   streakCount: number;
@@ -14,14 +14,20 @@ export interface HobbyItem {
   minutesPerDay: number;
 }
 
-export interface LogSessionHeaderProps extends HeaderProps {
-  hobby: HobbyItem;
+export interface LogSessionHeaderProps extends ModalHeaderProps {
+  hobby: HobbySession;
 }
 
-export interface HobbyDetail extends HobbyItem {
+export interface HobbyListItemProps extends HobbySession {
   isDark: boolean;
   tertiaryTextColor: string;
   onPress: () => void;
+}
+
+export interface LogSessionMenuProps extends HobbySession {
+  isDark: boolean;
+  tertiaryTextColor: string;
+  onBackToList: () => void;
   tokens: ThemeTokens;
 }
 
@@ -31,7 +37,7 @@ export interface Mood {
   name: string;
 }
 
-export interface MoodPillProp {
+export interface MoodPillProps {
   emoji: string;
   color: string;
   name: string;
@@ -40,14 +46,14 @@ export interface MoodPillProp {
   isSelected: boolean;
 }
 
-export interface Time {
+export interface SessionDuration {
   hours: number;
   minutes: number;
 }
 
 export interface LogSessionMenuFooterProps {
   isDark: boolean;
-  renderedColor: string;
+  accentColor: string;
   selectedMoodName?: string;
   onCancel: () => void;
   onSubmit: () => void;

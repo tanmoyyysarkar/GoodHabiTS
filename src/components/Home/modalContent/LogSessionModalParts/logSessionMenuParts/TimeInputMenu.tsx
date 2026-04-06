@@ -1,23 +1,23 @@
 import { View, Text, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ThemeTokens } from '@/theme/tokens';
-import { Mood, Time } from '@/types/logSessionModalTypes';
+import { Mood, SessionDuration } from '@/types/logSessionModalTypes';
 
 interface TimeInputMenuProps {
-  incHour: () => void;
-  decHour: () => void;
-  incMin: () => void;
-  decMin: () => void;
+  incrementHours: () => void;
+  decrementHours: () => void;
+  incrementMinutes: () => void;
+  decrementMinutes: () => void;
   tokens: ThemeTokens;
   selectedMood: Mood | null;
-  timeLogged: Time;
+  timeLogged: SessionDuration;
 }
 
 const TimeInputMenu = ({
-  decHour,
-  decMin,
-  incHour,
-  incMin,
+  decrementHours,
+  decrementMinutes,
+  incrementHours,
+  incrementMinutes,
   selectedMood,
   tokens,
   timeLogged,
@@ -26,7 +26,7 @@ const TimeInputMenu = ({
     <View className="flex-row items-center justify-center gap-2">
       <View className="flex items-center justify-center gap-2">
         <Pressable
-          onPress={incHour}
+          onPress={incrementHours}
           className="flex h-8 w-12 items-center justify-center rounded-xl"
           style={{
             backgroundColor: tokens.cardBg,
@@ -48,7 +48,7 @@ const TimeInputMenu = ({
         </View>
         <Pressable
           className="flex h-8 w-12 items-center justify-center rounded-xl"
-          onPress={decHour}
+          onPress={decrementHours}
           style={{
             backgroundColor: tokens.cardBg,
             borderColor: tokens.border,
@@ -63,7 +63,7 @@ const TimeInputMenu = ({
       <View className="flex items-center justify-center gap-2">
         <Pressable
           className="flex h-8 w-12 items-center justify-center rounded-xl"
-          onPress={incMin}
+          onPress={incrementMinutes}
           style={{
             backgroundColor: tokens.cardBg,
             borderColor: tokens.border,
@@ -83,7 +83,7 @@ const TimeInputMenu = ({
           </Text>
         </View>
         <Pressable
-          onPress={decMin}
+          onPress={decrementMinutes}
           className="flex h-8 w-12 items-center justify-center rounded-xl"
           style={{
             backgroundColor: tokens.cardBg,
