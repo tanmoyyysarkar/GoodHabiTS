@@ -6,6 +6,7 @@ import { MoodPill } from './MoodPill';
 import { LogSessionMenuProps, Mood, SessionDuration } from '../../../../types/logSessionModalTypes';
 import DoneForToday from './logSessionMenuParts/DoneForToday';
 import TimeInputMenu from './logSessionMenuParts/TimeInputMenu';
+import SessionNotes from './logSessionMenuParts/SessionNotes';
 
 export const LogSessionMenu = ({
   name,
@@ -26,6 +27,7 @@ export const LogSessionMenu = ({
 
   const [accentColor, setAccentColor] = useState<string>(tertiaryTextColor);
   const [selectedMood, setSelectedMood] = useState<Mood | null>(null);
+  const [notes, setNotes] = useState('');
 
   const [isDoneForToday, setIsDoneForToday] = useState<boolean>(false);
 
@@ -86,6 +88,7 @@ export const LogSessionMenu = ({
       name,
       totalMinutesLogged,
       feeling: selectedMood?.name,
+      notes: notes.trim() === '' ? '' : notes,
     };
     console.log(sessionLogPayload);
   };
@@ -126,6 +129,17 @@ export const LogSessionMenu = ({
           tokens={tokens}
         />
       </View>
+
+      <Text className="py-3 font-jetbrains-mono text-sm" style={{ color: tokens.textTertiary }}>
+        NOTES
+      </Text>
+      <SessionNotes
+        color={color}
+        notes={notes}
+        onChangeText={setNotes}
+        selectedMood={selectedMood}
+        tokens={tokens}
+      />
 
       <Text className="py-3 font-jetbrains-mono text-sm" style={{ color: tokens.textTertiary }}>
         HOW DID IT FEEL?
