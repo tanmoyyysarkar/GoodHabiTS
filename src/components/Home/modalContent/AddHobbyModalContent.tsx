@@ -17,9 +17,9 @@ import {
   ColorBall,
   formatMinutes,
   IconPills,
-} from './addHobbyModalParts/index';
-import SubHeadingText from './addHobbyModalParts/SubHeadingText';
-import TimeSelectionSlider from './addHobbyModalParts/TimeSelectionSlider';
+} from './AddHobbyModalParts/index';
+import SubHeadingText from './AddHobbyModalParts/SubHeadingText';
+import TimeSelectionSlider from './AddHobbyModalParts/TimeSelectionSlider';
 
 interface AddHobbyModalContentProps {
   onClose: () => void;
