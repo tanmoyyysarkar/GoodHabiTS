@@ -31,7 +31,7 @@ const HomeScreen = () => {
   };
 
   const modalHeightClass =
-    activeModal === 'logSession' && isLogSessionCompact ? 'h-[63%]' : 'h-[90%]';
+    activeModal === 'logSession' && isLogSessionCompact ? 'h-[80%]' : 'h-[90%]';
 
   return (
     <>
