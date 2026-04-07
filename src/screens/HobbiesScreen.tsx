@@ -1,4 +1,3 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { ScrollView, View } from 'react-native';
 import { useThemeTokens } from '@/hooks/useThemeTokens';
 import { useColorScheme } from 'nativewind';
@@ -66,11 +65,7 @@ const HobbiesScreen = () => {
   ));
 
   return (
-    <LinearGradient
-      colors={tokens.pageBg as unknown as [string, string, ...string[]]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      className="flex-1 pt-8">
+    <View className="flex-1 pt-8" style={{ backgroundColor: tokens.pageBg }}>
       <ScrollView className="flex-1" contentContainerClassName="gap-8 px-6">
         <HobbiesHeader isDark={isDark} tokens={tokens} activeHobbies={3} totalTime={179} />
         <SearchBox isDark={isDark} tokens={tokens} />
@@ -78,7 +73,7 @@ const HobbiesScreen = () => {
         {DetailedHobbyCards}
         <View className='h-24 w-max' />
       </ScrollView>
-    </LinearGradient>
+    </View>
   );
 };
 

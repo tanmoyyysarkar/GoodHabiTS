@@ -44,13 +44,9 @@ export function TabBar({ state, descriptors, navigation, position }: MaterialTop
       onLayout={onTabBarLayout}
       className="absolute bottom-7 mx-12 flex-row items-center justify-between rounded-[35] py-3"
       style={{
-        shadowColor: theme.border,
-        shadowOffset: { width: 0, height: 10 },
-        shadowOpacity: 0.1,
-        elevation: 4,
         backgroundColor: theme.tabbarBg,
         borderColor: theme.border,
-        borderWidth: 0.5,
+        borderWidth: 1,
       }}>
       <RNAnimated.View
         // Active-tab highlight that slides behind icons/labels.

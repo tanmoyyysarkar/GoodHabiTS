@@ -26,7 +26,7 @@ const ProfileHeader = ({ isDark, link, name }: ProfileHeaderProps) => {
       </Text>
       <Pressable
         className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} rounded-full border px-3 py-2`}>
-        <Text className="text-md font-jetbrains-mono-bold text-text-primary">Share profile</Text>
+        <Text className={`text-md font-jetbrains-mono-bold ${isDark ? "text-text-primary" : "text-text-primary-light"}`}>Share profile</Text>
       </Pressable>
     </View>
   );

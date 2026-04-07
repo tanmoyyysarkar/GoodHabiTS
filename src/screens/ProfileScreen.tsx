@@ -1,11 +1,12 @@
 import HobbyBreakDownCard from '@/components/Profile/HobbyBreakDownCard';
+import LogOutButton from '@/components/Profile/LogOutButton';
 import MilestoneCard from '@/components/Profile/MilestoneCard';
 import ProfileHeader from '@/components/Profile/ProfileHeader';
 import ProfileSubHeadingText from '@/components/Profile/ProfileSubHeadingText';
 import QuickProfileInsightsCard from '@/components/Profile/QuickProfileInsightsCard';
 import ThisYearInsights from '@/components/Profile/ThisYearInsights';
+import { useAuth } from '@/context/AuthContext';
 import { useThemeTokens } from '@/hooks/useThemeTokens';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useColorScheme } from 'nativewind';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
@@ -82,12 +83,10 @@ const ProfileScreen = () => {
     },
   ];
 
+  const { logout } = useAuth();
+
   return (
-    <LinearGradient
-      colors={tokens.pageBg as unknown as [string, string, ...string[]]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      className="flex-1">
+    <View className="flex-1" style={{ backgroundColor: tokens.pageBg }}>
       <ScrollView
         className="flex-1"
         nestedScrollEnabled
@@ -124,9 +123,10 @@ const ProfileScreen = () => {
           <HobbyBreakDownCard isDark={isDark} tokens={tokens} />
           <ProfileSubHeadingText text="THIS YEAR" isDark={isDark} />
           <ThisYearInsights isDark={isDark} data={yearInsightsData} tokens={tokens} />
+          <LogOutButton text="Logout" onPress={logout} />
         </View>
       </ScrollView>
-    </LinearGradient>
+    </View>
   );
 };
 
