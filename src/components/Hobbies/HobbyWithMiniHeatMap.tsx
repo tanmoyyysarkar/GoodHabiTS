@@ -78,7 +78,15 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
 
   return (
     <View
-      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} gap-4 rounded-2xl border p-4`}>
+      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} gap-4 rounded-2xl p-4`}
+      style={{
+          borderWidth: 1,
+          shadowColor: tokens.border,
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.25,
+          shadowRadius: 12,
+          elevation: 6,
+        }}>
       <View className="flex-row items-start justify-between">
         <View className="flex-row gap-4">
           <View
@@ -114,7 +122,7 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
           </View>
           <View className="mt-2 h-6 w-6 items-center justify-center">
             <Animated.View style={iconStyle}>
-              <Ionicons name="chevron-up-outline" size={24} color={'white'} />
+              <Ionicons name="chevron-up-outline" size={24} color={tokens.textPrimary} />
             </Animated.View>
           </View>
         </Pressable>

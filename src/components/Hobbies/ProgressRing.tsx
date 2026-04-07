@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
+import Svg, { Circle } from 'react-native-svg';
 
 interface ProgressRingProps {
   progress: number;
@@ -18,15 +18,6 @@ export const ProgressRing = ({ progress, size, strokeWidth, mainColor, isDark }:
   return (
     <View style={{ width: size, height: size, justifyContent: 'center', alignItems: 'center' }}>
       <Svg width={size} height={size} style={{ transform: [{ rotate: '-90deg' }] }}>
-        <Defs>
-          <LinearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            {/* Start color: A lighter or more vibrant version */}
-            <Stop offset="0%" stopColor={mainColor} stopOpacity="1" />
-            {/* End color: A slightly darker/different hue for the gradient effect */}
-            <Stop offset="100%" stopColor="#ffffff" stopOpacity="1" />
-          </LinearGradient>
-        </Defs>
-
         {/* Background Track */}
         <Circle
           cx={size / 2}
@@ -42,7 +33,7 @@ export const ProgressRing = ({ progress, size, strokeWidth, mainColor, isDark }:
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke="url(#grad)" // Link to the ID in <Defs>
+          stroke={mainColor}
           strokeWidth={strokeWidth}
           fill="transparent"
           strokeDasharray={circumference}

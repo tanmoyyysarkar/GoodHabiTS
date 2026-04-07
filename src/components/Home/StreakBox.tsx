@@ -9,11 +9,17 @@ interface StreakBoxProps {
 const StreakBox = ({ isDark, tokens }: StreakBoxProps) => {
   return (
     <View
-      className="flex-row items-center gap-4 rounded-2xl p-4 border"
+      className="flex-row items-center gap-4 rounded-2xl p-4"
       style={{
-        backgroundColor: tokens.cardBgElevated,
-        borderColor: tokens.border
-      }}>
+        borderColor: tokens.border,
+          borderWidth: 1,
+          backgroundColor: tokens.cardBgElevated,
+          shadowColor: tokens.border,
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.25,
+          shadowRadius: 12,
+          elevation: 6,
+        }}>
       <Text className="text-4xl font">🔥</Text>
       <Text
         className={`flex-1 text-lg ${

@@ -1,13 +1,7 @@
 import { ThemeTokens } from '@/theme/tokens';
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
-import {
-  Animated,
-  LayoutAnimation,
-  Pressable,
-  Text,
-  View,
-} from 'react-native';
+import { Animated, LayoutAnimation, Pressable, Text, View } from 'react-native';
 
 interface HobbyBreakDownCardProps {
   isDark: boolean;
@@ -42,7 +36,8 @@ const HobbyBreakDownListItem = ({
           {name}
         </Text>
       </View>
-      <Text className={`${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} font-jetbrains-mono-light text-sm`}>
+      <Text
+        className={`${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} font-jetbrains-mono-light text-sm`}>
         {totalTime}hrs
       </Text>
     </View>
@@ -152,7 +147,15 @@ const HobbyBreakDownCard = ({ isDark, tokens }: HobbyBreakDownCardProps) => {
 
   return (
     <View
-      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} rounded-2xl border p-2 px-4`}>
+      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} rounded-2xl border p-2 px-4`}
+      style={{
+        borderWidth: 1,
+        shadowColor: tokens.border,
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.25,
+        shadowRadius: 12,
+        elevation: 6,
+      }}>
       {baseItems.map((hobbyData, index) => (
         <HobbyBreakDownListItem
           color={hobbyData.color}

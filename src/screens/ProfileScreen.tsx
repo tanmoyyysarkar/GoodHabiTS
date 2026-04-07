@@ -99,7 +99,7 @@ const ProfileScreen = () => {
             />
           ))}
         </View>
-        <View className="flex w-full justify-start">
+        <View className="flex w-full justify-start mb-10">
           <ProfileSubHeadingText text="MILESTONES" isDark={isDark} />
           <ScrollView
             horizontal

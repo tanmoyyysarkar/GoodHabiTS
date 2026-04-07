@@ -22,7 +22,7 @@ export const getHeatMapColor = (
   isDark: boolean
 ) => {
   const target = hexToRBG(baseHex);
-  const start = isDark ? { r: 255, g: 255, b: 255 } : { r: 70, g: 70, b: 70 };
+  const start = isDark ? { r: 25, g: 25, b: 25 } : { r: 255, g: 255, b: 255 };
 
   if (value <= 0 || maxValue <= 0) {
     return rgbToCss(start);
