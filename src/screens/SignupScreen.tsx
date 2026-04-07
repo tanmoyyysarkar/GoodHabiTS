@@ -1,11 +1,61 @@
+import {
+  AuthDivider,
+  AuthFormCard,
+  AuthPrimaryButton,
+  AuthSecondaryButton,
+  AuthSocialButton,
+  AuthTextField,
+} from '@/components/Auth';
 import { useThemeTokens } from '@/hooks/useThemeTokens';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
-import { View, ScrollView, Pressable, Text } from 'react-native';
+import { Controller, useForm } from 'react-hook-form';
+import { View, ScrollView, Text } from 'react-native';
+import { z } from 'zod';
+
+const signupSchema = z
+  .object({
+    name: z.string().min(1, 'Name is required').min(2, 'Name must be at least 2 characters'),
+    email: z.string().min(1, 'Email is required').pipe(z.email('Please enter a valid email')),
+    password: z
+      .string()
+      .min(1, 'Password is required')
+      .min(8, 'Password must be at least 8 characters'),
+    confirmPassword: z.string().min(1, 'Please confirm your password'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  });
+
+type SignupFormInput = z.input<typeof signupSchema>;
+type SignupFormOutput = z.output<typeof signupSchema>;
 
 const SignupScreen = () => {
   const tokens = useThemeTokens();
   const { colorScheme } = useColorScheme();
   const isDark = colorScheme === 'dark';
+  const router = useRouter();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignupFormInput, unknown, SignupFormOutput>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+  });
+
+  const onSubmit = async (data: SignupFormOutput) => {
+    // TODO: wire signup endpoint/auth provider
+    console.log(data);
+  };
 
   return (
     <View className="flex-1 pt-6" style={{ backgroundColor: tokens.pageBg }}>
@@ -13,8 +63,126 @@ const SignupScreen = () => {
         className="flex-1"
         contentContainerClassName="gap-8 px-6"
         showsVerticalScrollIndicator={false}>
-        <View>
-          <Text>Hello from signup screen</Text>
+        <View className="gap-2 pt-4">
+          <Text
+            className={`font-jetbrains-mono-semibold text-md ${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} pb-4`}>
+            CREATE ACCOUNT
+          </Text>
+          <Text
+            className={`font-handwriting-bold text-4xl ${isDark ? 'text-text-primary' : 'text-text-primary-light'}`}>
+            Start your GoodHabiTS journey
+          </Text>
+          <Text
+            className={`font-jetbrains-mono ${isDark ? 'text-text-secondary' : 'text-text-secondary-light'}`}>
+            Track sessions, build streaks, and celebrate progress.
+          </Text>
+        </View>
+
+        <AuthFormCard>
+          <Controller
+            control={control}
+            name="name"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <AuthTextField
+                label="Name"
+                placeholder="Tuna Mayo"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                autoCapitalize="words"
+                autoCorrect={false}
+                error={errors.name?.message}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <AuthTextField
+                label="Email"
+                placeholder="tunamayo@gmail.com"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+                error={errors.email?.message}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <AuthTextField
+                label="Password"
+                placeholder="********"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                secureTextEntry
+                autoCapitalize="none"
+                autoCorrect={false}
+                error={errors.password?.message}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="confirmPassword"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <AuthTextField
+                label="Confirm Password"
+                placeholder="********"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                secureTextEntry
+                autoCapitalize="none"
+                autoCorrect={false}
+                error={errors.confirmPassword?.message}
+              />
+            )}
+          />
+
+          <AuthPrimaryButton
+            text="Create account"
+            loadingText="Creating account..."
+            isLoading={isSubmitting}
+            onPress={handleSubmit(onSubmit)}
+          />
+
+          <AuthDivider text="OR CONTINUE WITH" />
+
+          <View className="flex-row gap-3">
+            <AuthSocialButton
+              icon="logo-google"
+              text="Google"
+              onPress={() => {
+                // TODO: wire Google auth
+              }}
+            />
+            <AuthSocialButton
+              icon="logo-apple"
+              text="Apple"
+              onPress={() => {
+                // TODO: wire Apple auth
+              }}
+            />
+          </View>
+        </AuthFormCard>
+
+        <View className="gap-4 pb-8">
+          <Text
+            className={`${isDark ? 'text-text-secondary' : 'text-text-secondary-light '} text-center font-handwriting-bold text-xl`}>
+            Already have an account?
+          </Text>
+          <AuthSecondaryButton text="Sign in" onPress={() => router.push('/auth/login')} />
         </View>
       </ScrollView>
     </View>
