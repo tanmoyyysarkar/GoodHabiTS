@@ -1,7 +1,6 @@
-import { ScrollView, View, Modal } from 'react-native';
+import { ScrollView, View, Modal, Pressable, Text } from 'react-native';
 import { useState } from 'react';
 import { useColorScheme } from 'nativewind';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeTokens } from '@/hooks/useThemeTokens';
 
 import HomeHeader from '@/components/Home/HomeHeader';
@@ -13,6 +12,8 @@ import LogASessionButton from '@/components/Home/LogASessionButton';
 import ProfileModalContent from '@/components/Home/modalContent/ProfileModalContent';
 import AddHobbyModalContent from '@/components/Home/modalContent/AddHobbyModalContent';
 import LogSessionModalContent from '@/components/Home/modalContent/LogSessionModalContent';
+
+import { useRouter } from 'expo-router';
 
 type ModalType = 'profile' | 'addHobby' | 'logSession' | null;
 
@@ -30,28 +31,29 @@ const HomeScreen = () => {
     setIsLogSessionCompact(false);
   };
 
+  const router = useRouter();
+
   const modalHeightClass =
     activeModal === 'logSession' && isLogSessionCompact ? 'h-[80%]' : 'h-[90%]';
 
   return (
     <>
-      <LinearGradient
-        colors={tokens.pageBg as unknown as [string, string, ...string[]]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        className="flex-1 pt-6">
+      <View className="flex-1 pt-6" style={{ backgroundColor: tokens.pageBg }}>
         <ScrollView
           className="flex-1"
-          contentContainerClassName="gap-8 px-6"
+          contentContainerClassName="gap-6 px-6"
           showsVerticalScrollIndicator={false}>
           <HomeHeader isDark={isDark} tokens={tokens} onProfilePress={() => openModal('profile')} />
           <StreakBox isDark={isDark} tokens={tokens} />
           <SummaryCard isDark={isDark} tokens={tokens} />
           <MyHobbyCard isDark={isDark} tokens={tokens} onAddPress={() => openModal('addHobby')} />
           <LogASessionButton isDark={isDark} onPress={() => openModal('logSession')} />
+          <Pressable className="h-30 h-20 bg-red-700" onPress={()=>router.push("/auth/login")}>
+            <Text className="text-xl font-bold text-white">GO TO LOGIN PAGE</Text>
+          </Pressable>
           <View className="h-24 w-max"></View>
         </ScrollView>
-      </LinearGradient>
+      </View>
 
       <Modal
         transparent

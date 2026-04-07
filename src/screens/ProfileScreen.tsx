@@ -5,7 +5,6 @@ import ProfileSubHeadingText from '@/components/Profile/ProfileSubHeadingText';
 import QuickProfileInsightsCard from '@/components/Profile/QuickProfileInsightsCard';
 import ThisYearInsights from '@/components/Profile/ThisYearInsights';
 import { useThemeTokens } from '@/hooks/useThemeTokens';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useColorScheme } from 'nativewind';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
@@ -83,11 +82,7 @@ const ProfileScreen = () => {
   ];
 
   return (
-    <LinearGradient
-      colors={tokens.pageBg as unknown as [string, string, ...string[]]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      className="flex-1">
+    <View className="flex-1" style={{ backgroundColor: tokens.pageBg }}>
       <ScrollView
         className="flex-1"
         nestedScrollEnabled
@@ -126,7 +121,7 @@ const ProfileScreen = () => {
           <ThisYearInsights isDark={isDark} data={yearInsightsData} tokens={tokens} />
         </View>
       </ScrollView>
-    </LinearGradient>
+    </View>
   );
 };
 

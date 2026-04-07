@@ -1,7 +1,8 @@
 {
   "expo": {
     "name": "GoodHabiTS",
-    "slug": "GoodHabiTS",
+    "slug": "good-habits",
+    "scheme": "good-habits",
     "version": "1.0.0",
     "web": {
       "favicon": "./assets/favicon.png"
@@ -16,7 +17,8 @@
           "root": "./src/app"
         }
       ],
-      "expo-font"
+      "expo-font",
+      "expo-web-browser"
     ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -41,4 +43,3 @@
     }
   }
 }
-

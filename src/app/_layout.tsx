@@ -6,9 +6,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useFonts } from 'expo-font';
 import 'global.css';
 
-
 export default function RootLayout() {
-  const {setColorScheme} = useColorScheme();
+  const { setColorScheme } = useColorScheme();
   const [fontsLoaded] = useFonts({
     Handwriting: require('@expo-google-fonts/caveat/400Regular/Caveat_400Regular.ttf'),
     HandwritingBold: require('@expo-google-fonts/caveat/700Bold/Caveat_700Bold.ttf'),
@@ -22,7 +21,9 @@ export default function RootLayout() {
     PlusJakartaSansBold: require('@expo-google-fonts/plus-jakarta-sans/700Bold/PlusJakartaSans_700Bold.ttf'),
   });
 
-  useEffect(()=>{setColorScheme("system")},[])
+  useEffect(() => {
+    setColorScheme('system');
+  }, []);
 
   if (!fontsLoaded) {
     return null;
@@ -31,7 +32,7 @@ export default function RootLayout() {
   return (
     // Required for gesture-based navigators (pager/tab swipe) to work reliably.
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView className='flex-1 bg-white dark:bg-page-start'>
+      <SafeAreaView className="flex-1 bg-page-bg-light dark:bg-page-bg">
         <Stack screenOptions={{ headerShown: false }} />
       </SafeAreaView>
     </GestureHandlerRootView>

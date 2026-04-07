@@ -104,7 +104,7 @@ const SummaryCard = ({ isDark, tokens }: SummaryCardProps) => {
       <View
         className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} rounded-2xl border p-4`}
         style={{
-          borderWidth: 0.5,
+          borderWidth: 1,
           shadowColor: tokens.border,
           shadowOffset: { width: 0, height: 8 },
           shadowOpacity: 0.25,
