@@ -1,3 +1,11 @@
+import { useThemeTokens } from '@/hooks/useThemeTokens';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'expo-router';
+import { useColorScheme } from 'nativewind';
+import { Controller, useForm } from 'react-hook-form';
+import { View, ScrollView, Text } from 'react-native';
+import { z } from 'zod';
+
 import {
   AuthDivider,
   AuthFormCard,
@@ -6,13 +14,7 @@ import {
   AuthSocialButton,
   AuthTextField,
 } from '@/components/Auth';
-import { useThemeTokens } from '@/hooks/useThemeTokens';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'expo-router';
-import { useColorScheme } from 'nativewind';
-import { Controller, useForm } from 'react-hook-form';
-import { View, ScrollView, Text } from 'react-native';
-import { z } from 'zod';
+import { useAuth } from '@/context/AuthContext';
 
 const loginSchema = z.object({
   email: z.string().min(1, 'Email is required').pipe(z.email('Please enter a valid email')),
@@ -44,9 +46,13 @@ const LoginScreen = () => {
     },
   });
 
+  const { login } = useAuth();
+
   const onSubmit = async (data: LoginFormOutput) => {
-    //TODO
-    console.log(data);
+    const email = data.email;
+    const password = data.password;
+    await login(email, password);
+    // console.log(data);
   };
 
   return (
@@ -55,9 +61,9 @@ const LoginScreen = () => {
         className="flex-1"
         contentContainerClassName="gap-8 px-6"
         showsVerticalScrollIndicator={false}>
-        <View className="gap-2 pt-4 pb-8">
+        <View className="gap-2 pb-8 pt-4">
           <Text
-            className={`font-jetbrains-mono-semibold text-md ${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} pb-4`}>
+            className={`text-md font-jetbrains-mono-semibold ${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} pb-4`}>
             WELCOME BACK
           </Text>
           <Text
@@ -133,12 +139,16 @@ const LoginScreen = () => {
             />
           </View>
         </AuthFormCard>
+
         <View className="gap-4">
           <Text
             className={`${isDark ? 'text-text-secondary' : 'text-text-secondary-light '} text-center font-handwriting-bold text-xl`}>
             New Here? Start your journey today!
           </Text>
-          <AuthSecondaryButton text="Create an account" onPress={() => router.push('/auth/signup')} />
+          <AuthSecondaryButton
+            text="Create an account"
+            onPress={() => router.push('/auth/signup')}
+          />
         </View>
       </ScrollView>
     </View>

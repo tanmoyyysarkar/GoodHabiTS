@@ -1,12 +1,17 @@
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
+import { useEffect } from 'react';
+import { useColorScheme } from 'nativewind';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useFonts } from 'expo-font';
 import { useThemeTokens } from '@/hooks/useThemeTokens';
 import 'global.css';
 
+import { AuthProvider, useAuth } from '@/context/AuthContext';
+
 export default function RootLayout() {
   const tokens = useThemeTokens();
+  const { setColorScheme } = useColorScheme();
   const [fontsLoaded] = useFonts({
     Handwriting: require('@expo-google-fonts/caveat/400Regular/Caveat_400Regular.ttf'),
     HandwritingBold: require('@expo-google-fonts/caveat/700Bold/Caveat_700Bold.ttf'),
@@ -20,21 +25,30 @@ export default function RootLayout() {
     PlusJakartaSansBold: require('@expo-google-fonts/plus-jakarta-sans/700Bold/PlusJakartaSans_700Bold.ttf'),
   });
 
+  useEffect(() => {
+    setColorScheme('system');
+  }, [setColorScheme]);
+
   if (!fontsLoaded) {
     return null;
   }
 
+  const { session } = useAuth();
+  const router = useRouter();
+
   return (
-    // Required for gesture-based navigators (pager/tab swipe) to work reliably.
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView className="flex-1" style={{ backgroundColor: tokens.pageBg }}>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            contentStyle: { backgroundColor: tokens.pageBg },
-          }}
-        />
-      </SafeAreaView>
-    </GestureHandlerRootView>
+    <AuthProvider>
+      {/* Required for gesture-based navigators (pager/tab swipe) to work reliably. */}
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaView className="flex-1" style={{ backgroundColor: tokens.pageBg }}>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              contentStyle: { backgroundColor: tokens.pageBg },
+            }}
+          />
+        </SafeAreaView>
+      </GestureHandlerRootView>
+    </AuthProvider>
   );
 }
