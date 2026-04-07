@@ -51,8 +51,8 @@ const LoginScreen = () => {
   const onSubmit = async (data: LoginFormOutput) => {
     const email = data.email;
     const password = data.password;
+    console.log('submitted credentials:', data);  //delete later
     await login(email, password);
-    // console.log(data);
   };
 
   return (

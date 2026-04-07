@@ -15,7 +15,7 @@ interface ThisYearInsightsProps {
 const ThisYearInsights = ({ isDark, data, tokens }: ThisYearInsightsProps) => {
   return (
     <View
-      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} w-full rounded-2xl border p-4`}
+      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} w-full rounded-2xl border p-4 mb-6`}
       style={{
         borderWidth: 1,
         shadowColor: tokens.border,

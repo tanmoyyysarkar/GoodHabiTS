@@ -13,9 +13,6 @@ import ProfileModalContent from '@/components/Home/modalContent/ProfileModalCont
 import AddHobbyModalContent from '@/components/Home/modalContent/AddHobbyModalContent';
 import LogSessionModalContent from '@/components/Home/modalContent/LogSessionModalContent';
 
-import { useRouter } from 'expo-router';
-import { useAuth } from '@/context/AuthContext';
-
 type ModalType = 'profile' | 'addHobby' | 'logSession' | null;
 
 const HomeScreen = () => {
@@ -32,10 +29,6 @@ const HomeScreen = () => {
     setIsLogSessionCompact(false);
   };
 
-  const router = useRouter();
-
-  const { logout } = useAuth();
-
   const modalHeightClass =
     activeModal === 'logSession' && isLogSessionCompact ? 'h-[80%]' : 'h-[90%]';
 
@@ -51,12 +44,6 @@ const HomeScreen = () => {
           <SummaryCard isDark={isDark} tokens={tokens} />
           <MyHobbyCard isDark={isDark} tokens={tokens} onAddPress={() => openModal('addHobby')} />
           <LogASessionButton isDark={isDark} onPress={() => openModal('logSession')} />
-          <Pressable className="bg-red-700" onPress={() => router.push('/auth/login')}>
-            <Text className="text-xl font-bold text-white">GO TO LOGIN PAGE</Text>
-          </Pressable>
-          <Pressable className="bg-red-700" onPress={logout}>
-            <Text className="text-xl font-bold text-white">LOGOUT</Text>
-          </Pressable>
           <View className="h-24 w-max"></View>
         </ScrollView>
       </View>

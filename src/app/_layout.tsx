@@ -1,4 +1,4 @@
-import { Stack, useRouter } from 'expo-router';
+import { Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { useColorScheme } from 'nativewind';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,7 +7,7 @@ import { useFonts } from 'expo-font';
 import { useThemeTokens } from '@/hooks/useThemeTokens';
 import 'global.css';
 
-import { AuthProvider, useAuth } from '@/context/AuthContext';
+import { AuthProvider } from '@/context/AuthContext';
 
 export default function RootLayout() {
   const tokens = useThemeTokens();
@@ -32,9 +32,6 @@ export default function RootLayout() {
   if (!fontsLoaded) {
     return null;
   }
-
-  const { session } = useAuth();
-  const router = useRouter();
 
   return (
     <AuthProvider>

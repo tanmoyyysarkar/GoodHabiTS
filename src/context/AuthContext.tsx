@@ -3,7 +3,7 @@ import signOut from '@/lib/supabase/signOut';
 import signUp from '@/lib/supabase/signUp';
 import { supabase } from '@/lib/supabase/supabase';
 import { Session } from '@supabase/supabase-js';
-import { useRouter } from 'expo-router';
+import { SplashScreen } from 'expo-router';
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 
 interface AuthContextType {
@@ -13,6 +13,8 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 }
+
+SplashScreen.preventAutoHideAsync();
 
 const AuthContext = createContext<AuthContextType>({
   session: null,
@@ -26,26 +28,26 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const router = useRouter();
-
   useEffect(() => {
     //check existing session on app startup
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setLoading(false);
-
-      //listen for state change (login, logout, token refresh)
-      const { data: AuthListener } = supabase.auth.onAuthStateChange((_event, session) => {
-        setSession(session);
-        setLoading(false);
-      });
-
-      //cleanup
-      return () => {
-        AuthListener.subscription.unsubscribe();
-      };
     });
+    //listen for state change (login, logout, token refresh)
+    const { data: AuthListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setLoading(false);
+    });
+    //cleanup
+    return () => AuthListener.subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      SplashScreen.hideAsync();
+    }
+  }, [loading]);
 
   const signup: AuthContextType['signup'] = async (
     email: string,
@@ -60,7 +62,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     setSession(data.session);
     console.log(data.session?.user); //DELETE LATER
     setLoading(false);
-    router.replace('/');
   };
 
   const login = async (email: string, password: string) => {
@@ -72,7 +73,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     setSession(data.session);
     console.log(data.session?.user); //DELETE LATER
     setLoading(false);
-    router.replace('/');
   };
 
   const logout = async () => {
@@ -81,7 +81,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       if (!success) {
         console.log(errorMessage);
       }
-      router.replace('/auth/login');
     }
   };
 

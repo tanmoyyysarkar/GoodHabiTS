@@ -1,11 +1,12 @@
 import { TabBar } from '@/components/TabBar';
-import { withLayoutContext } from 'expo-router';
+import { Redirect, withLayoutContext } from 'expo-router';
 import {
   createMaterialTopTabNavigator,
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationEventMap,
 } from '@react-navigation/material-top-tabs';
 import { ParamListBase, TabNavigationState } from '@react-navigation/native';
+import { useAuth } from '@/context/AuthContext';
 
 // Material Top Tabs uses react-native-pager-view under the hood, which enables
 // interactive horizontal swipe gestures (drag/hold/release) between tab screens.
@@ -21,6 +22,10 @@ const SwipeTabs = withLayoutContext<
 >(Navigator);
 
 export default function TabLayout() {
+  const { session, loading } = useAuth();
+  if (loading) return null;
+  if (!session) return <Redirect href="/auth/login" />;
+
   return (
     <SwipeTabs
       // Keep the custom bar visually at the bottom even though we use top-tabs engine.
