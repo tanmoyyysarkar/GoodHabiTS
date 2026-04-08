@@ -42,7 +42,7 @@ export function TabBar({ state, descriptors, navigation, position }: MaterialTop
     // Floating-card shadow: iOS shadow + Android elevation.
     <View
       onLayout={onTabBarLayout}
-      className="absolute bottom-7 mx-12 flex-row items-center justify-between rounded-[35] py-3"
+      className="absolute bottom-4 mx-12 flex-row items-center justify-between rounded-[35] py-3"
       style={{
         backgroundColor: theme.tabbarBg,
         borderColor: theme.border,
