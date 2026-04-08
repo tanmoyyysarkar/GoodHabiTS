@@ -5,6 +5,7 @@ import { View, Text, Pressable } from 'react-native';
 
 interface DoneForTodayProps {
   isDoneForToday: boolean;
+  isLoggingToday: boolean;
   selectedMood: Mood | null;
   color: string;
   tokens: ThemeTokens;
@@ -15,6 +16,7 @@ interface DoneForTodayProps {
 
 const DoneForToday = ({
   isDoneForToday,
+  isLoggingToday,
   color,
   isDark,
   onToggle,
@@ -37,11 +39,11 @@ const DoneForToday = ({
       <View>
         <Text
           className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold text-xl`}>
-          Done For Today!
+          {isLoggingToday ? 'Done For Today!' : 'Done For This Day!'}
         </Text>
         <Text
           className={`${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} font-jetbrains-mono text-sm`}>
-          Mark {minutesPerDay}m - Your daily goal
+          Mark {minutesPerDay}m - {isLoggingToday ? 'Your daily goal' : 'That day\'s goal'}
         </Text>
       </View>
       <Pressable onPress={onToggle} className="px-2">

@@ -29,9 +29,6 @@ const HomeScreen = () => {
     setIsLogSessionCompact(false);
   };
 
-  const modalHeightClass =
-    activeModal === 'logSession' && isLogSessionCompact ? 'h-[80%]' : 'h-[90%]';
-
   return (
     <>
       <View className="flex-1 pt-6" style={{ backgroundColor: tokens.pageBg }}>
@@ -55,7 +52,7 @@ const HomeScreen = () => {
         animationType="slide">
         <View className="flex-1 items-center justify-end bg-black/35">
           <View
-            className={`${modalHeightClass} w-[100%] rounded-t-3xl ${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} border`}>
+            className={`h-[92%] w-[100%] rounded-t-3xl ${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} border`}>
             {activeModal === 'profile' && (
               <ProfileModalContent isDark={isDark} onClose={closeModal} />
             )}

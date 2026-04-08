@@ -181,12 +181,12 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
             name="name"
             render={({ field: { onChange, value } }) => (
               <TextInput
-                placeholder="eg. Guitar"
-                placeholderTextColor={tokens.textPrimary}
+                placeholder="eg. Learning Guitar"
+                placeholderTextColor={tokens.textTertiary}
                 value={value}
                 onChangeText={onChange}
                 className={`${isDark ? 'border-border bg-card-bg-elevated text-text-primary' : 'border-border-light bg-card-bg-elevated-light text-text-primary-light'}
-                 mb-6 h-16 w-full rounded-2xl border px-2 font-jetbrains-mono-bold text-xl`}
+                 mb-6 h-16 w-full rounded-2xl border px-4 font-jetbrains-mono text-xl`}
               />
             )}
           />
