@@ -5,6 +5,7 @@ import { LogSessionMenuFooter } from './LogSessionMenuFooter';
 import { MoodPill } from './MoodPill';
 import { LogSessionMenuProps, Mood, SessionDuration } from '../../../../types/logSessionModalTypes';
 import DoneForToday from './logSessionMenuParts/DoneForToday';
+import LogDaySelector from './logSessionMenuParts/LogDaySelector';
 import TimeInputMenu from './logSessionMenuParts/TimeInputMenu';
 import SessionNotes from './logSessionMenuParts/SessionNotes';
 
@@ -28,6 +29,34 @@ export const LogSessionMenu = ({
   const [accentColor, setAccentColor] = useState<string>(tertiaryTextColor);
   const [selectedMood, setSelectedMood] = useState<Mood | null>(null);
   const [notes, setNotes] = useState('');
+  const [selectedDayOffset, setSelectedDayOffset] = useState<0 | 1 | 2 | 3>(0);
+
+  const dayOptions = [0, 1, 2, 3].map((offset) => {
+    const optionDate = new Date();
+    optionDate.setHours(0, 0, 0, 0);
+    optionDate.setDate(optionDate.getDate() - offset);
+
+    const label =
+      offset === 0
+        ? 'Today'
+        : offset === 1
+          ? 'Yesterday'
+          : optionDate.toLocaleDateString('en-US', { weekday: 'short' });
+
+    const dateLabel = optionDate.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
+
+    const isoDate = optionDate.toISOString().split('T')[0];
+
+    return {
+      offset: offset as 0 | 1 | 2 | 3,
+      label,
+      dateLabel,
+      isoDate,
+    };
+  });
 
   const [isDoneForToday, setIsDoneForToday] = useState<boolean>(false);
 
@@ -76,28 +105,51 @@ export const LogSessionMenu = ({
   }, [timeLogged]);
 
   const handleDoneForTodayToggle = () => {
-    setIsDoneForToday(!isDoneForToday);
-    setTimeLogged({
-      hours: Math.floor(minutesPerDay / 60),
-      minutes: minutesPerDay % 60,
+    setIsDoneForToday((prev) => {
+      const next = !prev;
+
+      if (next) {
+        setTimeLogged({
+          hours: Math.floor(minutesPerDay / 60),
+          minutes: minutesPerDay % 60,
+        });
+      }
+
+      return next;
     });
   };
 
   const handleLogSessionPress = () => {
+    const selectedDay = dayOptions.find((day) => day.offset === selectedDayOffset);
+
     const sessionLogPayload = {
       name,
       totalMinutesLogged,
       feeling: selectedMood?.name,
       notes: notes.trim() === '' ? '' : notes,
+      dayOffset: selectedDayOffset,
+      logForDate: selectedDay?.isoDate,
     };
     console.log(sessionLogPayload);
   };
 
   return (
     <View className="px-3">
+       <Text className="pb-3 font-jetbrains-mono text-sm" style={{ color: tokens.textTertiary }}>
+        LOG FOR
+      </Text>
+      <LogDaySelector
+        dayOptions={dayOptions}
+        selectedDayOffset={selectedDayOffset}
+        onSelectDay={setSelectedDayOffset}
+        tokens={tokens}
+        selectedColor={selectedMood ? selectedMood.color : color}
+      />
+
       <DoneForToday //===============================DONE-FOR-TODAY-BUTTON=================================
         color={color}
         isDoneForToday={isDoneForToday}
+        isLoggingToday={selectedDayOffset === 0}
         isDark={isDark}
         minutesPerDay={minutesPerDay}
         onToggle={handleDoneForTodayToggle}

@@ -5,11 +5,7 @@ import { useState } from 'react';
 import { ThemeTokens } from '@/theme/tokens';
 import { ScrollView } from 'react-native-gesture-handler';
 import Slider from '@react-native-community/slider';
-import {
-  addHobbySchema,
-  AddHobbyFormInput,
-  AddHobbyFormOutput,
-} from '@/types/addHobbyModalTypes';
+import { addHobbySchema, AddHobbyFormInput, AddHobbyFormOutput } from '@/types/addHobbyModalTypes';
 import {
   AddHobbyFooter,
   AddHobbyHeader,
@@ -42,6 +38,7 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
       color: '#ff7b00',
       icon: '🎨',
       minutesPerDay: 30,
+      days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     },
   });
 
@@ -137,6 +134,36 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
     );
   };
 
+  const [days, setDays] = useState([
+    { val: 'Sun', isSelected: true },
+    { val: 'Mon', isSelected: true },
+    { val: 'Tue', isSelected: true },
+    { val: 'Wed', isSelected: true },
+    { val: 'Thu', isSelected: true },
+    { val: 'Fri', isSelected: true },
+    { val: 'Sat', isSelected: true },
+  ]);
+
+  const handleDayPillPress = (val: string) => {
+    setDays((prevDays) => {
+      const updatedDays = prevDays.map((day) => {
+        if (day.val === val)
+          return {
+            ...day,
+            isSelected: !day.isSelected,
+          };
+        return {
+          ...day,
+        };
+      });
+
+      const selectedDayVals = updatedDays.filter((day) => day.isSelected).map((day) => day.val);
+      setValue('days', selectedDayVals, { shouldValidate: true, shouldDirty: true });
+
+      return updatedDays;
+    });
+  };
+
   return (
     <View className="flex h-full w-full">
       <AddHobbyHeader
@@ -154,12 +181,12 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
             name="name"
             render={({ field: { onChange, value } }) => (
               <TextInput
-                placeholder="eg. Guitar"
-                placeholderTextColor={tokens.textPrimary}
+                placeholder="eg. Learning Guitar"
+                placeholderTextColor={tokens.textTertiary}
                 value={value}
                 onChangeText={onChange}
                 className={`${isDark ? 'border-border bg-card-bg-elevated text-text-primary' : 'border-border-light bg-card-bg-elevated-light text-text-primary-light'}
-                 mb-6 h-16 w-full rounded-2xl border px-2 font-jetbrains-mono-bold text-xl`}
+                 mb-6 h-16 w-full rounded-2xl border px-4 font-jetbrains-mono text-xl`}
               />
             )}
           />
@@ -219,6 +246,8 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
             isDark={isDark}
             selectedColor={selectedColor}
             tokens={tokens}
+            onDayPillPress={handleDayPillPress}
+            days={days}
           />
           {errors.minutesPerDay && <Text>{errors.minutesPerDay.message}</Text>}
         </View>

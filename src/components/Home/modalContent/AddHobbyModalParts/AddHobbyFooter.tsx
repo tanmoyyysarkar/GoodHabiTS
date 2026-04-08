@@ -17,7 +17,7 @@ export const AddHobbyFooter = ({ isDark, selectedColor, isSubmitting, onClose, o
       <View
         className="flex h-16 flex-1 items-center justify-center rounded-2xl"
         style={{
-          backgroundColor: `${selectedColor}70`,
+          backgroundColor: `${selectedColor}85`,
           borderColor: selectedColor,
           borderWidth: 1,
         }}>

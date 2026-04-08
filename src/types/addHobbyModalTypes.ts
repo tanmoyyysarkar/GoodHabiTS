@@ -12,6 +12,7 @@ export const addHobbySchema = z.object({
     .min(15, 'Must be at least 15m')
     .max(360, 'Must be at most 6h')
     .multipleOf(15, 'Must be in 15m intervals'),
+  days: z.array(z.string()).min(1, 'At least one day must be selected'),
 });
 
 export type AddHobbyFormInput = z.input<typeof addHobbySchema>;
