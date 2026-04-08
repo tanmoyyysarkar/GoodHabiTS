@@ -16,6 +16,7 @@ import {
 } from './AddHobbyModalParts/index';
 import SubHeadingText from './AddHobbyModalParts/SubHeadingText';
 import TimeSelectionSlider from './AddHobbyModalParts/TimeSelectionSlider';
+import addNewHobby from '@/lib/supabase/addNewHobby';
 
 interface AddHobbyModalContentProps {
   onClose: () => void;
@@ -41,11 +42,6 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
       days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     },
   });
-
-  const onSubmit = async (data: AddHobbyFormOutput) => {
-    //TODO implement later
-    console.log(data);
-  };
 
   const [colors, setColors] = useState([
     { name: '#ff7b00', isSelected: true },
@@ -162,6 +158,23 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
 
       return updatedDays;
     });
+  };
+
+  const onSubmit = async (formOutputData: AddHobbyFormOutput) => {
+    const is_daily = formOutputData.days.length === 7;
+    const { success, data, errorMessage } = await addNewHobby(
+      formOutputData.name,
+      formOutputData.icon,
+      formOutputData.color,
+      formOutputData.minutesPerDay,
+      formOutputData.days,
+      is_daily
+    );
+    if (!success) {
+      console.log(errorMessage);
+    }
+    console.log('Data given to supabase for insertion: ', { ...formOutputData, is_daily }); //delete later
+    console.log('Data returned from supabase', data); //delete later
   };
 
   return (

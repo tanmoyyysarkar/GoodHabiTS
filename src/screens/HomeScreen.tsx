@@ -12,6 +12,7 @@ import LogASessionButton from '@/components/Home/LogASessionButton';
 import ProfileModalContent from '@/components/Home/modalContent/ProfileModalContent';
 import AddHobbyModalContent from '@/components/Home/modalContent/AddHobbyModalContent';
 import LogSessionModalContent from '@/components/Home/modalContent/LogSessionModalContent';
+import { useAuth } from '@/context/AuthContext';
 
 type ModalType = 'profile' | 'addHobby' | 'logSession' | null;
 
@@ -29,6 +30,17 @@ const HomeScreen = () => {
     setIsLogSessionCompact(false);
   };
 
+  const { session } = useAuth();
+
+  const fullName = session ? session.user.user_metadata.full_name : '';
+  const firstName = fullName.split(' ')[0];
+  const initials = fullName
+    .split(' ')
+    .map((word: string) => word[0])
+    .join('');
+
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Good morning." : hour < 18 ? "Good afternoon." : "Good evening."
   return (
     <>
       <View className="flex-1 pt-6" style={{ backgroundColor: tokens.pageBg }}>
@@ -36,7 +48,14 @@ const HomeScreen = () => {
           className="flex-1"
           contentContainerClassName="gap-6 px-6"
           showsVerticalScrollIndicator={false}>
-          <HomeHeader isDark={isDark} tokens={tokens} onProfilePress={() => openModal('profile')} />
+          <HomeHeader
+            name={firstName}
+            avatar={initials}
+            greeting={greeting}
+            isDark={isDark}
+            tokens={tokens}
+            onProfilePress={() => openModal('profile')}
+          />
           <StreakBox isDark={isDark} tokens={tokens} />
           <SummaryCard isDark={isDark} tokens={tokens} />
           <MyHobbyCard isDark={isDark} tokens={tokens} onAddPress={() => openModal('addHobby')} />
