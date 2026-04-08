@@ -12,8 +12,8 @@ interface HomeHeaderProps {
 
 const HomeHeader = ({
   greeting = 'Good morning',
-  name = 'Arjun',
-  avatar = 'AR',
+  name = '',
+  avatar = '',
   isDark,
   tokens,
   onProfilePress,
@@ -25,7 +25,7 @@ const HomeHeader = ({
         <Text
           className={`text-lg ${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} opacity-70 font-jetbrains-mono-semibold`}
         >
-          {greeting}.
+          {greeting}
         </Text>
         <Text
           className={`mt-2 text-4xl font-handwriting-bold ${isDark ? 'text-text-primary' : 'text-text-primary-light'}`}
