@@ -8,6 +8,7 @@ const signUp = async (email: string, password: string, full_name: string) => {
       options: {
         data: {
           full_name,
+          avatar_url: '',
         },
       },
     });
