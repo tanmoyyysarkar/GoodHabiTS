@@ -1,5 +1,5 @@
-import { ScrollView, View, Modal, Pressable, Text } from 'react-native';
-import { useState } from 'react';
+import { ScrollView, View, Modal } from 'react-native';
+import { useEffect, useState } from 'react';
 import { useColorScheme } from 'nativewind';
 import { useThemeTokens } from '@/hooks/useThemeTokens';
 
@@ -13,8 +13,24 @@ import ProfileModalContent from '@/components/Home/modalContent/ProfileModalCont
 import AddHobbyModalContent from '@/components/Home/modalContent/AddHobbyModalContent';
 import LogSessionModalContent from '@/components/Home/modalContent/LogSessionModalContent';
 import { useAuth } from '@/context/AuthContext';
+import fetchUserHobbies from '@/lib/supabase/fetchUserHobbies';
 
 type ModalType = 'profile' | 'addHobby' | 'logSession' | null;
+
+type FetchedHobbyRow = {
+  id: string;
+  name: string;
+  icon: string;
+  streak_score: number | null;
+  color: string;
+  target_minutes: number;
+};
+
+type HobbyCardData = {
+  emoji: string;
+  name: string;
+  streakScore: number;
+};
 
 const HomeScreen = () => {
   const tokens = useThemeTokens();
@@ -32,6 +48,7 @@ const HomeScreen = () => {
 
   const { session } = useAuth();
 
+  //===============================FOR-HEADER===================================
   const fullName = session ? session.user.user_metadata.full_name : '';
   const firstName = fullName.split(' ')[0];
   const initials = fullName
@@ -40,7 +57,40 @@ const HomeScreen = () => {
     .join('');
 
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? "Good morning." : hour < 18 ? "Good afternoon." : "Good evening."
+  const greeting = hour < 12 ? 'Good morning.' : hour < 18 ? 'Good afternoon.' : 'Good evening.';
+
+  //==============================FOR-MY-HOBBY-CARDS=============================
+  const [hobbyData, setHobbyData] = useState<HobbyCardData[]>([]);
+
+  const loadHobbies = async () => {
+    if (!session) {
+      setHobbyData([]);
+      return;
+    }
+
+    const user_id = session.user.id;
+    const { success, data, errorMessage } = await fetchUserHobbies(user_id);
+
+    if (!success) {
+      console.log(errorMessage);
+      return;
+    }
+
+    const mappedHobbies: HobbyCardData[] = (data as FetchedHobbyRow[] | undefined)?.map(
+      (hobby) => ({
+        emoji: hobby.icon,
+        name: hobby.name,
+        streakScore: hobby.streak_score ?? 0,
+      })
+    ) ?? [];
+
+    setHobbyData(mappedHobbies);
+  };
+
+  useEffect(() => { 
+    void loadHobbies();
+  }, [session]);
+
   return (
     <>
       <View className="flex-1 pt-6" style={{ backgroundColor: tokens.pageBg }}>
@@ -58,7 +108,12 @@ const HomeScreen = () => {
           />
           <StreakBox isDark={isDark} tokens={tokens} />
           <SummaryCard isDark={isDark} tokens={tokens} />
-          <MyHobbyCard isDark={isDark} tokens={tokens} onAddPress={() => openModal('addHobby')} />
+          <MyHobbyCard
+            hobbyData={hobbyData}
+            isDark={isDark}
+            tokens={tokens}
+            onAddPress={() => openModal('addHobby')}
+          />
           <LogASessionButton isDark={isDark} onPress={() => openModal('logSession')} />
           <View className="h-24 w-max"></View>
         </ScrollView>
@@ -76,7 +131,15 @@ const HomeScreen = () => {
               <ProfileModalContent isDark={isDark} onClose={closeModal} />
             )}
             {activeModal === 'addHobby' && (
-              <AddHobbyModalContent tokens={tokens} isDark={isDark} onClose={closeModal} />
+              <AddHobbyModalContent
+                tokens={tokens}
+                isDark={isDark}
+                onClose={closeModal}
+                onSubmitPress={() => {
+                  void loadHobbies();
+                  closeModal();
+                }}
+              />
             )}
             {activeModal === 'logSession' && (
               <LogSessionModalContent

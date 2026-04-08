@@ -1,47 +1,59 @@
 import { Text, View, Pressable, ScrollView } from 'react-native';
 import { ThemeTokens } from '@/theme/tokens';
 
-interface SummaryCardProps {
-  isDark: boolean;
-  tokens: ThemeTokens;
-  onAddPress?: () => void;
+interface hobbyCardData {
+  emoji: string;
+  name: string;
+  streakScore: number;
 }
 
-const myHobbyList = [
-  {
-    emoji: '🎸',
-    name: 'Guitar',
-    StreakScore: 12,
-  },
-  {
-    emoji: '🏃‍♂️',
-    name: 'Running',
-    StreakScore: 5,
-  },
-  {
-    emoji: '✏️',
-    name: 'Sketching',
-    StreakScore: 2,
-  },
-  {
-    emoji: '🎸',
-    name: 'Guitar',
-    StreakScore: 12,
-  },
-  {
-    emoji: '🏃‍♂️',
-    name: 'Running',
-    StreakScore: 5,
-  },
-  {
-    emoji: '✏️',
-    name: 'Sketching',
-    StreakScore: 2,
-  },
-];
+interface MyHobbyCardProps {
+  isDark: boolean;
+  tokens: ThemeTokens;
+  onAddPress: () => void;
+  hobbyData: hobbyCardData[];
+}
 
-const MyHobbyCard = ({ isDark, tokens, onAddPress }: SummaryCardProps) => {
-  const hobbyCards = myHobbyList.map((hobby, index) => (
+// const myHobbyList = [
+//   {
+//     emoji: '🎸',
+//     name: 'Guitar',
+//     StreakScore: 12,
+//   },
+//   {
+//     emoji: '🏃‍♂️',
+//     name: 'Running',
+//     StreakScore: 5,
+//   },
+//   {
+//     emoji: '✏️',
+//     name: 'Sketching',
+//     StreakScore: 2,
+//   },
+//   {
+//     emoji: '🎸',
+//     name: 'Guitar',
+//     StreakScore: 12,
+//   },
+//   {
+//     emoji: '🏃‍♂️',
+//     name: 'Running',
+//     StreakScore: 5,
+//   },
+//   {
+//     emoji: '✏️',
+//     name: 'Sketching',
+//     StreakScore: 2,
+//   },
+// ];
+
+const MyHobbyCard = ({
+  hobbyData,
+  isDark,
+  tokens,
+  onAddPress,
+}: MyHobbyCardProps) => {
+  const hobbyCards = hobbyData.map((hobby, index) => (
     <View
       key={index}
       className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} mx-2 mb-6 flex h-28 w-[85px] items-center justify-center gap-1 rounded-2xl border`}
@@ -61,7 +73,8 @@ const MyHobbyCard = ({ isDark, tokens, onAddPress }: SummaryCardProps) => {
         className={`${isDark ? ' bg-purple-700' : 'bg-card-bg-elevated-light'} rounded-full px-1`}>
         <Text
           className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-light text-xs`}>
-          {hobby.StreakScore}d 🔥
+          {/* {hobby.streakScore > 0 ? `${hobby.streakScore}d 🔥` : ''} */}
+          {hobby.streakScore}d 🔥
         </Text>
       </View>
     </View>

@@ -4,7 +4,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { ThemeTokens } from '@/theme/tokens';
 import { ScrollView } from 'react-native-gesture-handler';
-import Slider from '@react-native-community/slider';
 import { addHobbySchema, AddHobbyFormInput, AddHobbyFormOutput } from '@/types/addHobbyModalTypes';
 import {
   AddHobbyFooter,
@@ -20,12 +19,18 @@ import addNewHobby from '@/lib/supabase/addNewHobby';
 
 interface AddHobbyModalContentProps {
   onClose: () => void;
+  onSubmitPress: () => void;
   isDark: boolean;
   tokens: ThemeTokens;
 }
 
 //=================================================MAIN-MODEL=========================================================
-const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentProps) => {
+const AddHobbyModalContent = ({
+  onClose,
+  isDark,
+  tokens,
+  onSubmitPress,
+}: AddHobbyModalContentProps) => {
   const {
     control,
     handleSubmit,
@@ -162,6 +167,8 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
 
   const onSubmit = async (formOutputData: AddHobbyFormOutput) => {
     const is_daily = formOutputData.days.length === 7;
+    // console.log('Data given to supabase for insertion: ', { ...formOutputData, is_daily }); //delete later
+
     const { success, data, errorMessage } = await addNewHobby(
       formOutputData.name,
       formOutputData.icon,
@@ -173,8 +180,8 @@ const AddHobbyModalContent = ({ onClose, isDark, tokens }: AddHobbyModalContentP
     if (!success) {
       console.log(errorMessage);
     }
-    console.log('Data given to supabase for insertion: ', { ...formOutputData, is_daily }); //delete later
-    console.log('Data returned from supabase', data); //delete later
+    // console.log('Data returned from supabase', data); //delete later
+    onSubmitPress();
   };
 
   return (

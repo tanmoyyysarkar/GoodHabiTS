@@ -13,6 +13,7 @@ CREATE TABLE public.hobbies (
   days_of_week ARRAY NOT NULL DEFAULT '{''Sun'',''Mon'',''Tue'',''Wed'',''Thu'',''Fri'',''Sat''}'::text[],
   is_active boolean NOT NULL DEFAULT true,
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  streak_score numeric NOT NULL DEFAULT '0'::numeric CHECK (streak_score > '-1'::integer::numeric),
   CONSTRAINT hobbies_pkey PRIMARY KEY (id),
   CONSTRAINT hobbies_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
 );
