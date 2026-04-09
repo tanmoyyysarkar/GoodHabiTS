@@ -12,7 +12,15 @@ interface SummaryCardProps {
   summaryData: CurrentDaySummaryData[];
 }
 
-const WEEKDAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const WEEKDAY_NAMES = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+];
 const MONTH_NAMES = [
   'January',
   'February',
@@ -28,6 +36,7 @@ const MONTH_NAMES = [
   'December',
 ];
 
+//TODO: when a new hobby is added it is not reflected in the card automatically
 const SummaryCard = ({ isDark, tokens, summaryData }: SummaryCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const arrowRotation = useRef(new Animated.Value(isExpanded ? 1 : 0)).current;
@@ -74,37 +83,39 @@ const SummaryCard = ({ isDark, tokens, summaryData }: SummaryCardProps) => {
     </View>
   ));
 
-  const progressBars = [...summaryData].sort((a, b) => b.minutes_today - a.minutes_today).map((data, index) => {
-    const progress = (data.minutes_today / data.target_minutes) * 100;
+  const progressBars = [...summaryData]
+    .sort((a, b) => b.minutes_today - a.minutes_today)
+    .map((data, index) => {
+      const progress = (data.minutes_today / data.target_minutes) * 100;
 
-    return (
-      <View key={`${data.name}-${index}`} className="gap-2 pb-4">
-        <View className="flex-row items-center gap-2">
-          <View className="h-3 w-3 rounded-full" style={{ backgroundColor: data.color }} />
-          <Text
-            className={`flex-1 font-medium ${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-semibold`}>
-            {data.name}
-          </Text>
-          <Text
-            className={`text-sm ${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} font-jetbrains-mono`}>
-            {data.minutes_today} / {data.target_minutes} min
-          </Text>
-        </View>
-        <View
-          className={`h-2 overflow-hidden rounded-full ${
-            isDark ? 'bg-card-bg-elevated' : 'bg-card-bg-elevated-light'
-          }`}>
+      return (
+        <View key={`${data.name}-${index}`} className="gap-2 pb-4">
+          <View className="flex-row items-center gap-2">
+            <View className="h-3 w-3 rounded-full" style={{ backgroundColor: data.color }} />
+            <Text
+              className={`flex-1 font-medium ${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-semibold`}>
+              {data.name}
+            </Text>
+            <Text
+              className={`text-sm ${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} font-jetbrains-mono`}>
+              {data.minutes_today} / {data.target_minutes} min
+            </Text>
+          </View>
           <View
-            className="h-full rounded-full"
-            style={{
-              backgroundColor: data.color,
-              width: `${progress}%`,
-            }}
-          />
+            className={`h-2 overflow-hidden rounded-full ${
+              isDark ? 'bg-card-bg-elevated' : 'bg-card-bg-elevated-light'
+            }`}>
+            <View
+              className="h-full rounded-full"
+              style={{
+                backgroundColor: data.color,
+                width: `${progress}%`,
+              }}
+            />
+          </View>
         </View>
-      </View>
-    );
-  });
+      );
+    });
 
   const visibleProgressBars = progressBars.slice(0, 3);
   const extendedProgressBars = progressBars.slice(3);

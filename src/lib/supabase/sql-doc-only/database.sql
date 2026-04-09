@@ -14,6 +14,7 @@ CREATE TABLE public.hobbies (
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   streak_score numeric NOT NULL DEFAULT '0'::numeric CHECK (streak_score > '-1'::integer::numeric),
   id uuid NOT NULL DEFAULT gen_random_uuid(),
+  category text NOT NULL DEFAULT 'Misc'::text,
   CONSTRAINT hobbies_pkey PRIMARY KEY (id),
   CONSTRAINT hobbies_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
 );

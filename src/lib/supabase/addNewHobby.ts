@@ -6,6 +6,7 @@ const addNewHobby = async (
   color: string,
   target_minutes: number,
   days_of_week: string[],
+  category: string,
   is_daily: boolean
 ) => {
   try {
@@ -19,6 +20,7 @@ const addNewHobby = async (
           target_minutes,
           days_of_week,
           is_daily,
+          category,
         },
       ])
       .select()

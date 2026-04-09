@@ -3,7 +3,6 @@ import { ThemeTokens } from '@/theme/tokens';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text, View } from 'react-native';
 import { ProgressRing } from './ProgressRing';
-import { HobbyHeatmapItem } from '@/types/HobbyHeatMapItem';
 import { useEffect, useState } from 'react';
 import Animated, {
   Easing,
@@ -12,23 +11,24 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import { MonthlySummaryData } from '@/lib/supabase/getHobby30DaySummary';
 
 interface HobbyWithMiniHeatMapProps {
   isDark: boolean;
   tokens: ThemeTokens;
-  data: HobbyHeatmapItem;
+  data: MonthlySummaryData;
 }
 
 const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProps) => {
-  const progress = (data.timeDoneToday / data.totalTimePerDay) * 100;
+  const progress = (data.last_30_days_minutes[29] / data.target_minutes) * 100;
 
   const days = ['S', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'];
 
-  const heatMap = data.timeDonePerDay.map((time, index) => (
+  const heatMap = data.last_30_days_minutes.map((time, index) => (
     <View
       key={index}
       style={{
-        backgroundColor: getHeatMapColor(time, data.totalTimePerDay, data.color, isDark),
+        backgroundColor: getHeatMapColor(time, data.target_minutes, data.color, isDark),
         borderWidth: 0.5,
         borderColor: data.color,
       }}
@@ -36,11 +36,14 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
     />
   ));
 
-  const emptyHeats = Array.from({ length: data.startDay - 1 }, (_, index) => (
+  const todayDay = new Date().getDay() + 1; // 1..7, Sun..Sat
+  const leadingEmptyCount = (todayDay - 1 - ((data.last_30_days_minutes.length - 1) % 7) + 7) % 7;
+
+  const emptyHeats = Array.from({ length: leadingEmptyCount }, (_, index) => (
     <View
       key={`empty-${index}`}
       className="h-6 w-6 rounded-md"
-      style={{ borderWidth: 0.5, borderColor: data.color, backgroundColor: 'transparent' }}
+      style={{ backgroundColor: 'transparent' }}
     />
   ));
 
@@ -76,24 +79,30 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
     setIsExpanded((prev) => !prev);
   };
 
+  const totalHoursDoneThisMonth = data.last_30_days_minutes.reduce(
+    (total, item) => total + item,
+    0
+  );
+  const ringProgress = Math.floor((totalHoursDoneThisMonth / (data.target_minutes * 30)) * 100);
+  const monthlyAverageMins = Math.floor(totalHoursDoneThisMonth / 30);
   return (
     <View
       className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} gap-4 rounded-2xl p-4`}
       style={{
-          borderWidth: 1,
-          shadowColor: tokens.border,
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.25,
-          shadowRadius: 12,
-          elevation: 6,
-        }}>
+        borderWidth: 1,
+        shadowColor: tokens.border,
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.25,
+        shadowRadius: 12,
+        elevation: 6,
+      }}>
       <View className="flex-row items-start justify-between">
         <View className="flex-row gap-4">
           <View
             style={{ backgroundColor: data.color }}
             className="flex h-12 w-12 items-center justify-center rounded-2xl">
             <Text className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'}`}>
-              {data.emoji}
+              {data.icon}
             </Text>
           </View>
           <View>
@@ -103,7 +112,7 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
             </Text>
             <Text
               className={`${isDark ? 'text-text-secondary' : 'text-text-primary-light'} font-jetbrains-mono-light text-sm`}>
-              {data.category} • {data.totalHours} hrs total
+              {data.category} • {totalHoursDoneThisMonth} hrs total
             </Text>
           </View>
         </View>
@@ -117,7 +126,7 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
             className="flex h-6 items-center justify-center rounded-full px-2">
             <Text
               className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-light text-sm`}>
-              🔥{data.streakCount}d
+              🔥{data.streak_score}d
             </Text>
           </View>
           <View className="mt-2 h-6 w-6 items-center justify-center">
@@ -126,7 +135,6 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
             </Animated.View>
           </View>
         </Pressable>
-
       </View>
       <View className="flex-row items-center justify-between gap-4">
         <View
@@ -138,7 +146,7 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
         </View>
         <Text
           className={`${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} font-jetbrains-mono-light text-xs`}>
-          {data.timeDoneToday}/{data.totalTimePerDay} min today
+          {data.last_30_days_minutes[29]}/{data.target_minutes} min today
         </Text>
       </View>
 
@@ -160,7 +168,7 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
             </View>
             <View className="flex items-center justify-between p-1">
               <ProgressRing
-                progress={75} //TODO: add logic
+                progress={ringProgress} //TODO: add logic
                 size={90}
                 strokeWidth={15}
                 mainColor={data.color}
@@ -169,12 +177,12 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
               <View className="mt-2 flex items-center justify-center gap-1">
                 <Text
                   className={`${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} font-jetbrains-mono-semibold text-[10px]`}>
-                  WEEKLY AVG
+                  MONTHLY AVG
                 </Text>
                 <Text
                   className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold text-xs`} //TODO: Add login
                 >
-                  42 min
+                  {monthlyAverageMins} min
                 </Text>
               </View>
             </View>

@@ -29,6 +29,7 @@ type FetchedHobbyRow = {
   streak_score: number | null;
   color: string;
   target_minutes: number;
+  category: string;
 };
 
 type HobbyCardData = {
