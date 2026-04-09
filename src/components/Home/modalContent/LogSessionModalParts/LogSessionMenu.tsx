@@ -41,9 +41,8 @@ export const LogSessionMenu = ({
   const [selectedDayOffset, setSelectedDayOffset] = useState<0 | 1 | 2 | 3>(0);
 
   const dayOptions = [0, 1, 2, 3].map((offset) => {
-    const optionDate = new Date();
-    optionDate.setHours(0, 0, 0, 0);
-    optionDate.setDate(optionDate.getDate() - offset);
+    const now = new Date();
+    const optionDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - offset);
 
     const label =
       offset === 0
