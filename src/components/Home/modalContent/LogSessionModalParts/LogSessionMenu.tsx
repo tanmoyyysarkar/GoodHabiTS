@@ -26,6 +26,7 @@ export const LogSessionMenu = ({
   tertiaryTextColor,
   onBackToList,
   tokens,
+  onLoggingASession,
 }: LogSessionMenuProps) => {
   const moodOptions: Mood[] = [
     { emoji: '😫', color: '#ff6565', name: 'Rough', value: 1 },
@@ -127,9 +128,9 @@ export const LogSessionMenu = ({
     });
   };
 
-  const handleLogSessionPress = async () => {
+  const handleLogSessionPress = async (): Promise<boolean> => {
     const selectedDay = dayOptions.find((day) => day.offset === selectedDayOffset);
-    if (!selectedDay || !selectedMood) return;
+    if (!selectedDay || !selectedMood) return false;
 
     const { success, data, errorMessage } = await addNewHobbySession(
       id,
@@ -140,9 +141,10 @@ export const LogSessionMenu = ({
     );
     if (!success) {
       console.log(errorMessage);
-      return;
+      return false;
     }
     console.log(data);
+    return true;
   };
 
   return (
@@ -229,7 +231,12 @@ export const LogSessionMenu = ({
         accentColor={accentColor}
         selectedMoodName={selectedMood?.name}
         onCancel={onBackToList}
-        onSubmit={handleLogSessionPress}
+        onSubmit={async () => {
+          const didLogSession = await handleLogSessionPress();
+          if (didLogSession) {
+            onLoggingASession();
+          }
+        }}
       />
     </View>
   );
