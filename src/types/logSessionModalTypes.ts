@@ -30,6 +30,7 @@ export interface LogSessionMenuProps extends HobbySession {
   tertiaryTextColor: string;
   onBackToList: () => void;
   tokens: ThemeTokens;
+  onLoggingASession: () => void;
 }
 
 export interface Mood {

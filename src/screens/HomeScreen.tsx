@@ -15,6 +15,10 @@ import LogSessionModalContent from '@/components/Home/modalContent/LogSessionMod
 import { useAuth } from '@/context/AuthContext';
 import fetchUserHobbies from '@/lib/supabase/fetchUserHobbies';
 import { HobbySession } from '@/types/logSessionModalTypes';
+import {
+  CurrentDaySummaryData,
+  fetchCurrentDaySessions,
+} from '@/lib/supabase/fetchCurrentDaySessions';
 
 type ModalType = 'profile' | 'addHobby' | 'logSession' | null;
 
@@ -31,6 +35,25 @@ type HobbyCardData = {
   emoji: string;
   name: string;
   streakScore: number;
+};
+
+const isCurrentDaySummaryItemValid = (value: unknown): value is CurrentDaySummaryData => {
+  if (!value || typeof value !== 'object') return false;
+
+  const candidate = value as Record<string, unknown>;
+
+  return (
+    typeof candidate.id === 'string' &&
+    typeof candidate.name === 'string' &&
+    typeof candidate.color === 'string' &&
+    typeof candidate.target_minutes === 'number' &&
+    typeof candidate.minutes_today === 'number' &&
+    typeof candidate.sessions_today === 'number'
+  );
+};
+
+const isCurrentDaySummaryDataArrayValid = (value: unknown): value is CurrentDaySummaryData[] => {
+  return Array.isArray(value) && value.every(isCurrentDaySummaryItemValid);
 };
 
 const HomeScreen = () => {
@@ -62,6 +85,7 @@ const HomeScreen = () => {
 
   const [hobbyDataForCards, setHobbyDataForCards] = useState<HobbyCardData[]>([]);
   const [hobbyDataForLogSessionList, setHobbyDataForLogSessionList] = useState<HobbySession[]>([]);
+  const [currentDaySummaryData, setCurrentDaySummaryData] = useState<CurrentDaySummaryData[]>([]);
 
   const loadHobbies = async () => {
     if (!session) {
@@ -101,8 +125,24 @@ const HomeScreen = () => {
     setHobbyDataForLogSessionList(mappedHobbyDataForLogSessionList);
   };
 
+  const loadCurrentDaySummaryData = async () => {
+    const { success, data, errorMessage } = await fetchCurrentDaySessions();
+    if (!success) {
+      console.log(errorMessage);
+      return;
+    }
+
+    if (isCurrentDaySummaryDataArrayValid(data)) {
+      setCurrentDaySummaryData(data);
+      return;
+    }
+
+    console.log('Unexpected current day summary data shape received from Supabase.');
+  };
+
   useEffect(() => {
     void loadHobbies();
+    void loadCurrentDaySummaryData();
   }, [session]);
 
   return (
@@ -121,7 +161,7 @@ const HomeScreen = () => {
             onProfilePress={() => openModal('profile')}
           />
           <StreakBox isDark={isDark} tokens={tokens} />
-          <SummaryCard isDark={isDark} tokens={tokens} />
+          <SummaryCard isDark={isDark} tokens={tokens} summaryData={currentDaySummaryData} />
           <MyHobbyCard
             hobbyData={hobbyDataForCards}
             isDark={isDark}
@@ -162,6 +202,10 @@ const HomeScreen = () => {
                 isDark={isDark}
                 onClose={closeModal}
                 onSelectedHobbyViewChange={setIsLogSessionCompact}
+                onLoggingASession={() => {
+                  loadCurrentDaySummaryData();
+                  closeModal();
+                }}
               />
             )}
           </View>

@@ -16,6 +16,7 @@ interface LogSessionModalContentProps {
   tokens: ThemeTokens;
   onSelectedHobbyViewChange: (isSelectedHobbyView: boolean) => void;
   hobbyList: HobbySession[];
+  onLoggingASession: () => void;
 }
 
 const LogSessionModalContent = ({
@@ -24,6 +25,7 @@ const LogSessionModalContent = ({
   tokens,
   onSelectedHobbyViewChange,
   hobbyList,
+  onLoggingASession
 }: LogSessionModalContentProps) => {
   const [selectedHobbySession, setSelectedHobbySession] = useState<HobbySession | null>(null);
 
@@ -42,6 +44,7 @@ const LogSessionModalContent = ({
       <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
         {selectedHobbySession ? (
           <View className="gap-8 p-3">
+            {/* THIS IS WHERE YOU ACTUALLY LOG A SESSION */}
             <LogSessionMenuHeader
               isDark={isDark}
               tokens={tokens}
@@ -60,10 +63,12 @@ const LogSessionModalContent = ({
               isDark={isDark}
               tertiaryTextColor={tokens.textTertiary}
               tokens={tokens}
+              onLoggingASession={onLoggingASession}
             />
           </View>
         ) : (
           <View className="gap-8 p-3">
+            {/* THIS IS WHERE THE LIST OF HOBBIES IS SHOWN FOR SELECTION TO ADD A SESSION */}
             <HobbyListHeader isDark={isDark} tokens={tokens} onClose={onClose} />
             {hobbyList.map((hobbySession) => (
               <HobbyListItem

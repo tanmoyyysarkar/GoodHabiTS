@@ -14,39 +14,6 @@ interface MyHobbyCardProps {
   hobbyData: hobbyCardData[];
 }
 
-// const myHobbyList = [
-//   {
-//     emoji: '🎸',
-//     name: 'Guitar',
-//     StreakScore: 12,
-//   },
-//   {
-//     emoji: '🏃‍♂️',
-//     name: 'Running',
-//     StreakScore: 5,
-//   },
-//   {
-//     emoji: '✏️',
-//     name: 'Sketching',
-//     StreakScore: 2,
-//   },
-//   {
-//     emoji: '🎸',
-//     name: 'Guitar',
-//     StreakScore: 12,
-//   },
-//   {
-//     emoji: '🏃‍♂️',
-//     name: 'Running',
-//     StreakScore: 5,
-//   },
-//   {
-//     emoji: '✏️',
-//     name: 'Sketching',
-//     StreakScore: 2,
-//   },
-// ];
-
 const MyHobbyCard = ({
   hobbyData,
   isDark,

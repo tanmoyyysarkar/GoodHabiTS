@@ -20,8 +20,8 @@ CREATE TABLE public.hobbies (
 CREATE TABLE public.sessions (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   created_at timestamp with time zone NOT NULL DEFAULT now(),
-  hobby_id uuid NOT NULL DEFAULT gen_random_uuid(),
-  user_id uuid NOT NULL,
+  hobby_id uuid NOT NULL,
+  user_id uuid NOT NULL DEFAULT auth.uid(),
   feeling smallint NOT NULL DEFAULT '5'::smallint,
   session_date date NOT NULL,
   notes text NOT NULL DEFAULT ''::text,
