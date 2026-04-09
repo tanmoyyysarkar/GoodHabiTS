@@ -14,6 +14,7 @@ import AddHobbyModalContent from '@/components/Home/modalContent/AddHobbyModalCo
 import LogSessionModalContent from '@/components/Home/modalContent/LogSessionModalContent';
 import { useAuth } from '@/context/AuthContext';
 import fetchUserHobbies from '@/lib/supabase/fetchUserHobbies';
+import { HobbySession } from '@/types/logSessionModalTypes';
 
 type ModalType = 'profile' | 'addHobby' | 'logSession' | null;
 
@@ -59,12 +60,12 @@ const HomeScreen = () => {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning.' : hour < 18 ? 'Good afternoon.' : 'Good evening.';
 
-  //==============================FOR-MY-HOBBY-CARDS=============================
-  const [hobbyData, setHobbyData] = useState<HobbyCardData[]>([]);
+  const [hobbyDataForCards, setHobbyDataForCards] = useState<HobbyCardData[]>([]);
+  const [hobbyDataForLogSessionList, setHobbyDataForLogSessionList] = useState<HobbySession[]>([]);
 
   const loadHobbies = async () => {
     if (!session) {
-      setHobbyData([]);
+      setHobbyDataForCards([]);
       return;
     }
 
@@ -76,18 +77,31 @@ const HomeScreen = () => {
       return;
     }
 
-    const mappedHobbies: HobbyCardData[] = (data as FetchedHobbyRow[] | undefined)?.map(
-      (hobby) => ({
+    //==============================FOR-MY-HOBBY-CARDS=============================
+    const mappedHobbiesForMyHobbyCards: HobbyCardData[] =
+      (data as FetchedHobbyRow[] | undefined)?.map((hobby) => ({
         emoji: hobby.icon,
         name: hobby.name,
         streakScore: hobby.streak_score ?? 0,
-      })
-    ) ?? [];
+      })) ?? [];
 
-    setHobbyData(mappedHobbies);
+    setHobbyDataForCards(mappedHobbiesForMyHobbyCards);
+
+    //==============================FOR-HOBBY-SESSION-LIST==========================
+    const mappedHobbyDataForLogSessionList: HobbySession[] =
+      (data as FetchedHobbyRow[] | undefined)?.map((hobby) => ({
+        icon: hobby.icon,
+        color: hobby.color,
+        minutesPerDay: hobby.target_minutes,
+        name: hobby.name,
+        streakCount: hobby.streak_score ?? 0,
+        id: hobby.id,
+      })) ?? [];
+
+    setHobbyDataForLogSessionList(mappedHobbyDataForLogSessionList);
   };
 
-  useEffect(() => { 
+  useEffect(() => {
     void loadHobbies();
   }, [session]);
 
@@ -109,7 +123,7 @@ const HomeScreen = () => {
           <StreakBox isDark={isDark} tokens={tokens} />
           <SummaryCard isDark={isDark} tokens={tokens} />
           <MyHobbyCard
-            hobbyData={hobbyData}
+            hobbyData={hobbyDataForCards}
             isDark={isDark}
             tokens={tokens}
             onAddPress={() => openModal('addHobby')}
@@ -143,6 +157,7 @@ const HomeScreen = () => {
             )}
             {activeModal === 'logSession' && (
               <LogSessionModalContent
+                hobbyList={hobbyDataForLogSessionList}
                 tokens={tokens}
                 isDark={isDark}
                 onClose={closeModal}

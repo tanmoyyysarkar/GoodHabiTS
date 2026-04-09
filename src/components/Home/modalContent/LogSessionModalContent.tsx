@@ -5,17 +5,17 @@ import { ScrollView } from 'react-native';
 import {
   LogSessionMenu,
   LogSessionMenuHeader,
-  HobbySession,
   HobbyListHeader,
   HobbyListItem,
 } from './LogSessionModalParts/index';
-import { hobbySessions } from './LogSessionModalData';
+import { HobbySession } from '@/types/logSessionModalTypes';
 
 interface LogSessionModalContentProps {
   onClose: () => void;
   isDark: boolean;
   tokens: ThemeTokens;
   onSelectedHobbyViewChange: (isSelectedHobbyView: boolean) => void;
+  hobbyList: HobbySession[];
 }
 
 const LogSessionModalContent = ({
@@ -23,6 +23,7 @@ const LogSessionModalContent = ({
   isDark,
   tokens,
   onSelectedHobbyViewChange,
+  hobbyList,
 }: LogSessionModalContentProps) => {
   const [selectedHobbySession, setSelectedHobbySession] = useState<HobbySession | null>(null);
 
@@ -31,7 +32,7 @@ const LogSessionModalContent = ({
   }, [selectedHobbySession, onSelectedHobbyViewChange]);
 
   const handleHobbyListItemPress = (hobbyName: string) => {
-    const matchedHobbySession = hobbySessions.find((hobby) => hobby.name === hobbyName) ?? null;
+    const matchedHobbySession = hobbyList.find((hobby) => hobby.name === hobbyName) ?? null;
     console.log(matchedHobbySession);
     setSelectedHobbySession(matchedHobbySession);
   };
@@ -48,8 +49,9 @@ const LogSessionModalContent = ({
               hobby={selectedHobbySession}
             />
             <LogSessionMenu
-              onBackToList={() => setSelectedHobbySession(null)}
               key={selectedHobbySession.name}
+              id={selectedHobbySession.id}
+              onBackToList={() => setSelectedHobbySession(null)}
               name={selectedHobbySession.name}
               minutesPerDay={selectedHobbySession.minutesPerDay}
               streakCount={selectedHobbySession.streakCount}
@@ -63,10 +65,11 @@ const LogSessionModalContent = ({
         ) : (
           <View className="gap-8 p-3">
             <HobbyListHeader isDark={isDark} tokens={tokens} onClose={onClose} />
-            {hobbySessions.map((hobbySession) => (
+            {hobbyList.map((hobbySession) => (
               <HobbyListItem
+                key={hobbySession.id}
+                id={hobbySession.id}
                 onPress={() => handleHobbyListItemPress(hobbySession.name)}
-                key={hobbySession.name}
                 name={hobbySession.name}
                 minutesPerDay={hobbySession.minutesPerDay}
                 streakCount={hobbySession.streakCount}
