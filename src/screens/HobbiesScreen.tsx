@@ -15,7 +15,8 @@ const HobbiesScreen = () => {
   const isDark = colorScheme === 'dark';
 
   const [categories, setCategories] = useState([
-    { name: 'Creative', isSelected: true },
+    { name: 'All', isSelected: true },
+    { name: 'Creative', isSelected: false },
     { name: 'Sport', isSelected: false },
     { name: 'Music', isSelected: false },
     { name: 'Learning', isSelected: false },
@@ -23,6 +24,9 @@ const HobbiesScreen = () => {
     { name: 'Social', isSelected: false },
     { name: 'Misc', isSelected: false },
   ]);
+
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [searchText, setSearchText] = useState<string>('');
 
   const { session } = useAuth();
   const [hobbySummary30days, setHobbySummary30days] = useState<MonthlySummaryData[]>([]);
@@ -55,52 +59,16 @@ const HobbiesScreen = () => {
     void load30DaysSummary();
   }, [session]);
 
-  const HobbyData = [
-    {
-      name: 'Guitar',
-      color: '#504aa6b9',
-      category: 'Creative',
-      emoji: '🎸',
-      totalHours: 68,
-      streakCount: 12,
-      totalTimePerDay: 90,
-      timeDoneToday: 60,
-      timeDonePerDay: [
-        0, 15, 20, 10, 35, 45, 25, 30, 55, 40, 20, 0, 15, 25, 40, 60, 50, 30, 20, 10, 45, 55, 30,
-        35, 25, 15, 20, 10, 50, 60,
-      ],
-    },
-    {
-      name: 'Running',
-      color: '#22c55eb9',
-      category: 'Fitness',
-      emoji: '🏃‍♂️',
-      totalHours: 42,
-      streakCount: 7,
-      totalTimePerDay: 60,
-      timeDoneToday: 30,
-      timeDonePerDay: [
-        0, 10, 15, 20, 25, 30, 15, 20, 35, 40, 30, 20, 10, 0, 15, 25, 30, 35, 20, 15, 10, 20, 30,
-        40, 35, 25, 20, 15, 30, 45,
-      ],
-    },
-    {
-      name: 'Sketching',
-      color: '#e90e0eb9',
-      category: 'Learning',
-      emoji: '🏊‍♂️',
-      totalHours: 29,
-      streakCount: 4,
-      totalTimePerDay: 45,
-      timeDoneToday: 18,
-      timeDonePerDay: [
-        0, 5, 10, 15, 20, 25, 10, 5, 0, 10, 15, 20, 25, 30, 20, 15, 10, 5, 0, 10, 15, 20, 25, 15,
-        10, 5, 0, 10, 20, 25,
-      ],
-    },
-  ];
+  const filteredHobbies = hobbySummary30days.filter((hobby) => {
+    const categoryMatches =
+      selectedCategory === 'All' || hobby.category?.toLowerCase() === selectedCategory.toLowerCase();
 
-  const DetailedHobbyCards = hobbySummary30days.map((data) => (
+    const nameMatches = hobby.name.toLowerCase().includes(searchText.trim().toLowerCase());
+
+    return categoryMatches && nameMatches;
+  });
+
+  const DetailedHobbyCards = filteredHobbies.map((data) => (
     <HobbyWithMiniHeatMap key={data.name} isDark={isDark} tokens={tokens} data={data} />
   ));
 
@@ -111,13 +79,19 @@ const HobbiesScreen = () => {
         isSelected: category.name === selectedCategory,
       }))
     );
+    setSelectedCategory(selectedCategory);
   };
 
   return (
     <View className="flex-1 pt-8" style={{ backgroundColor: tokens.pageBg }}>
       <ScrollView className="flex-1" contentContainerClassName="gap-8 px-6">
         <HobbiesHeader isDark={isDark} tokens={tokens} activeHobbies={3} totalTime={179} />
-        <SearchBox isDark={isDark} tokens={tokens} />
+        <SearchBox
+          isDark={isDark}
+          tokens={tokens}
+          searchText={searchText}
+          onSearchTextChange={setSearchText}
+        />
 
         <View className="flex-row flex-wrap gap-2">
           {categories.map((category) => {

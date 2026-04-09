@@ -5,9 +5,11 @@ import { ThemeTokens } from '@/theme/tokens';
 interface SearchBoxProps {
   isDark: boolean;
   tokens: ThemeTokens;
+  searchText: string;
+  onSearchTextChange: (value: string) => void;
 }
 
-const SearchBox = ({ isDark, tokens }: SearchBoxProps) => {
+const SearchBox = ({ isDark, tokens, searchText, onSearchTextChange }: SearchBoxProps) => {
   return (
     <View
       className={`${isDark ? 'border-border bg-card-bg ' : 'border-border-light bg-card-bg-light '} h-12 w-full flex-row rounded-2xl border items-center px-2`}>
@@ -16,6 +18,8 @@ const SearchBox = ({ isDark, tokens }: SearchBoxProps) => {
         placeholder="Search Hobbies..."
         placeholderTextColor={tokens.textSecondary}
         className={`h-full w-full px-4 ${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} font-jetbrains-mono-light`}
+        value={searchText}
+        onChangeText={onSearchTextChange}
       />
     </View>
   );
