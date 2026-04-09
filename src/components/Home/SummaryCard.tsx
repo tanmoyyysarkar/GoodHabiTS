@@ -12,43 +12,20 @@ interface SummaryCardProps {
   summaryData: CurrentDaySummaryData[];
 }
 
-const hobbyProgressData = [
-  {
-    name: 'Guitar',
-    color: '#9500ff',
-    totalTime: 90,
-    timeDone: 60,
-  },
-  {
-    name: 'Running',
-    color: '#1cc099',
-    totalTime: 60,
-    timeDone: 30,
-  },
-  {
-    name: 'Sketching',
-    color: '#ee4242',
-    totalTime: 30,
-    timeDone: 50,
-  },
-  {
-    name: 'Guitar',
-    color: '#9500ff',
-    totalTime: 90,
-    timeDone: 60,
-  },
-  {
-    name: 'Running',
-    color: '#1cc099',
-    totalTime: 60,
-    timeDone: 30,
-  },
-  {
-    name: 'Sketching',
-    color: '#ee4242',
-    totalTime: 30,
-    timeDone: 50,
-  },
+const WEEKDAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const MONTH_NAMES = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
 const SummaryCard = ({ isDark, tokens, summaryData }: SummaryCardProps) => {
@@ -57,6 +34,9 @@ const SummaryCard = ({ isDark, tokens, summaryData }: SummaryCardProps) => {
   const expandProgress = useRef(new Animated.Value(isExpanded ? 1 : 0)).current;
   const [renderExtraItems, setRenderExtraItems] = useState(isExpanded);
   const [extraContentHeight, setExtraContentHeight] = useState(0);
+
+  const now = new Date();
+  const todayDateLabel = `${WEEKDAY_NAMES[now.getDay()]}, ${MONTH_NAMES[now.getMonth()]} ${now.getDate()}`;
 
   const todayStatsData = [
     {
@@ -94,8 +74,8 @@ const SummaryCard = ({ isDark, tokens, summaryData }: SummaryCardProps) => {
     </View>
   ));
 
-  const progressBars = hobbyProgressData.map((data, index) => {
-    const progress = (data.timeDone / data.totalTime) * 100;
+  const progressBars = [...summaryData].sort((a, b) => b.minutes_today - a.minutes_today).map((data, index) => {
+    const progress = (data.minutes_today / data.target_minutes) * 100;
 
     return (
       <View key={`${data.name}-${index}`} className="gap-2 pb-4">
@@ -107,7 +87,7 @@ const SummaryCard = ({ isDark, tokens, summaryData }: SummaryCardProps) => {
           </Text>
           <Text
             className={`text-sm ${isDark ? 'text-text-secondary' : 'text-text-secondary-light'} font-jetbrains-mono`}>
-            {data.timeDone} / {data.totalTime} min
+            {data.minutes_today} / {data.target_minutes} min
           </Text>
         </View>
         <View
@@ -189,7 +169,7 @@ const SummaryCard = ({ isDark, tokens, summaryData }: SummaryCardProps) => {
         }}>
         <Text
           className={`${isDark ? `text-text-secondary` : `text-text-secondary-light`} pb-4 font-jetbrains-mono-semibold`}>
-          Sunday, March 29
+          {todayDateLabel}
         </Text>
         <View className="mb-2 flex-row flex-wrap justify-between">{statsCards}</View>
         {visibleProgressBars}
