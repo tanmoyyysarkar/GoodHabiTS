@@ -3,13 +3,22 @@ import { Text, View } from 'react-native';
 import { SessionProgressRing } from './SessionProgressRing';
 import { LogSessionMenuFooter } from './LogSessionMenuFooter';
 import { MoodPill } from './MoodPill';
-import { LogSessionMenuProps, Mood, SessionDuration } from '../../../../types/logSessionModalTypes';
+import { LogSessionMenuProps, Mood, SessionDuration } from '@/types/logSessionModalTypes';
 import DoneForToday from './logSessionMenuParts/DoneForToday';
 import LogDaySelector from './logSessionMenuParts/LogDaySelector';
 import TimeInputMenu from './logSessionMenuParts/TimeInputMenu';
 import SessionNotes from './logSessionMenuParts/SessionNotes';
+import addNewHobbySession from '@/lib/supabase/addNewHobbySession';
+
+const formatLocalDate = (date: Date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 
 export const LogSessionMenu = ({
+  id,
   name,
   color,
   minutesPerDay,
@@ -19,11 +28,11 @@ export const LogSessionMenu = ({
   tokens,
 }: LogSessionMenuProps) => {
   const moodOptions: Mood[] = [
-    { emoji: '😫', color: '#ff6565', name: 'Rough' },
-    { emoji: '😕', color: '#ffb667', name: 'Meh' },
-    { emoji: '🙂', color: '#fff643', name: 'Okay' },
-    { emoji: '😁', color: '#a8ff50', name: 'Good' },
-    { emoji: '🤩', color: '#73deff', name: 'Amazing' },
+    { emoji: '😫', color: '#ff6565', name: 'Rough', value: 1 },
+    { emoji: '😕', color: '#ffb667', name: 'Meh', value: 2 },
+    { emoji: '🙂', color: '#fff643', name: 'Okay', value: 3 },
+    { emoji: '😁', color: '#a8ff50', name: 'Good', value: 4 },
+    { emoji: '🤩', color: '#73deff', name: 'Amazing', value: 5 },
   ];
 
   const [accentColor, setAccentColor] = useState<string>(tertiaryTextColor);
@@ -48,7 +57,7 @@ export const LogSessionMenu = ({
       day: 'numeric',
     });
 
-    const isoDate = optionDate.toISOString().split('T')[0];
+    const isoDate = formatLocalDate(optionDate);
 
     return {
       offset: offset as 0 | 1 | 2 | 3,
@@ -119,23 +128,27 @@ export const LogSessionMenu = ({
     });
   };
 
-  const handleLogSessionPress = () => {
+  const handleLogSessionPress = async () => {
     const selectedDay = dayOptions.find((day) => day.offset === selectedDayOffset);
+    if (!selectedDay || !selectedMood) return;
 
-    const sessionLogPayload = {
-      name,
-      totalMinutesLogged,
-      feeling: selectedMood?.name,
-      notes: notes.trim() === '' ? '' : notes,
-      dayOffset: selectedDayOffset,
-      logForDate: selectedDay?.isoDate,
-    };
-    console.log(sessionLogPayload);
+    const { success, data, errorMessage } = await addNewHobbySession(
+      id,
+      selectedMood.value,
+      selectedDay.isoDate,
+      notes.trim() === '' ? '' : notes,
+      totalMinutesLogged
+    );
+    if (!success) {
+      console.log(errorMessage);
+      return;
+    }
+    console.log(data);
   };
 
   return (
     <View className="px-3">
-       <Text className="pb-3 font-jetbrains-mono text-sm" style={{ color: tokens.textTertiary }}>
+      <Text className="pb-3 font-jetbrains-mono text-sm" style={{ color: tokens.textTertiary }}>
         LOG FOR
       </Text>
       <LogDaySelector
