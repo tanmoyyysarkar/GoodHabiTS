@@ -8,5 +8,4 @@ export type HobbyHeatmapItem = {
   totalTimePerDay: number;
   timeDoneToday: number;
   timeDonePerDay: number[];
-  startDay: number; //sun = 1 -> sat = 7
 };

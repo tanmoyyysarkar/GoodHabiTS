@@ -175,6 +175,7 @@ const AddHobbyModalContent = ({
       formOutputData.color,
       formOutputData.minutesPerDay,
       formOutputData.days,
+      formOutputData.category,
       is_daily
     );
     if (!success) {

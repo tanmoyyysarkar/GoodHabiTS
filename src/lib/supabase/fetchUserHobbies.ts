@@ -4,7 +4,7 @@ const fetchUserHobbies = async (userId: string) => {
   try {
     const { data, error } = await supabase
       .from('hobbies')
-      .select('id, name, icon, streak_score, color, target_minutes')
+      .select('id, name, icon, streak_score, color, target_minutes, category')
       .eq('user_id', userId)
       .eq('is_active', true)
       .order('created_at', { ascending: false });
