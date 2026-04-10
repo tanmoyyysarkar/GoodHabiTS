@@ -16,7 +16,7 @@ export const fetch30dayInsights = async () => {
     return { success: true, data };
   } catch (error) {
     const errorMessage =
-      error instanceof Error ? error.message : 'Unexpected error fetch the last 30 days summary';
+      error instanceof Error ? error.message : 'Unexpected error fetch the last 30 day insights';
     return { success: false as const, errorMessage };
   }
 };
