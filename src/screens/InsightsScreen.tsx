@@ -1,5 +1,6 @@
 import CategoryBreakDown from '@/components/Insights/CategoryBreakDown';
 import DailySessionsLineChart from '@/components/Insights/DailySessionsLineChart';
+import HeatMap from '@/components/Insights/HeatMap';
 import InsightsSubHeadingText from '@/components/Insights/InsightsSubHeading';
 import MoodVsSessionGraph from '@/components/Insights/MoodVsSessionGraph';
 import { useThemeTokens } from '@/hooks/useThemeTokens';
@@ -24,6 +25,7 @@ const InsightsScreen = () => {
         <InsightsSubHeadingText isDark={isDark} text="DAILY SESSIONS" />
         <DailySessionsLineChart isDark={isDark} tokens={tokens} />
         <InsightsSubHeadingText isDark={isDark} text="ACTIVITY HEATMAP" />
+        <HeatMap isDark={isDark} tokens={tokens} />
         <InsightsSubHeadingText isDark={isDark} text="CATEGORY BREAKDOWN" />
         <CategoryBreakDown isDark={isDark} tokens={tokens} />
         <InsightsSubHeadingText isDark={isDark} text="MOOD VS SESSIONS" />
