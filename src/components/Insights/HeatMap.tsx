@@ -1,6 +1,7 @@
+import { get365HeatMap, YearHeatMapData } from '@/lib/supabase/get365DayHeatMap';
 import { ThemeTokens } from '@/theme/tokens';
 import { Ionicons } from '@expo/vector-icons';
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
 interface HeatMapProps {
@@ -14,14 +15,20 @@ interface HeatProps {
   legend?: boolean;
 }
 
-const generateValues = () => {
-  return Array.from(
-    { length: 365 },
-    () => Math.floor(Math.random() * 121) // 0–120 inclusive
-  );
-};
-
-const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const monthLabels = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
 
 const HeatMap = ({ isDark, tokens }: HeatMapProps) => {
   const scrollViewRef = useRef<ScrollView>(null);
@@ -46,13 +53,26 @@ const HeatMap = ({ isDark, tokens }: HeatMapProps) => {
     return (
       <View
         className={`${legend ? 'h-4 w-4' : ' h-6 w-6'} flex items-center justify-center rounded-md`}
-        style={{ borderWidth: 0.5, borderColor: normalColor, backgroundColor: heatColor }}>
+        style={{ borderWidth: 0.5, borderColor: `${normalColor}80`, backgroundColor: heatColor }}>
         {value > 100 && !legend ? <Ionicons color={'#ffea00'} name="star" size={12} /> : null}
       </View>
     );
   };
 
-  const values = useMemo(() => generateValues(), []);
+  const [values, setValues] = useState<YearHeatMapData[]>([]);
+
+  useEffect(() => {
+    const loadMetrics = async () => {
+      const { success, data, errorMessage } = await get365HeatMap();
+      if (!success) {
+        console.error(errorMessage);
+        return;
+      }
+      setValues((data as YearHeatMapData[] | undefined) ?? []);
+    };
+
+    void loadMetrics();
+  }, []);
 
   const todayDay = new Date().getDay() + 1;
   const leadingEmptyCount = (todayDay - 1 - ((values.length - 1) % 7) + 7) % 7;
@@ -78,11 +98,6 @@ const HeatMap = ({ isDark, tokens }: HeatMapProps) => {
       return monthLabels[monthIndex];
     });
   }, []);
-
-  const heatCellSize = 24;
-  const heatColumnGap = 4;
-  const heatmapWidth =
-    columns.length * heatCellSize + Math.max(columns.length - 1, 0) * heatColumnGap;
 
   const legendHeatVals = [0, 10, 21, 41, 61, 81];
 
@@ -111,7 +126,15 @@ const HeatMap = ({ isDark, tokens }: HeatMapProps) => {
             {columns.map((column, columnIndex) => (
               <View key={`column-${columnIndex}`} className="gap-1">
                 {column.map((value, rowIndex) => (
-                  <Heats key={`cell-${columnIndex}-${rowIndex}`} isDark={isDark} value={value} />
+                  <Heats
+                    key={`cell-${columnIndex}-${rowIndex}`}
+                    isDark={isDark}
+                    value={
+                      value && value.total_target_minutes > 0
+                        ? (value.total_minutes_logged / value.total_target_minutes) * 100
+                        : null
+                    }
+                  />
                 ))}
               </View>
             ))}

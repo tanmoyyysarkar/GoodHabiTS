@@ -38,7 +38,7 @@ const MoodVsSessionGraph = ({ isDark, tokens }: MoodVsSessionGraphProps) => {
       if (!acc[item.feeling]) {
         acc[item.feeling] = { total: 0, count: 0 };
       }
-
+      
       acc[item.feeling].total += item.minutes_logged;
       acc[item.feeling].count += 1;
 
