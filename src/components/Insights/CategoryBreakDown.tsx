@@ -1,4 +1,6 @@
+import { CategoryDataType, getCategoryDistribution } from '@/lib/supabase/getCategoryDistribution';
 import { ThemeTokens } from '@/theme/tokens';
+import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import { PieChart } from 'react-native-gifted-charts';
 
@@ -18,23 +20,30 @@ const categoryColor = [
   { name: 'Misc', color: '#565656' },
 ];
 
-const categoryData = [
-  //MOCK
-  { name: 'Creative', value: 28 },
-  { name: 'Sport', value: 18 },
-  { name: 'Music', value: 12 },
-  { name: 'Learning', value: 22 },
-  { name: 'Wellness', value: 10 },
-  { name: 'Social', value: 6 },
-  { name: 'Misc', value: 14 },
-];
-
 const CategoryBreakDown = ({ isDark, tokens }: CategoryBreakDownProps) => {
+  const [categoryData, setCategoryData] = useState<CategoryDataType[]>([]);
+
+  useEffect(() => {
+    const loadMetrics = async () => {
+      const { success, data, errorMessage } = await getCategoryDistribution();
+      if (!success) {
+        console.log(errorMessage);
+        return;
+      }
+      setCategoryData((data as CategoryDataType[] | undefined) ?? []);
+    };
+    loadMetrics();
+  }, []);
+
+  const totalMinutes = categoryData.reduce((total, item) => total + item.total_minutes, 0);
+
   const chartDataWithColors = categoryData.map((category) => {
-    const matchedCategory = categoryColor.find((x) => x.name === category.name);
+    const matchedCategory = categoryColor.find((x) => x.name === category.category);
+    const percentage = totalMinutes > 0 ? Number(((category.total_minutes / totalMinutes) * 100).toFixed(1)) : 0;
+
     return {
-      name: category.name,
-      value: category.value,
+      name: category.category,
+      value: percentage,
       color: matchedCategory ? matchedCategory.color : '#fff',
     };
   });
@@ -42,7 +51,7 @@ const CategoryBreakDown = ({ isDark, tokens }: CategoryBreakDownProps) => {
   const pieChartData = chartDataWithColors.map(({ value, color }) => ({ value, color }));
   return (
     <View
-      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} overflow-hidden rounded-2xl border pl-4`}>
+      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} overflow-hidden rounded-2xl border pl-4 py-3`}>
       <View className="flex-row items-center justify-between">
         <PieChart
           data={pieChartData}
@@ -56,7 +65,7 @@ const CategoryBreakDown = ({ isDark, tokens }: CategoryBreakDownProps) => {
           {chartDataWithColors.map((item) => (
             <View key={item.name} className="mb-2 flex-row items-center">
               <View className="mr-2 h-4 w-4 rounded-md" style={{ backgroundColor: item.color }} />
-              <View className='w-full pr-8 pl-2 flex-row justify-between'>
+              <View className="w-full flex-row justify-between pl-2 pr-8">
                 <Text
                   className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-light text-sm`}>
                   {item.name}
