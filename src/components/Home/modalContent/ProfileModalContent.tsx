@@ -5,6 +5,7 @@ interface ProfileModalContentProps {
   isDark: boolean;
 }
 
+//TODO complete it soon
 const ProfileModalContent = ({onClose, isDark}: ProfileModalContentProps) => {
   return (
     <View>
