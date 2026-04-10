@@ -29,11 +29,11 @@ const colorPalette = {
   // ══════════════════════════════════════════════════════════════════════════
 
   // ── Page Background
-  'page-bg-light': '#eff4ff',   // Clean cloud background for bento layout
+  'page-bg-light': '#e2e2e2',   // Clean cloud background for bento layout
 
   // ── Surfaces
-  'card-bg-light': '#e8f0fa',         // Crisp white for standard cards
-  'card-bg-elevated-light': '#cdd5eb',// Slightly tinted for floating menus
+  'card-bg-light': '#e7f2ff',         // Crisp white for standard cards
+  'card-bg-elevated-light': '#dae8ea',// Slightly tinted for floating menus
   'tabbar-bg-light': '#eef2fb',       // Special floating tab bar at bottom
 
   // ── Borders

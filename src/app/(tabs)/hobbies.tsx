@@ -1,8 +1,5 @@
-import HobbiesScreen from "@/screens/HobbiesScreen";
+import HobbiesScreen from '@/screens/HobbiesScreen';
 
 export default function Hobbies() {
-
-  return (
-    <HobbiesScreen />
-  );
+  return <HobbiesScreen />;
 }

@@ -72,7 +72,7 @@ const SummaryCard = ({ isDark, tokens, summaryData }: SummaryCardProps) => {
         elevation: 3,
       }}
       key={data.name}
-      className={`${isDark ? 'border-border bg-card-bg-elevated' : 'border-border-light bg-card-bg-elevated-light'} flex h-20 w-[105px] items-center justify-center rounded-2xl border p-2`}>
+      className={`${isDark ? 'border-border bg-card-bg-elevated' : 'border-border-light bg-card-bg-elevated-light'} flex h-20 w-[105px] items-center justify-center rounded-2xl border p-2 mb-2`}>
       <Text className={`${isDark ? `text-white` : `text-black`} font-jetbrains-mono-bold text-2xl`}>
         {data.value}
       </Text>
