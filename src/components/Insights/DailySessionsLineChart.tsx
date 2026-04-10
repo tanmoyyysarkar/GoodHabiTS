@@ -136,7 +136,7 @@ const DailySessionsLineChart = ({
         <View className="flex-row items-center gap-2">
           <View className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: completionColor }} />
           <Text
-            style={{ color: tokens.textSecondary }}
+            style={{ color: tokens.textPrimary }}
             className="font-jetbrains-mono-light text-sm">
             Hobbies Completed
           </Text>
@@ -144,7 +144,7 @@ const DailySessionsLineChart = ({
         <View className="flex-row items-center gap-2">
           <View className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: timeDoneColor }} />
           <Text
-            style={{ color: tokens.textSecondary }}
+            style={{ color: tokens.textPrimary }}
             className="font-jetbrains-mono-light text-sm">
             Time spent
           </Text>
