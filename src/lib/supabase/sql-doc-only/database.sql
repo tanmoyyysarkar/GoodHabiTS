@@ -7,12 +7,12 @@ CREATE TABLE public.hobbies (
   name text NOT NULL,
   icon text NOT NULL,
   color text NOT NULL,
-  target_minutes numeric NOT NULL,
+  target_minutes smallint NOT NULL DEFAULT '15'::smallint,
   is_daily boolean NOT NULL DEFAULT true,
   days_of_week ARRAY NOT NULL DEFAULT '{''Sun'',''Mon'',''Tue'',''Wed'',''Thu'',''Fri'',''Sat''}'::text[],
   is_active boolean NOT NULL DEFAULT true,
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
-  streak_score numeric NOT NULL DEFAULT '0'::numeric CHECK (streak_score > '-1'::integer::numeric),
+  streak_score integer NOT NULL CHECK (streak_score::numeric > '-1'::integer::numeric),
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   category text NOT NULL DEFAULT 'Misc'::text,
   CONSTRAINT hobbies_pkey PRIMARY KEY (id),
@@ -26,10 +26,10 @@ CREATE TABLE public.sessions (
   feeling smallint NOT NULL DEFAULT '5'::smallint,
   session_date date NOT NULL,
   notes text NOT NULL DEFAULT ''::text,
-  minutes_logged numeric NOT NULL,
+  minutes_logged smallint NOT NULL DEFAULT '0'::smallint,
   CONSTRAINT sessions_pkey PRIMARY KEY (id),
   CONSTRAINT sessions_hobby_id_fkey FOREIGN KEY (hobby_id) REFERENCES public.hobbies(id),
-  CONSTRAINT sessions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.user_profiles(id)
+  CONSTRAINT sessions_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
 );
 CREATE TABLE public.user_profiles (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
