@@ -1,3 +1,7 @@
+import { useState } from 'react';
+import { ScrollView, View } from 'react-native';
+import { useColorScheme } from 'nativewind';
+
 import HobbyBreakDownCard from '@/components/Profile/HobbyBreakDownCard';
 import LogOutButton from '@/components/Profile/LogOutButton';
 import MilestoneCard from '@/components/Profile/MilestoneCard';
@@ -5,11 +9,9 @@ import ProfileHeader from '@/components/Profile/ProfileHeader';
 import ProfileSubHeadingText from '@/components/Profile/ProfileSubHeadingText';
 import QuickProfileInsightsCard from '@/components/Profile/QuickProfileInsightsCard';
 import ThisYearInsights from '@/components/Profile/ThisYearInsights';
+
 import { useAuth } from '@/context/AuthContext';
 import { useThemeTokens } from '@/hooks/useThemeTokens';
-import { useColorScheme } from 'nativewind';
-import { useState } from 'react';
-import { ScrollView, View } from 'react-native';
 
 const ProfileScreen = () => {
   const tokens = useThemeTokens();

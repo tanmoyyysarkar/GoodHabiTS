@@ -41,6 +41,14 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.tanmoyyysarkar.GoodHabiTS"
+    },
+    "extra": {
+      "router": {
+        "root": "./src/app"
+      },
+      "eas": {
+        "projectId": "3cb4039e-0e2b-4693-a9c1-8ce7e8cbadde"
+      }
     }
   }
 }

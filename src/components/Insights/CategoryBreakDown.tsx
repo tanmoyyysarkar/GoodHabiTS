@@ -1,13 +1,12 @@
-import { CategoryDataType, getCategoryDistribution } from '@/lib/supabase/getCategoryDistribution';
+import { CategoryDataType } from '@/lib/supabase/getCategoryDistribution';
 import { ThemeTokens } from '@/theme/tokens';
-import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import { PieChart } from 'react-native-gifted-charts';
 
 interface CategoryBreakDownProps {
   isDark: boolean;
   tokens: ThemeTokens;
-  // PieChartData: CategoryData[];
+  data: CategoryDataType[];
 }
 
 const categoryColor = [
@@ -20,24 +19,10 @@ const categoryColor = [
   { name: 'Misc', color: '#565656' },
 ];
 
-const CategoryBreakDown = ({ isDark, tokens }: CategoryBreakDownProps) => {
-  const [categoryData, setCategoryData] = useState<CategoryDataType[]>([]);
+const CategoryBreakDown = ({ isDark, tokens, data }: CategoryBreakDownProps) => {
+  const totalMinutes = data.reduce((total, item) => total + item.total_minutes, 0);
 
-  useEffect(() => {
-    const loadMetrics = async () => {
-      const { success, data, errorMessage } = await getCategoryDistribution();
-      if (!success) {
-        console.log(errorMessage);
-        return;
-      }
-      setCategoryData((data as CategoryDataType[] | undefined) ?? []);
-    };
-    loadMetrics();
-  }, []);
-
-  const totalMinutes = categoryData.reduce((total, item) => total + item.total_minutes, 0);
-
-  const chartDataWithColors = categoryData.map((category) => {
+  const chartDataWithColors = data.map((category) => {
     const matchedCategory = categoryColor.find((x) => x.name === category.category);
     const percentage = totalMinutes > 0 ? Number(((category.total_minutes / totalMinutes) * 100).toFixed(1)) : 0;
 
