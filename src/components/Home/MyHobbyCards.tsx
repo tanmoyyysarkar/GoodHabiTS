@@ -10,7 +10,7 @@ interface MyHobbyCardProps {
   tokens: ThemeTokens;
   hobbyData: HobbyCardData[];
   onAddPress: () => void;
-  onLongPress: () => void;
+  onLongPress: (hobbyId: string) => void;
 }
 
 const MyHobbyCard = ({ hobbyData, isDark, tokens, onAddPress, onLongPress }: MyHobbyCardProps) => {
@@ -43,21 +43,26 @@ const MyHobbyCard = ({ hobbyData, isDark, tokens, onAddPress, onLongPress }: MyH
   };
 
   const hobbyCards = hobbyData.map((hobby) => (
-    <Pressable key={hobby.id} onPress={onLongPress}>
+    <Pressable key={hobby.id} onLongPress={() => onLongPress(hobby.id)}>
       <View
-        className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} flex h-28 w-[100px] items-center justify-center gap-1 rounded-2xl border`}
+        className={`${isDark ? ' bg-card-bg' : ' bg-card-bg-light'} flex h-28 w-[100px] items-center justify-center gap-1 rounded-2xl border`}
         style={{
           shadowColor: tokens.border,
           shadowOffset: { width: 0, height: 8 },
           shadowOpacity: 0.25,
           shadowRadius: 12,
           elevation: 6,
+          borderColor: hobby.color
         }}>
         <Text className="text-3xl">{hobby.emoji}</Text>
-        <Text
-          className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-light text-sm`}>
-          {hobby.name}
-        </Text>
+        <View className="w-full items-center px-1">
+          <Text
+            numberOfLines={2}
+            ellipsizeMode="tail"
+            className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} w-full text-center font-jetbrains-mono-light text-sm leading-4`}>
+            {hobby.name.trim()}
+          </Text>
+        </View>
         {hobby.streakScore >= 0 ? ( //TODO Fix this >= to > after streak logic is put in place
           <View
             className={`${isDark ? ' bg-purple-700' : 'bg-card-bg-elevated-light'} rounded-full px-1`}>

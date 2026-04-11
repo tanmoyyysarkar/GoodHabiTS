@@ -22,7 +22,7 @@ import fetchUserHobbies from '@/lib/supabase/home/fetchUserHobbies';
 
 type ModalType = 'profile' | 'addHobby' | 'logSession' | null;
 
-type FetchedHobbyRow = {
+export type FetchedHobbyRow = {
   id: string;
   name: string;
   icon: string;
@@ -30,6 +30,7 @@ type FetchedHobbyRow = {
   color: string;
   target_minutes: number;
   category: string;
+  days_of_week: string[];
 };
 
 export type HobbyCardData = {
@@ -37,6 +38,7 @@ export type HobbyCardData = {
   emoji: string;
   name: string;
   streakScore: number;
+  color: string;
 };
 
 const isCurrentDaySummaryItemValid = (value: unknown): value is CurrentDaySummaryData => {
@@ -70,6 +72,7 @@ const HomeScreen = () => {
   const closeModal = () => {
     setActiveModal(null);
     setIsLogSessionCompact(false);
+    setAddHobbyMode('add');
   };
 
   const { session } = useAuth();
@@ -88,7 +91,8 @@ const HomeScreen = () => {
   const [hobbyDataForCards, setHobbyDataForCards] = useState<HobbyCardData[]>([]);
   const [hobbyDataForLogSessionList, setHobbyDataForLogSessionList] = useState<HobbySession[]>([]);
   const [currentDaySummaryData, setCurrentDaySummaryData] = useState<CurrentDaySummaryData[]>([]);
-  const [refreshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [fetchedHobbies, setFetchedHobbies] = useState<FetchedHobbyRow[]>([]);
 
   const loadHobbies = async () => {
     if (!session) {
@@ -104,6 +108,8 @@ const HomeScreen = () => {
       return;
     }
 
+    setFetchedHobbies(data ?? []);
+
     //==============================FOR-MY-HOBBY-CARDS=============================
     const mappedHobbiesForMyHobbyCards: HobbyCardData[] =
       (data as FetchedHobbyRow[] | undefined)?.map((hobby) => ({
@@ -111,6 +117,7 @@ const HomeScreen = () => {
         emoji: hobby.icon,
         name: hobby.name,
         streakScore: hobby.streak_score ?? 0,
+        color: hobby.color
       })) ?? [];
 
     setHobbyDataForCards(mappedHobbiesForMyHobbyCards);
@@ -118,12 +125,12 @@ const HomeScreen = () => {
     //==============================FOR-HOBBY-SESSION-LIST==========================
     const mappedHobbyDataForLogSessionList: HobbySession[] =
       (data as FetchedHobbyRow[] | undefined)?.map((hobby) => ({
+        id: hobby.id,
+        name: hobby.name,
         icon: hobby.icon,
+        streakCount: hobby.streak_score ?? 0,
         color: hobby.color,
         minutesPerDay: hobby.target_minutes,
-        name: hobby.name,
-        streakCount: hobby.streak_score ?? 0,
-        id: hobby.id,
       })) ?? [];
 
     setHobbyDataForLogSessionList(mappedHobbyDataForLogSessionList);
@@ -147,9 +154,7 @@ const HomeScreen = () => {
   const onRefresh = async () => {
     if (!session) return;
     setRefreshing(true);
-
     await Promise.all([loadHobbies(), loadCurrentDaySummaryData()]);
-
     setRefreshing(false);
   };
 
@@ -157,6 +162,18 @@ const HomeScreen = () => {
     void loadHobbies();
     void loadCurrentDaySummaryData();
   }, [session]);
+
+  const [addHobbyMode, setAddHobbyMode] = useState<'add' | 'edit'>('add');
+  const [selectedHobbyForEdit, setSelectedHobbyForEdit] = useState<FetchedHobbyRow | undefined>(undefined);
+
+  const handleHobbyCardLongPress = (id: string) => {
+    const selectedHobby = fetchedHobbies.find((x) => x.id === id);
+    if (!selectedHobby) return;
+
+    openModal('addHobby');
+    setAddHobbyMode('edit');
+    setSelectedHobbyForEdit(selectedHobby);
+  };
 
   return (
     <>
@@ -184,7 +201,7 @@ const HomeScreen = () => {
             isDark={isDark}
             tokens={tokens}
             onAddPress={() => openModal('addHobby')}
-            onLongPress={() => {}}
+            onLongPress={handleHobbyCardLongPress}
           />
           <View className="h-24 w-max"></View>
         </ScrollView>
@@ -203,6 +220,7 @@ const HomeScreen = () => {
             )}
             {activeModal === 'addHobby' && (
               <AddHobbyModalContent
+                mode={addHobbyMode}
                 tokens={tokens}
                 isDark={isDark}
                 onClose={closeModal}
@@ -210,6 +228,7 @@ const HomeScreen = () => {
                   void loadHobbies();
                   closeModal();
                 }}
+                selectedHobby={selectedHobbyForEdit}
               />
             )}
             {activeModal === 'logSession' && (

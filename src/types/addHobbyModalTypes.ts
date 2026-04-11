@@ -46,6 +46,7 @@ export interface AddHobbyHeaderProps {
   isDark: boolean;
   selectedColor: string;
   selectedIcon: string;
+  mode: "add" | "edit"
 }
 
 export interface AddHobbyFooterProps {

@@ -1,6 +1,6 @@
-import signInWithPassword from '@/lib/supabase/signInWithPassword';
-import signOut from '@/lib/supabase/signOut';
-import signUp from '@/lib/supabase/signUp';
+import signInWithPassword from '@/lib/supabase/auth/signInWithPassword';
+import signOut from '@/lib/supabase/auth/signOut';
+import signUp from '@/lib/supabase/auth/signUp';
 import { supabase } from '@/lib/supabase/supabase';
 import { Session } from '@supabase/supabase-js';
 import { SplashScreen } from 'expo-router';
