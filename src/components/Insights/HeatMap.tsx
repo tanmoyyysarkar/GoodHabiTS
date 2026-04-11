@@ -1,12 +1,14 @@
-import { get365HeatMap, YearHeatMapData } from '@/lib/supabase/get365DayHeatMap';
+import { YearHeatMapData } from '@/lib/supabase/get365DayHeatMap';
 import { ThemeTokens } from '@/theme/tokens';
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
+import { InteractionManager } from 'react-native';
 import { ScrollView, Text, View } from 'react-native';
 
 interface HeatMapProps {
   isDark: boolean;
   tokens: ThemeTokens;
+  data: YearHeatMapData[];
 }
 
 interface HeatProps {
@@ -30,7 +32,16 @@ const monthLabels = [
   'Dec',
 ];
 
-const HeatMap = ({ isDark, tokens }: HeatMapProps) => {
+const scrollToRightEdge = (scrollViewRef: { current: ScrollView | null }) => {
+  // Run after layout/interaction work to avoid race conditions where scrollToEnd is ignored.
+  InteractionManager.runAfterInteractions(() => {
+    requestAnimationFrame(() => {
+      scrollViewRef.current?.scrollToEnd({ animated: false });
+    });
+  });
+};
+
+const HeatMap = ({ isDark, tokens, data }: HeatMapProps) => {
   const scrollViewRef = useRef<ScrollView>(null);
 
   const Heats = ({ value, isDark, legend = false }: HeatProps) => {
@@ -59,27 +70,12 @@ const HeatMap = ({ isDark, tokens }: HeatMapProps) => {
     );
   };
 
-  const [values, setValues] = useState<YearHeatMapData[]>([]);
-
-  useEffect(() => {
-    const loadMetrics = async () => {
-      const { success, data, errorMessage } = await get365HeatMap();
-      if (!success) {
-        console.error(errorMessage);
-        return;
-      }
-      setValues((data as YearHeatMapData[] | undefined) ?? []);
-    };
-
-    void loadMetrics();
-  }, []);
-
   const todayDay = new Date().getDay() + 1;
-  const leadingEmptyCount = (todayDay - 1 - ((values.length - 1) % 7) + 7) % 7;
+  const leadingEmptyCount = (todayDay - 1 - ((data.length - 1) % 7) + 7) % 7;
 
   const alignedValues = useMemo(
-    () => [...Array.from({ length: leadingEmptyCount }, () => null), ...values],
-    [leadingEmptyCount, values]
+    () => [...Array.from({ length: leadingEmptyCount }, () => null), ...data],
+    [leadingEmptyCount, data]
   );
 
   const columns = useMemo(() => {
@@ -101,6 +97,11 @@ const HeatMap = ({ isDark, tokens }: HeatMapProps) => {
 
   const legendHeatVals = [0, 10, 21, 41, 61, 81];
 
+  useEffect(() => {
+    if (alignedValues.length === 0) return;
+    scrollToRightEdge(scrollViewRef);
+  }, [alignedValues.length]);
+
   return (
     <View
       className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} h-[260px] rounded-2xl border px-6 pb-2 pt-6`}>
@@ -109,9 +110,9 @@ const HeatMap = ({ isDark, tokens }: HeatMapProps) => {
         horizontal
         showsHorizontalScrollIndicator={false}
         onContentSizeChange={() => {
-          scrollViewRef.current?.scrollToEnd({ animated: false });
+          scrollToRightEdge(scrollViewRef);
         }}>
-        <View>
+        <View onLayout={() => scrollToRightEdge(scrollViewRef)}>
           <View className="flex-row items-center justify-between">
             {monthlyLabels.map((label) => (
               <Text

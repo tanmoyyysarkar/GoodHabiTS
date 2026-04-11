@@ -1,6 +1,5 @@
-import { MonthlySummaryData, fetch30dayInsights } from '@/lib/supabase/fetch30dayInsights';
+import { MonthlySummaryData } from '@/lib/supabase/fetch30dayInsights';
 import { ThemeTokens } from '@/theme/tokens';
-import { useEffect, useMemo, useState } from 'react';
 import { Text, View } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 
@@ -9,7 +8,7 @@ interface HobbyCompletionData {
   date: string;
 }
 
-interface TimeDoneData {
+interface DailyTimeDoneData {
   value: number;
   date: string;
 }
@@ -94,7 +93,7 @@ const getMinuteAxisStep = (maxMinutes: number) => {
 const buildLast30DaySeries = (rows: MonthlySummaryData[]) => {
   const rowByDate = new Map(rows.map((row) => [row.date, row]));
   const completionSeries: HobbyCompletionData[] = [];
-  const timeSeries: TimeDoneData[] = [];
+  const timeSeries: DailyTimeDoneData[] = [];
 
   for (let offset = DAY_WINDOW - 1; offset >= 0; offset -= 1) {
     const date = new Date();
@@ -119,32 +118,11 @@ const buildLast30DaySeries = (rows: MonthlySummaryData[]) => {
 interface DailySessionsLineChartProps {
   isDark: boolean;
   tokens: ThemeTokens;
+  data: MonthlySummaryData[];
 }
 
-const DailySessionsLineChart = ({ isDark, tokens }: DailySessionsLineChartProps) => {
-  const [insightsRows, setInsightsRows] = useState<MonthlySummaryData[]>([]);
-
-  /*
-    One-time fetch on mount.
-    If the request fails, we keep empty data so the chart still renders a 30-day zero baseline.
-  */
-  useEffect(() => {
-    const loadMetrics = async () => {
-      const { success, data, errorMessage } = await fetch30dayInsights();
-      if (!success) {
-        console.error(errorMessage);
-        return;
-      }
-      setInsightsRows((data as MonthlySummaryData[] | undefined) ?? []);
-    };
-
-    void loadMetrics();
-  }, []);
-
-  const { completionSeries, timeSeries } = useMemo(
-    () => buildLast30DaySeries(insightsRows),
-    [insightsRows]
-  );
+const DailySessionsLineChart = ({ isDark, tokens, data }: DailySessionsLineChartProps) => {
+  const { completionSeries, timeSeries } = buildLast30DaySeries(data);
 
   /*
     Primary line data (completion %) includes sparse labels on X-axis.

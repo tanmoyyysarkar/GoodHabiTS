@@ -1,24 +1,24 @@
-import { ScrollView, View, Modal } from 'react-native';
 import { useEffect, useState } from 'react';
+import { ScrollView, View, Modal, RefreshControl } from 'react-native';
 import { useColorScheme } from 'nativewind';
-import { useThemeTokens } from '@/hooks/useThemeTokens';
 
 import HomeHeader from '@/components/Home/HomeHeader';
 import StreakBox from '@/components/Home/StreakBox';
 import SummaryCard from '@/components/Home/SummaryCard';
 import MyHobbyCard from '@/components/Home/MyHobbyCards';
 import LogASessionButton from '@/components/Home/LogASessionButton';
-
 import ProfileModalContent from '@/components/Home/modalContent/ProfileModalContent';
 import AddHobbyModalContent from '@/components/Home/modalContent/AddHobbyModalContent';
 import LogSessionModalContent from '@/components/Home/modalContent/LogSessionModalContent';
+
+import { useThemeTokens } from '@/hooks/useThemeTokens';
 import { useAuth } from '@/context/AuthContext';
-import fetchUserHobbies from '@/lib/supabase/fetchUserHobbies';
 import { HobbySession } from '@/types/logSessionModalTypes';
 import {
   CurrentDaySummaryData,
   fetchCurrentDaySessions,
 } from '@/lib/supabase/fetchCurrentDaySessions';
+import fetchUserHobbies from '@/lib/supabase/fetchUserHobbies';
 
 type ModalType = 'profile' | 'addHobby' | 'logSession' | null;
 
@@ -87,6 +87,7 @@ const HomeScreen = () => {
   const [hobbyDataForCards, setHobbyDataForCards] = useState<HobbyCardData[]>([]);
   const [hobbyDataForLogSessionList, setHobbyDataForLogSessionList] = useState<HobbySession[]>([]);
   const [currentDaySummaryData, setCurrentDaySummaryData] = useState<CurrentDaySummaryData[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const loadHobbies = async () => {
     if (!session) {
@@ -141,6 +142,15 @@ const HomeScreen = () => {
     console.log('Unexpected current day summary data shape received from Supabase.');
   };
 
+  const onRefresh = async () => {
+    if (!session) return;
+    setRefreshing(true);
+
+    await Promise.all([loadHobbies(), loadCurrentDaySummaryData()]);
+
+    setRefreshing(false);
+  };
+
   useEffect(() => {
     void loadHobbies();
     void loadCurrentDaySummaryData();
@@ -152,7 +162,8 @@ const HomeScreen = () => {
         <ScrollView
           className="flex-1"
           contentContainerClassName="gap-6 px-6"
-          showsVerticalScrollIndicator={false}>
+          showsVerticalScrollIndicator={false}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
           <HomeHeader
             name={firstName}
             avatar={initials}

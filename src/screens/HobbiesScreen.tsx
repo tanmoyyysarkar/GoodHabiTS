@@ -1,13 +1,15 @@
-import { ScrollView, View } from 'react-native';
-import { useThemeTokens } from '@/hooks/useThemeTokens';
+import { useEffect, useState } from 'react';
+import { ScrollView, View, RefreshControl } from 'react-native';
 import { useColorScheme } from 'nativewind';
+
+import { useThemeTokens } from '@/hooks/useThemeTokens';
+import { useAuth } from '@/context/AuthContext';
+import { getHobby30DaySummary, MonthlySummaryData } from '@/lib/supabase/getHobby30DaySummary';
+
 import HobbiesHeader from '@/components/Hobbies/HobbiesHeader';
 import SearchBox from '@/components/Hobbies/SearchBox';
 import CategoryPill from '@/components/Hobbies/CategoryPill';
 import HobbyWithMiniHeatMap from '@/components/Hobbies/HobbyWithMiniHeatMap';
-import { useEffect, useState } from 'react';
-import { getHobby30DaySummary, MonthlySummaryData } from '@/lib/supabase/getHobby30DaySummary';
-import { useAuth } from '@/context/AuthContext';
 
 const HobbiesScreen = () => {
   const tokens = useThemeTokens();
@@ -59,9 +61,28 @@ const HobbiesScreen = () => {
     void load30DaysSummary();
   }, [session]);
 
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = async () => {
+    if (!session) return;
+    setRefreshing(true);
+
+    await Promise.all([load30DaysSummary()]);
+
+    setSearchText('');
+    setSelectedCategory('All');
+    setCategories((prevCategories) =>
+      prevCategories.map((category) => ({
+        ...category,
+        isSelected: category.name === 'All',
+      }))
+    );
+    setRefreshing(false);
+  };
+
   const filteredHobbies = hobbySummary30days.filter((hobby) => {
     const categoryMatches =
-      selectedCategory === 'All' || hobby.category?.toLowerCase() === selectedCategory.toLowerCase();
+      selectedCategory === 'All' ||
+      hobby.category?.toLowerCase() === selectedCategory.toLowerCase();
 
     const nameMatches = hobby.name.toLowerCase().includes(searchText.trim().toLowerCase());
 
@@ -84,7 +105,10 @@ const HobbiesScreen = () => {
 
   return (
     <View className="flex-1 pt-8" style={{ backgroundColor: tokens.pageBg }}>
-      <ScrollView className="flex-1" contentContainerClassName="gap-8 px-6">
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="gap-8 px-6"
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         <HobbiesHeader isDark={isDark} tokens={tokens} activeHobbies={3} totalTime={179} />
         <SearchBox
           isDark={isDark}

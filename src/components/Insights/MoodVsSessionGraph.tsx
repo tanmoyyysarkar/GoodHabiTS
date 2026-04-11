@@ -1,13 +1,13 @@
-import { useAuth } from '@/context/AuthContext';
-import { fetchMoodTrends, MoodVsSessionDataType } from '@/lib/supabase/fetchMoodTrends';
+import { MoodVsSessionDataType } from '@/lib/supabase/fetchMoodTrends';
 import { ThemeTokens } from '@/theme/tokens';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo} from 'react';
 import { Text, View, Dimensions } from 'react-native';
-import Svg, { Circle, G } from 'react-native-svg';
+import Svg, { Circle } from 'react-native-svg';
 
 interface MoodVsSessionGraphProps {
   isDark: boolean;
   tokens: ThemeTokens;
+  data: MoodVsSessionDataType[];
 }
 
 type MoodPoint = {
@@ -45,28 +45,9 @@ const CHART_PADDING = {
 const MAX_MOOD = 5;
 const MIN_MOOD = 1;
 
-const MoodVsSessionGraph = ({ isDark, tokens }: MoodVsSessionGraphProps) => {
-  const [moodSessions, setMoodSessions] = useState<MoodVsSessionDataType[]>([]);
-  const { session } = useAuth();
-
+const MoodVsSessionGraph = ({ isDark, tokens, data }: MoodVsSessionGraphProps) => {
   /* -------------------------------------------------------------------------
-    2. DATA FETCHING
-    -------------------------------------------------------------------------
-    When the component loads (or if the user session changes), we reach out
-    to Supabase. We grab the raw history of the user's sessions and save
-    it into our local state.
-  */
-  useEffect(() => {
-    const loadMetrics = async () => {
-      if (!session) return;
-      const { success, data } = await fetchMoodTrends(session.user.id);
-      if (success) setMoodSessions((data as MoodVsSessionDataType[]) ?? []);
-    };
-    loadMetrics();
-  }, [session]);
-
-  /* -------------------------------------------------------------------------
-    3. DATA FORMATTING
+    2. DATA FORMATTING
     -------------------------------------------------------------------------
     We take the raw database rows and format them into simple {x, y} coordinates.
     X represents the minutes logged.
@@ -75,14 +56,14 @@ const MoodVsSessionGraph = ({ isDark, tokens }: MoodVsSessionGraphProps) => {
     unless the database data actually changes.
   */
   const chartData = useMemo<MoodPoint[]>(() =>
-    moodSessions
+    data
       .map((item) => ({ x: Number(item.minutes_logged), y: Number(item.feeling) }))
       .filter((item) => Number.isFinite(item.x) && item.y >= MIN_MOOD),
-    [moodSessions]
+    [data]
   );
 
   /* -------------------------------------------------------------------------
-    4. DYNAMIC X-AXIS BOUNDARIES
+    3. DYNAMIC X-AXIS BOUNDARIES
     -------------------------------------------------------------------------
     To make the graph look good, we need to know the longest session the user
     has ever had. If their longest session is 45 minutes, we round the edge
@@ -94,7 +75,7 @@ const MoodVsSessionGraph = ({ isDark, tokens }: MoodVsSessionGraphProps) => {
   }, [chartData]);
 
   /* -------------------------------------------------------------------------
-    5. THE MATH: SCALING FUNCTIONS
+    4. THE MATH: SCALING FUNCTIONS
     -------------------------------------------------------------------------
     SVG canvases are measured in exact pixels, but our data is measured in
     minutes (X) and moods (Y). These two functions act as translators.
@@ -125,7 +106,7 @@ const MoodVsSessionGraph = ({ isDark, tokens }: MoodVsSessionGraphProps) => {
   const chartCardClass = `${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} rounded-3xl border p-4`;
 
   /* -------------------------------------------------------------------------
-    6. THE UI RENDER
+    5. THE UI RENDER
     -------------------------------------------------------------------------
   */
   return (
