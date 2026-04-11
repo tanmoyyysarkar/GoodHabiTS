@@ -9,10 +9,13 @@ import { ScrollView, Text, View, RefreshControl } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 
-import { MonthlySummaryData, fetch30dayInsights } from '@/lib/supabase/fetch30dayInsights';
-import { get365HeatMap, YearHeatMapData } from '@/lib/supabase/get365DayHeatMap';
-import { CategoryDataType, getCategoryDistribution } from '@/lib/supabase/getCategoryDistribution';
-import { fetchMoodTrends, MoodVsSessionDataType } from '@/lib/supabase/fetchMoodTrends';
+import { MonthlySummaryData, fetch30dayInsights } from '@/lib/supabase/insights/fetch30dayInsights';
+import { get365HeatMap, YearHeatMapData } from '@/lib/supabase/insights/get365DayHeatMap';
+import {
+  CategoryDataType,
+  getCategoryDistribution,
+} from '@/lib/supabase/insights/getCategoryDistribution';
+import { fetchMoodTrends, MoodVsSessionDataType } from '@/lib/supabase/insights/fetchMoodTrends';
 
 const InsightsScreen = () => {
   const tokens = useThemeTokens();

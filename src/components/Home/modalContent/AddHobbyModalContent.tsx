@@ -15,7 +15,7 @@ import {
 } from './AddHobbyModalParts/index';
 import SubHeadingText from './AddHobbyModalParts/SubHeadingText';
 import TimeSelectionSlider from './AddHobbyModalParts/TimeSelectionSlider';
-import addNewHobby from '@/lib/supabase/addNewHobby';
+import addNewHobby from '@/lib/supabase/home/addNewHobby';
 
 interface AddHobbyModalContentProps {
   onClose: () => void;

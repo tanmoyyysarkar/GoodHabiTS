@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { supabase } from '@/lib/supabase/supabase';
 
 export type MonthlySummaryData = {
   hobby_id: string;

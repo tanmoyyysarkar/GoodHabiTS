@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { supabase } from '@/lib/supabase/supabase';
 
 const signUp = async (email: string, password: string, full_name: string) => {
   try {

@@ -4,7 +4,7 @@ import { useColorScheme } from 'nativewind';
 
 import { useThemeTokens } from '@/hooks/useThemeTokens';
 import { useAuth } from '@/context/AuthContext';
-import { getHobby30DaySummary, MonthlySummaryData } from '@/lib/supabase/getHobby30DaySummary';
+import { getHobby30DaySummary, MonthlySummaryData } from '@/lib/supabase/hobbies/getHobby30DaySummary';
 
 import HobbiesHeader from '@/components/Hobbies/HobbiesHeader';
 import SearchBox from '@/components/Hobbies/SearchBox';

@@ -1,31 +1,58 @@
-import { Text, View, Pressable, ScrollView } from 'react-native';
+import { Text, View, Pressable } from 'react-native';
 import { ThemeTokens } from '@/theme/tokens';
-
-interface hobbyCardData {
-  emoji: string;
-  name: string;
-  streakScore: number;
-}
+import { HobbyCardData } from '@/screens/HomeScreen';
+import ToolTip from 'react-native-walkthrough-tooltip';
+import { Ionicons } from '@expo/vector-icons';
+import { useState } from 'react';
 
 interface MyHobbyCardProps {
   isDark: boolean;
   tokens: ThemeTokens;
+  hobbyData: HobbyCardData[];
   onAddPress: () => void;
-  hobbyData: hobbyCardData[];
+  onLongPress: () => void;
 }
 
-const MyHobbyCard = ({ hobbyData, isDark, tokens, onAddPress }: MyHobbyCardProps) => {
-  const hobbyCards = hobbyData.map((hobby, index) => (
-    <Pressable key={index}>
-    <View
-      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} flex h-28 w-[100px] items-center justify-center gap-1 rounded-2xl border`}
-      style={{
-        shadowColor: tokens.border,
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.25,
-        shadowRadius: 12,
-        elevation: 6,
-      }}>
+const MyHobbyCard = ({ hobbyData, isDark, tokens, onAddPress, onLongPress }: MyHobbyCardProps) => {
+  const [isToolTipVisible, setIsToolTipVisible] = useState(false);
+
+  const tooltipContent = () => {
+    return (
+      <View
+        className="px-3 py-2"
+        style={{
+          backgroundColor: tokens.cardBgElevated,
+          borderRadius: 14,
+          maxWidth: 220,
+          borderWidth: 1,
+          borderColor: tokens.border,
+        }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+          <Text
+            style={{
+              color: tokens.textPrimary,
+              fontSize: 13,
+              lineHeight: 18,
+              flexShrink: 1,
+            }}>
+            Long press a hobby to edit or delete it
+          </Text>
+        </View>
+      </View>
+    );
+  };
+
+  const hobbyCards = hobbyData.map((hobby) => (
+    <Pressable key={hobby.id} onPress={onLongPress}>
+      <View
+        className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} flex h-28 w-[100px] items-center justify-center gap-1 rounded-2xl border`}
+        style={{
+          shadowColor: tokens.border,
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.25,
+          shadowRadius: 12,
+          elevation: 6,
+        }}>
         <Text className="text-3xl">{hobby.emoji}</Text>
         <Text
           className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-light text-sm`}>
@@ -40,16 +67,30 @@ const MyHobbyCard = ({ hobbyData, isDark, tokens, onAddPress }: MyHobbyCardProps
             </Text>
           </View>
         ) : null}
-    </View>
-      </Pressable>
+      </View>
+    </Pressable>
   ));
 
   return (
-    <View className="">
-      <Text
-        className={`${isDark ? `text-text-secondary` : `text-text-tertiary-light`} pb-4 font-jetbrains-mono opacity-70`}>
-        MY HOBBIES
-      </Text>
+    <View className="gap-2">
+      <View className="flex-row items-center justify-between">
+        <Text
+          className={`${isDark ? `text-text-secondary` : `text-text-tertiary-light`} pb-4 font-jetbrains-mono opacity-70`}>
+          MY HOBBIES
+        </Text>
+
+        <ToolTip
+          isVisible={isToolTipVisible}
+          content={tooltipContent()}
+          contentStyle={{ padding: 0, backgroundColor: tokens.cardBgElevated, borderRadius: 14 }}
+          placement="left"
+          onClose={() => setIsToolTipVisible(false)}>
+          <Pressable onPress={() => setIsToolTipVisible(true)}>
+            <Ionicons name="information-circle" color={tokens.textPrimary} size={24} />
+          </Pressable>
+        </ToolTip>
+      </View>
+
       <View className="flex w-full items-center justify-center">
         <View className="w-[324px] flex-row flex-wrap content-start justify-start gap-3">
           <Pressable

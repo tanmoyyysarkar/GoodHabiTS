@@ -17,8 +17,8 @@ import { HobbySession } from '@/types/logSessionModalTypes';
 import {
   CurrentDaySummaryData,
   fetchCurrentDaySessions,
-} from '@/lib/supabase/fetchCurrentDaySessions';
-import fetchUserHobbies from '@/lib/supabase/fetchUserHobbies';
+} from '@/lib/supabase/home/fetchCurrentDaySessions';
+import fetchUserHobbies from '@/lib/supabase/home/fetchUserHobbies';
 
 type ModalType = 'profile' | 'addHobby' | 'logSession' | null;
 
@@ -32,7 +32,8 @@ type FetchedHobbyRow = {
   category: string;
 };
 
-type HobbyCardData = {
+export type HobbyCardData = {
+  id: string;
   emoji: string;
   name: string;
   streakScore: number;
@@ -106,6 +107,7 @@ const HomeScreen = () => {
     //==============================FOR-MY-HOBBY-CARDS=============================
     const mappedHobbiesForMyHobbyCards: HobbyCardData[] =
       (data as FetchedHobbyRow[] | undefined)?.map((hobby) => ({
+        id: hobby.id,
         emoji: hobby.icon,
         name: hobby.name,
         streakScore: hobby.streak_score ?? 0,
@@ -182,6 +184,7 @@ const HomeScreen = () => {
             isDark={isDark}
             tokens={tokens}
             onAddPress={() => openModal('addHobby')}
+            onLongPress={() => {}}
           />
           <View className="h-24 w-max"></View>
         </ScrollView>

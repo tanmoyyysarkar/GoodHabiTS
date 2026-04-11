@@ -11,7 +11,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { MonthlySummaryData } from '@/lib/supabase/getHobby30DaySummary';
+import { MonthlySummaryData } from '@/lib/supabase/hobbies/getHobby30DaySummary';
 
 interface HobbyWithMiniHeatMapProps {
   isDark: boolean;

@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { supabase } from '@/lib/supabase/supabase';
 
 const fetchUserHobbies = async (userId: string) => {
   try {
