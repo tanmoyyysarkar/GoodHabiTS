@@ -161,7 +161,7 @@ const HomeScreen = () => {
       <View className="flex-1 pt-6" style={{ backgroundColor: tokens.pageBg }}>
         <ScrollView
           className="flex-1"
-          contentContainerClassName="gap-6 px-6"
+          contentContainerClassName="gap-8 px-6"
           showsVerticalScrollIndicator={false}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
           <HomeHeader
@@ -174,13 +174,15 @@ const HomeScreen = () => {
           />
           <StreakBox isDark={isDark} tokens={tokens} />
           <SummaryCard isDark={isDark} tokens={tokens} summaryData={currentDaySummaryData} />
+          {hobbyDataForCards.length > 0 ? (
+            <LogASessionButton isDark={isDark} onPress={() => openModal('logSession')} />
+          ) : null}
           <MyHobbyCard
             hobbyData={hobbyDataForCards}
             isDark={isDark}
             tokens={tokens}
             onAddPress={() => openModal('addHobby')}
           />
-          <LogASessionButton isDark={isDark} onPress={() => openModal('logSession')} />
           <View className="h-24 w-max"></View>
         </ScrollView>
       </View>

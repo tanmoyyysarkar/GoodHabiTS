@@ -14,16 +14,11 @@ interface MyHobbyCardProps {
   hobbyData: hobbyCardData[];
 }
 
-const MyHobbyCard = ({
-  hobbyData,
-  isDark,
-  tokens,
-  onAddPress,
-}: MyHobbyCardProps) => {
+const MyHobbyCard = ({ hobbyData, isDark, tokens, onAddPress }: MyHobbyCardProps) => {
   const hobbyCards = hobbyData.map((hobby, index) => (
+    <Pressable key={index}>
     <View
-      key={index}
-      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} mx-2 mb-6 flex h-28 w-[85px] items-center justify-center gap-1 rounded-2xl border`}
+      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} flex h-28 w-[100px] items-center justify-center gap-1 rounded-2xl border`}
       style={{
         shadowColor: tokens.border,
         shadowOffset: { width: 0, height: 8 },
@@ -31,20 +26,22 @@ const MyHobbyCard = ({
         shadowRadius: 12,
         elevation: 6,
       }}>
-      <Text className="text-3xl">{hobby.emoji}</Text>
-      <Text
-        className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-light text-sm`}>
-        {hobby.name}
-      </Text>
-      <View
-        className={`${isDark ? ' bg-purple-700' : 'bg-card-bg-elevated-light'} rounded-full px-1`}>
+        <Text className="text-3xl">{hobby.emoji}</Text>
         <Text
-          className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-light text-xs`}>
-          {/* {hobby.streakScore > 0 ? `${hobby.streakScore}d 🔥` : ''} */}
-          {hobby.streakScore}d 🔥
+          className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-light text-sm`}>
+          {hobby.name}
         </Text>
-      </View>
+        {hobby.streakScore >= 0 ? ( //TODO Fix this >= to > after streak logic is put in place
+          <View
+            className={`${isDark ? ' bg-purple-700' : 'bg-card-bg-elevated-light'} rounded-full px-1`}>
+            <Text
+              className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-light text-xs`}>
+              {hobby.streakScore}d 🔥
+            </Text>
+          </View>
+        ) : null}
     </View>
+      </Pressable>
   ));
 
   return (
@@ -53,20 +50,22 @@ const MyHobbyCard = ({
         className={`${isDark ? `text-text-secondary` : `text-text-tertiary-light`} pb-4 font-jetbrains-mono opacity-70`}>
         MY HOBBIES
       </Text>
-      <View className="flex-row items-center">
-        <Pressable
-          onPress={onAddPress}
-          className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} mb-6 mr-2 flex h-28 w-[85px] items-center justify-center gap-1 rounded-3xl border active:opacity-70`}>
-          <Text className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'}`}>+</Text>
-          <Text className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'}`}>Add</Text>
-        </Pressable>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerClassName="flex-row"
-          className="flex-1">
+      <View className="flex w-full items-center justify-center">
+        <View className="w-[324px] flex-row flex-wrap content-start justify-start gap-3">
+          <Pressable
+            onPress={onAddPress}
+            className={`${isDark ? 'border-border bg-card-bg-elevated' : 'border-border-light bg-card-bg-elevated-light'} flex h-28 w-[100px] items-center justify-center gap-1 rounded-2xl border active:opacity-70`}>
+            <Text
+              className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold`}>
+              +
+            </Text>
+            <Text
+              className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold text-xl`}>
+              Add
+            </Text>
+          </Pressable>
           {hobbyCards}
-        </ScrollView>
+        </View>
       </View>
     </View>
   );

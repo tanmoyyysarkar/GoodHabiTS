@@ -22,6 +22,7 @@ interface AddHobbyModalContentProps {
   onSubmitPress: () => void;
   isDark: boolean;
   tokens: ThemeTokens;
+  // mode: "add" | "edit"
 }
 
 //=================================================MAIN-MODEL=========================================================
