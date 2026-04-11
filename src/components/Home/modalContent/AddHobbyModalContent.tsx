@@ -1,7 +1,7 @@
 import { Text, View, TextInput } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ThemeTokens } from '@/theme/tokens';
 import { ScrollView } from 'react-native-gesture-handler';
 import { addHobbySchema, AddHobbyFormInput, AddHobbyFormOutput } from '@/types/addHobbyModalTypes';
@@ -10,27 +10,35 @@ import {
   AddHobbyHeader,
   CategoryPills,
   ColorBall,
-  formatMinutes,
   IconPills,
 } from './AddHobbyModalParts/index';
 import SubHeadingText from './AddHobbyModalParts/SubHeadingText';
 import TimeSelectionSlider from './AddHobbyModalParts/TimeSelectionSlider';
-import addNewHobby from '@/lib/supabase/addNewHobby';
+import addNewHobby from '@/lib/supabase/home/addNewHobby';
+import { FetchedHobbyRow } from '@/screens/HomeScreen';
+import editExistingHobby from '@/lib/supabase/home/editExistingHobby';
 
 interface AddHobbyModalContentProps {
   onClose: () => void;
   onSubmitPress: () => void;
   isDark: boolean;
   tokens: ThemeTokens;
+  mode: 'add' | 'edit';
+  selectedHobby?: FetchedHobbyRow;
+  onDeletePress: () => void;
 }
 
-//=================================================MAIN-MODEL=========================================================
+//=================================================MAIN-MODEL-STARTS-HERE===============================================
 const AddHobbyModalContent = ({
   onClose,
   isDark,
   tokens,
   onSubmitPress,
+  mode,
+  selectedHobby,
+  onDeletePress,
 }: AddHobbyModalContentProps) => {
+  //========================================ZOD-FORM-SETUP==========================
   const {
     control,
     handleSubmit,
@@ -40,7 +48,7 @@ const AddHobbyModalContent = ({
     resolver: zodResolver(addHobbySchema),
     defaultValues: {
       name: '',
-      category: 'Creative',
+      category: 'Misc',
       color: '#ff7b00',
       icon: '🎨',
       minutesPerDay: 30,
@@ -48,6 +56,7 @@ const AddHobbyModalContent = ({
     },
   });
 
+  //=====================================FORM-CONSTANTS===============================
   const [colors, setColors] = useState([
     { name: '#ff7b00', isSelected: true },
     { name: '#ffae00', isSelected: false },
@@ -59,23 +68,6 @@ const AddHobbyModalContent = ({
     { name: '#7d7395', isSelected: false },
   ]);
 
-  const [selectedColor, setSelectedColor] = useState(colors[0].name);
-
-  const handleColorBallPress = (color: string) => {
-    setColors((prevColors) =>
-      prevColors.map((prevColor) => {
-        if (prevColor.name === color) {
-          setSelectedColor(color);
-          setValue('color', color, { shouldValidate: true });
-        }
-        return {
-          name: prevColor.name,
-          isSelected: prevColor.name === color ? true : false,
-        };
-      })
-    );
-  };
-
   const [categories, setCategories] = useState([
     { name: 'Creative', isSelected: true },
     { name: 'Sport', isSelected: false },
@@ -85,23 +77,6 @@ const AddHobbyModalContent = ({
     { name: 'Social', isSelected: false },
     { name: 'Misc', isSelected: false },
   ]);
-
-  const [selectedCategory, setSelectedCategory] = useState(categories[0].name);
-
-  const handleCategoryPillPress = (name: string) => {
-    setValue('category', name, { shouldValidate: true });
-    setCategories((prevCategories) =>
-      prevCategories.map((prevCategory) => {
-        if (prevCategory.name === name) {
-          setSelectedCategory(name);
-        }
-        return {
-          name: prevCategory.name,
-          isSelected: prevCategory.name === name ? true : false,
-        };
-      })
-    );
-  };
 
   const [icons, setIcons] = useState([
     { name: '🎨', isSelected: true },
@@ -118,7 +93,96 @@ const AddHobbyModalContent = ({
     { name: '🏊', isSelected: false },
   ]);
 
+  const [days, setDays] = useState([
+    { val: 'Sun', isSelected: true },
+    { val: 'Mon', isSelected: true },
+    { val: 'Tue', isSelected: true },
+    { val: 'Wed', isSelected: true },
+    { val: 'Thu', isSelected: true },
+    { val: 'Fri', isSelected: true },
+    { val: 'Sat', isSelected: true },
+  ]);
+
+  const [selectedColor, setSelectedColor] = useState(colors[0].name);
+  const [selectedCategory, setSelectedCategory] = useState(categories[0].name);
   const [selectedIcon, setSelectedIcon] = useState(icons[0].name);
+
+  useEffect(() => {
+    if (mode === 'edit' && selectedHobby) {
+      const selectedDays =
+        Array.isArray(selectedHobby.days_of_week) && selectedHobby.days_of_week.length > 0
+          ? selectedHobby.days_of_week
+          : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+      setValue('name', selectedHobby.name);
+      setValue('category', selectedHobby.category);
+      setValue('icon', selectedHobby.icon);
+      setValue('color', selectedHobby.color);
+      setValue('days', selectedDays);
+      setSelectedCategory(selectedHobby.category);
+      setSelectedIcon(selectedHobby.icon);
+      setSelectedColor(selectedHobby.color);
+      setValue('minutesPerDay', selectedHobby.target_minutes);
+
+      setCategories((prevCategories) =>
+        prevCategories.map((prevCategory) => ({
+          ...prevCategory,
+          isSelected: prevCategory.name === selectedHobby.category,
+        }))
+      );
+
+      setIcons((prevIcons) =>
+        prevIcons.map((prevIcon) => ({
+          ...prevIcon,
+          isSelected: prevIcon.name === selectedHobby.icon,
+        }))
+      );
+
+      setColors((prevColors) =>
+        prevColors.map((prevColor) => ({
+          ...prevColor,
+          isSelected: prevColor.name === selectedHobby.color,
+        }))
+      );
+
+      setDays((prevDays) =>
+        prevDays.map((day) => ({
+          ...day,
+          isSelected: selectedDays.includes(day.val),
+        }))
+      );
+    }
+  }, [mode, selectedHobby, setValue]);
+
+  const handleColorBallPress = (color: string) => {
+    setColors((prevColors) =>
+      prevColors.map((prevColor) => {
+        if (prevColor.name === color) {
+          setSelectedColor(color);
+          setValue('color', color, { shouldValidate: true });
+        }
+        return {
+          name: prevColor.name,
+          isSelected: prevColor.name === color ? true : false,
+        };
+      })
+    );
+  };
+
+  const handleCategoryPillPress = (name: string) => {
+    setValue('category', name, { shouldValidate: true });
+    setCategories((prevCategories) =>
+      prevCategories.map((prevCategory) => {
+        if (prevCategory.name === name) {
+          setSelectedCategory(name);
+        }
+        return {
+          name: prevCategory.name,
+          isSelected: prevCategory.name === name ? true : false,
+        };
+      })
+    );
+  };
 
   const handleIconPillPress = (name: string) => {
     setIcons((prevIcons) =>
@@ -134,16 +198,6 @@ const AddHobbyModalContent = ({
       })
     );
   };
-
-  const [days, setDays] = useState([
-    { val: 'Sun', isSelected: true },
-    { val: 'Mon', isSelected: true },
-    { val: 'Tue', isSelected: true },
-    { val: 'Wed', isSelected: true },
-    { val: 'Thu', isSelected: true },
-    { val: 'Fri', isSelected: true },
-    { val: 'Sat', isSelected: true },
-  ]);
 
   const handleDayPillPress = (val: string) => {
     setDays((prevDays) => {
@@ -166,28 +220,44 @@ const AddHobbyModalContent = ({
   };
 
   const onSubmit = async (formOutputData: AddHobbyFormOutput) => {
-    const is_daily = formOutputData.days.length === 7;
-    // console.log('Data given to supabase for insertion: ', { ...formOutputData, is_daily }); //delete later
-
-    const { success, data, errorMessage } = await addNewHobby(
-      formOutputData.name,
-      formOutputData.icon,
-      formOutputData.color,
-      formOutputData.minutesPerDay,
-      formOutputData.days,
-      formOutputData.category,
-      is_daily
-    );
-    if (!success) {
-      console.log(errorMessage);
-    }
-    // console.log('Data returned from supabase', data); //delete later
+    if (mode === 'add') {
+      const is_daily = formOutputData.days.length === 7;
+      const { success, data, errorMessage } = await addNewHobby(
+        formOutputData.name,
+        formOutputData.icon,
+        formOutputData.color,
+        formOutputData.minutesPerDay,
+        formOutputData.days,
+        formOutputData.category,
+        is_daily
+      );
+      if (!success) {
+        console.log(errorMessage);
+      }
+    } else if (mode === 'edit' && selectedHobby) {
+      const is_daily = formOutputData.days.length === 7;
+      const { success, data, errorMessage } = await editExistingHobby(
+        formOutputData.name,
+        formOutputData.icon,
+        formOutputData.color,
+        formOutputData.minutesPerDay,
+        formOutputData.days,
+        formOutputData.category,
+        is_daily,
+        selectedHobby.id
+      );
+      if (!success) {
+        console.log(errorMessage);
+      }
+    } else return;
     onSubmitPress();
   };
 
   return (
     <View className="flex h-full w-full">
       <AddHobbyHeader
+        onDeletePress={onDeletePress}
+        mode={mode}
         isDark={isDark}
         selectedColor={selectedColor}
         selectedIcon={selectedIcon} //===============HEADER==================

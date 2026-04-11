@@ -1,4 +1,4 @@
-import { MonthlySummaryData } from '@/lib/supabase/fetch30dayInsights';
+import { MonthlySummaryData } from '@/lib/supabase/insights/fetch30dayInsights';
 import { ThemeTokens } from '@/theme/tokens';
 import { Text, View } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';

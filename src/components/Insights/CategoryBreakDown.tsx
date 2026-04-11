@@ -1,4 +1,4 @@
-import { CategoryDataType } from '@/lib/supabase/getCategoryDistribution';
+import { CategoryDataType } from '@/lib/supabase/insights/getCategoryDistribution';
 import { ThemeTokens } from '@/theme/tokens';
 import { Text, View } from 'react-native';
 import { PieChart } from 'react-native-gifted-charts';

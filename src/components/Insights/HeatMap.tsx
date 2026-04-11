@@ -1,4 +1,4 @@
-import { YearHeatMapData } from '@/lib/supabase/get365DayHeatMap';
+import { YearHeatMapData } from '@/lib/supabase/insights/get365DayHeatMap';
 import { ThemeTokens } from '@/theme/tokens';
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useMemo, useRef } from 'react';

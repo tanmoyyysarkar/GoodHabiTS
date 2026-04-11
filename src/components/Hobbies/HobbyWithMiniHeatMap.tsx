@@ -11,7 +11,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { MonthlySummaryData } from '@/lib/supabase/getHobby30DaySummary';
+import { MonthlySummaryData } from '@/lib/supabase/hobbies/getHobby30DaySummary';
 
 interface HobbyWithMiniHeatMapProps {
   isDark: boolean;
@@ -87,10 +87,11 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
   const monthlyAverageMins = Math.floor(totalHoursDoneThisMonth / 30);
   return (
     <View
-      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} gap-4 rounded-2xl p-4`}
+      className={`${isDark ? 'bg-card-bg' : 'bg-card-bg-light'} gap-4 rounded-2xl p-4`}
       style={{
-        borderWidth: 1,
-        shadowColor: tokens.border,
+        borderWidth: 0.5,
+        borderColor: data.color,
+        shadowColor: data.color,
         shadowOffset: { width: 0, height: 8 },
         shadowOpacity: 0.25,
         shadowRadius: 12,
@@ -99,9 +100,9 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
       <View className="flex-row items-start justify-between">
         <View className="flex-row gap-4">
           <View
-            style={{ backgroundColor: data.color }}
+            style={{ backgroundColor: `${data.color}70`, borderWidth: 1, borderColor: data.color }}
             className="flex h-12 w-12 items-center justify-center rounded-2xl">
-            <Text className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'}`}>
+            <Text className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} text-xl`}>
               {data.icon}
             </Text>
           </View>

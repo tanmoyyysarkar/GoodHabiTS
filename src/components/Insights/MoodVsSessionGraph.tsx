@@ -1,4 +1,4 @@
-import { MoodVsSessionDataType } from '@/lib/supabase/fetchMoodTrends';
+import { MoodVsSessionDataType } from '@/lib/supabase/insights/fetchMoodTrends';
 import { ThemeTokens } from '@/theme/tokens';
 import { useMemo} from 'react';
 import { Text, View, Dimensions } from 'react-native';

@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Animated, LayoutAnimation } from 'react-native';
 import { useEffect, useRef } from 'react';
 import { ThemeTokens } from '@/theme/tokens';
-import { CurrentDaySummaryData } from '@/lib/supabase/fetchCurrentDaySessions';
+import { CurrentDaySummaryData } from '@/lib/supabase/home/fetchCurrentDaySessions';
 
 interface SummaryCardProps {
   isDark: boolean;

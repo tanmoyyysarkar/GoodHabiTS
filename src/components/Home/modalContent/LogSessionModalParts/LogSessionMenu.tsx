@@ -8,7 +8,7 @@ import DoneForToday from './logSessionMenuParts/DoneForToday';
 import LogDaySelector from './logSessionMenuParts/LogDaySelector';
 import TimeInputMenu from './logSessionMenuParts/TimeInputMenu';
 import SessionNotes from './logSessionMenuParts/SessionNotes';
-import addNewHobbySession from '@/lib/supabase/addNewHobbySession';
+import addNewHobbySession from '@/lib/supabase/home/addNewHobbySession';
 
 const formatLocalDate = (date: Date) => {
   const year = date.getFullYear();

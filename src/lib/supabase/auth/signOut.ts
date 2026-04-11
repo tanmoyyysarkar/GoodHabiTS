@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { supabase } from '@/lib/supabase/supabase';
 
 const signOut = async () => {
   try {
