@@ -19,6 +19,7 @@ import {
   fetchCurrentDaySessions,
 } from '@/lib/supabase/home/fetchCurrentDaySessions';
 import fetchUserHobbies from '@/lib/supabase/home/fetchUserHobbies';
+import softDeleteHobby from '@/lib/supabase/home/softDeleteHobby';
 
 type ModalType = 'profile' | 'addHobby' | 'logSession' | null;
 
@@ -117,7 +118,7 @@ const HomeScreen = () => {
         emoji: hobby.icon,
         name: hobby.name,
         streakScore: hobby.streak_score ?? 0,
-        color: hobby.color
+        color: hobby.color,
       })) ?? [];
 
     setHobbyDataForCards(mappedHobbiesForMyHobbyCards);
@@ -164,7 +165,9 @@ const HomeScreen = () => {
   }, [session]);
 
   const [addHobbyMode, setAddHobbyMode] = useState<'add' | 'edit'>('add');
-  const [selectedHobbyForEdit, setSelectedHobbyForEdit] = useState<FetchedHobbyRow | undefined>(undefined);
+  const [selectedHobbyForEdit, setSelectedHobbyForEdit] = useState<FetchedHobbyRow | undefined>(
+    undefined
+  );
 
   const handleHobbyCardLongPress = (id: string) => {
     const selectedHobby = fetchedHobbies.find((x) => x.id === id);
@@ -173,6 +176,21 @@ const HomeScreen = () => {
     openModal('addHobby');
     setAddHobbyMode('edit');
     setSelectedHobbyForEdit(selectedHobby);
+  };
+
+  const handleHobbyDelete = async () => {
+    if (!selectedHobbyForEdit) return;
+    const { success, data, errorMessage } = await softDeleteHobby(selectedHobbyForEdit.id);
+    if (!success) {
+      console.log(errorMessage);
+      return;
+    }
+    closeModal();
+    setSelectedHobbyForEdit(undefined);
+    setAddHobbyMode('add');
+    setActiveModal(null);
+    void loadHobbies();
+    void loadCurrentDaySummaryData();
   };
 
   return (
@@ -220,6 +238,7 @@ const HomeScreen = () => {
             )}
             {activeModal === 'addHobby' && (
               <AddHobbyModalContent
+                onDeletePress={handleHobbyDelete}
                 mode={addHobbyMode}
                 tokens={tokens}
                 isDark={isDark}

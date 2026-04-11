@@ -25,6 +25,7 @@ interface AddHobbyModalContentProps {
   tokens: ThemeTokens;
   mode: 'add' | 'edit';
   selectedHobby?: FetchedHobbyRow;
+  onDeletePress: () => void;
 }
 
 //=================================================MAIN-MODEL-STARTS-HERE===============================================
@@ -35,6 +36,7 @@ const AddHobbyModalContent = ({
   onSubmitPress,
   mode,
   selectedHobby,
+  onDeletePress,
 }: AddHobbyModalContentProps) => {
   //========================================ZOD-FORM-SETUP==========================
   const {
@@ -254,6 +256,7 @@ const AddHobbyModalContent = ({
   return (
     <View className="flex h-full w-full">
       <AddHobbyHeader
+        onDeletePress={onDeletePress}
         mode={mode}
         isDark={isDark}
         selectedColor={selectedColor}

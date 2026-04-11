@@ -46,7 +46,8 @@ export interface AddHobbyHeaderProps {
   isDark: boolean;
   selectedColor: string;
   selectedIcon: string;
-  mode: "add" | "edit"
+  mode: 'add' | 'edit';
+  onDeletePress: () => void;
 }
 
 export interface AddHobbyFooterProps {

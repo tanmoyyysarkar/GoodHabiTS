@@ -2,6 +2,7 @@ import { Text, View, Pressable } from 'react-native';
 import { ThemeTokens } from '@/theme/tokens';
 import { HobbyCardData } from '@/screens/HomeScreen';
 import ToolTip from 'react-native-walkthrough-tooltip';
+import Popover from 'react-native-popover-view';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 
