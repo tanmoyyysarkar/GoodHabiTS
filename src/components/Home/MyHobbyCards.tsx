@@ -1,10 +1,8 @@
-import { Text, View, Pressable } from 'react-native';
+import { Text, View, Pressable, TouchableOpacity } from 'react-native';
 import { ThemeTokens } from '@/theme/tokens';
 import { HobbyCardData } from '@/screens/HomeScreen';
-import ToolTip from 'react-native-walkthrough-tooltip';
-import Popover from 'react-native-popover-view';
+import Popover, { PopoverPlacement } from 'react-native-popover-view';
 import { Ionicons } from '@expo/vector-icons';
-import { useState } from 'react';
 
 interface MyHobbyCardProps {
   isDark: boolean;
@@ -15,34 +13,6 @@ interface MyHobbyCardProps {
 }
 
 const MyHobbyCard = ({ hobbyData, isDark, tokens, onAddPress, onLongPress }: MyHobbyCardProps) => {
-  const [isToolTipVisible, setIsToolTipVisible] = useState(false);
-
-  const tooltipContent = () => {
-    return (
-      <View
-        className="px-3 py-2"
-        style={{
-          backgroundColor: tokens.cardBgElevated,
-          borderRadius: 14,
-          maxWidth: 220,
-          borderWidth: 1,
-          borderColor: tokens.border,
-        }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-          <Text
-            style={{
-              color: tokens.textPrimary,
-              fontSize: 13,
-              lineHeight: 18,
-              flexShrink: 1,
-            }}>
-            Long press a hobby to edit or delete it
-          </Text>
-        </View>
-      </View>
-    );
-  };
-
   const hobbyCards = hobbyData.map((hobby) => (
     <Pressable key={hobby.id} onLongPress={() => onLongPress(hobby.id)}>
       <View
@@ -53,7 +23,7 @@ const MyHobbyCard = ({ hobbyData, isDark, tokens, onAddPress, onLongPress }: MyH
           shadowOpacity: 0.25,
           shadowRadius: 12,
           elevation: 6,
-          borderColor: hobby.color
+          borderColor: hobby.color,
         }}>
         <Text className="text-3xl">{hobby.emoji}</Text>
         <View className="w-full items-center px-1">
@@ -84,17 +54,36 @@ const MyHobbyCard = ({ hobbyData, isDark, tokens, onAddPress, onLongPress }: MyH
           className={`${isDark ? `text-text-secondary` : `text-text-tertiary-light`} pb-4 font-jetbrains-mono opacity-70`}>
           MY HOBBIES
         </Text>
-
-        <ToolTip
-          isVisible={isToolTipVisible}
-          content={tooltipContent()}
-          contentStyle={{ padding: 0, backgroundColor: tokens.cardBgElevated, borderRadius: 14 }}
-          placement="left"
-          onClose={() => setIsToolTipVisible(false)}>
-          <Pressable onPress={() => setIsToolTipVisible(true)}>
-            <Ionicons name="information-circle" color={tokens.textPrimary} size={24} />
-          </Pressable>
-        </ToolTip>
+        <Popover
+          placement={PopoverPlacement.LEFT}
+          popoverStyle={{backgroundColor: "transparent"}}
+          from={
+            <TouchableOpacity>
+              <Ionicons name="information-circle" color={tokens.textPrimary} size={24} />
+            </TouchableOpacity>
+          }>
+          <View
+            className="px-3 py-2"
+            style={{
+              backgroundColor: tokens.cardBgElevated,
+              borderRadius: 14,
+              maxWidth: 220,
+              borderWidth: 1,
+              borderColor: tokens.border,
+            }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <Text
+                style={{
+                  color: tokens.textPrimary,
+                  fontSize: 13,
+                  lineHeight: 18,
+                  flexShrink: 1,
+                }}>
+                Long press a hobby to edit or delete it
+              </Text>
+            </View>
+          </View>
+        </Popover>
       </View>
 
       <View className="flex w-full items-center justify-center">
