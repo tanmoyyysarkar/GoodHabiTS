@@ -93,7 +93,7 @@ const ProfileScreen = () => {
         className="flex-1"
         nestedScrollEnabled
         contentContainerClassName="items-center justify-start py-6 px-6 pb-24">
-        <ProfileHeader isDark={isDark} link={profileData.link} name={profileData.name} />
+        <ProfileHeader isDark={isDark} link={profileData.link} name={profileData.name} tokens={tokens}/>
         <View className="my-4 w-full flex-row items-center justify-between">
           {quickProfileInsights.map((insight) => (
             <QuickProfileInsightsCard
