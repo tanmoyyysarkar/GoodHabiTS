@@ -141,7 +141,7 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
         <View
           className={`${isDark ? 'bg-card-bg-elevated' : 'bg-card-bg-elevated-light'} h-2 flex-1 rounded-full`}>
           <View
-            style={{ backgroundColor: data.color, width: `${progress}%` }}
+            style={{ backgroundColor: data.color, width: `${progress > 100 ? 100 : progress}%` }}
             className="h-2 rounded-full"
           />
         </View>
