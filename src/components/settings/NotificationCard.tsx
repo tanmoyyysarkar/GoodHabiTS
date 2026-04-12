@@ -2,12 +2,12 @@ import { ThemeTokens } from '@/theme/tokens';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text, View } from 'react-native';
 
-interface AccountCardType {
+interface NotificationCardType {
   isDark: boolean;
   tokens: ThemeTokens;
 }
 
-const AccountCard = ({ isDark, tokens }: AccountCardType) => {
+const NotificationCard = ({ isDark, tokens }: NotificationCardType) => {
   return (
     <View
       className="w-full gap-3 rounded-2xl py-3"
@@ -53,4 +53,4 @@ const AccountCard = ({ isDark, tokens }: AccountCardType) => {
   );
 };
 
-export default AccountCard;
+export default NotificationCard;
