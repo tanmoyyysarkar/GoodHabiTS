@@ -2,12 +2,12 @@ import { ThemeTokens } from '@/theme/tokens';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text, View } from 'react-native';
 
-interface AccountCardType {
+interface DataCardType {
   isDark: boolean;
   tokens: ThemeTokens;
 }
 
-const AccountCard = ({ isDark, tokens }: AccountCardType) => {
+const DataCard = ({ isDark, tokens }: DataCardType) => {
   return (
     <View
       className="w-full gap-3 rounded-2xl py-3"
@@ -21,14 +21,21 @@ const AccountCard = ({ isDark, tokens }: AccountCardType) => {
           style={{ borderColor: tokens.border }}
           className="mx-3 flex-row items-center justify-between">
           <View className="flex-row  items-center gap-3">
-            <View className="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-950">
-              <Ionicons name="person" color={'white'} size={24} />
+            <View className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600">
+              <Text className="text-xl">📤</Text>
             </View>
-            <Text
-              style={{ color: tokens.textPrimary }}
-              className="font-jetbrains-mono-light text-lg">
-              Edit Profile
-            </Text>
+            <View>
+              <Text
+                style={{ color: tokens.textPrimary }}
+                className="font-jetbrains-mono-light text-lg">
+                Export my data
+              </Text>
+              <Text
+                style={{ color: tokens.textTertiary }}
+                className="font-jetbrains-mono-light text-sm">
+                CSV or JSON
+              </Text>
+            </View>
           </View>
           <Ionicons name="chevron-forward-outline" color={tokens.textPrimary} size={24} />
         </View>
@@ -37,20 +44,18 @@ const AccountCard = ({ isDark, tokens }: AccountCardType) => {
       <Pressable>
         <View className="mx-3 flex-row items-center justify-between">
           <View className="flex-row  items-center gap-3">
-            <View className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-950">
-              <Ionicons name="lock-closed" color={'#ffd900'} size={24} />
+            <View className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-800">
+              <Ionicons name="trash" color={'#fff'} size={24} />
             </View>
-            <Text
-              style={{ color: tokens.textPrimary }}
-              className="text-lg font-jetbrains-mono-light">
-              Change Password
+            <Text style={{ color: 'red' }} className="font-jetbrains-mono-light text-lg">
+              Delete Account
             </Text>
           </View>
-          <Ionicons name="chevron-forward-outline" color={tokens.textPrimary} size={24} />
+          <Ionicons name="chevron-forward-outline" color={'red'} size={24} />
         </View>
       </Pressable>
     </View>
   );
 };
 
-export default AccountCard;
+export default DataCard;

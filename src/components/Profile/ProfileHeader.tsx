@@ -15,13 +15,13 @@ interface ProfileHeaderProps {
 const ProfileHeader = ({ isDark, link, name, tokens }: ProfileHeaderProps) => {
   const router = useRouter();
   const handleSettingsPress = () => {
-    router.push('/profile/settings');
+    router.push('/settings');
   };
 
   return (
     <View className="flex items-center justify-center gap-3">
       <View className="flex-row items-center justify-between gap-32">
-        <View className="w-3" />
+        <View className="w-8" />
         <Pressable>
           <View className="flex h-20 w-20 items-center justify-center rounded-full  bg-button-primary">
             <Text className="font-jetbrains-mono-bold text-4xl text-text-primary">AR</Text>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useColorScheme } from 'nativewind';
 
 import HobbyBreakDownCard from '@/components/Profile/HobbyBreakDownCard';
@@ -12,6 +12,8 @@ import ThisYearInsights from '@/components/Profile/ThisYearInsights';
 
 import { useAuth } from '@/context/AuthContext';
 import { useThemeTokens } from '@/hooks/useThemeTokens';
+import Popover, { PopoverPlacement } from 'react-native-popover-view';
+import { Ionicons } from '@expo/vector-icons';
 
 const ProfileScreen = () => {
   const tokens = useThemeTokens();
@@ -93,7 +95,12 @@ const ProfileScreen = () => {
         className="flex-1"
         nestedScrollEnabled
         contentContainerClassName="items-center justify-start py-6 px-6 pb-24">
-        <ProfileHeader isDark={isDark} link={profileData.link} name={profileData.name} tokens={tokens}/>
+        <ProfileHeader
+          isDark={isDark}
+          link={profileData.link}
+          name={profileData.name}
+          tokens={tokens}
+        />
         <View className="my-4 w-full flex-row items-center justify-between">
           {quickProfileInsights.map((insight) => (
             <QuickProfileInsightsCard
@@ -106,7 +113,39 @@ const ProfileScreen = () => {
           ))}
         </View>
         <View className="flex w-full justify-start">
-          <ProfileSubHeadingText text="MILESTONES" isDark={isDark} />
+          <View className="flex-row justify-between items-center">
+            <ProfileSubHeadingText text="MILESTONES" isDark={isDark} />
+            <Popover
+              placement={PopoverPlacement.LEFT}
+              popoverStyle={{ backgroundColor: 'transparent' }}
+              from={
+                <TouchableOpacity>
+                  <Ionicons name="information-circle" color={tokens.textPrimary} size={24} />
+                </TouchableOpacity>
+              }>
+              <View
+                className="px-3 py-2"
+                style={{
+                  backgroundColor: tokens.cardBgElevated,
+                  borderRadius: 14,
+                  maxWidth: 220,
+                  borderWidth: 1,
+                  borderColor: tokens.border,
+                }}>
+                <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 6 }}>
+                  <Text
+                    style={{
+                      color: tokens.textSecondary,
+                      fontSize: 13,
+                      lineHeight: 18,
+                      flexShrink: 1,
+                    }}>
+                    Milestones feature will be implemented soon!
+                  </Text>
+                </View>
+              </View>
+            </Popover>
+          </View>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}

@@ -79,12 +79,13 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
     setIsExpanded((prev) => !prev);
   };
 
-  const totalHoursDoneThisMonth = data.last_30_days_minutes.reduce(
+  const totalMinutesDoneThisMonth = data.last_30_days_minutes.reduce(
     (total, item) => total + item,
     0
   );
-  const ringProgress = Math.floor((totalHoursDoneThisMonth / (data.target_minutes * 30)) * 100);
-  const monthlyAverageMins = Math.floor(totalHoursDoneThisMonth / 30);
+  const totalHoursDoneThisMonth = Math.floor(totalMinutesDoneThisMonth / 60);
+  const ringProgress = Math.floor((totalMinutesDoneThisMonth / (data.target_minutes * 30)) * 100);
+  const monthlyAverageMins = Math.floor(totalMinutesDoneThisMonth / 30);
   return (
     <View
       className={`${isDark ? 'bg-card-bg' : 'bg-card-bg-light'} gap-4 rounded-2xl p-4`}
@@ -113,7 +114,9 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
             </Text>
             <Text
               className={`${isDark ? 'text-text-secondary' : 'text-text-primary-light'} font-jetbrains-mono-light text-sm`}>
-              {data.category} • {totalHoursDoneThisMonth} hrs total
+              {data.category} •{' '}
+              {`${totalHoursDoneThisMonth > 0 ? `${totalHoursDoneThisMonth}h ` : ''}`}
+              {Math.floor(totalMinutesDoneThisMonth % 60)}m total
             </Text>
           </View>
         </View>

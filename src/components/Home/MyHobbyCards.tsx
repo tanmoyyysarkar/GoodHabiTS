@@ -56,7 +56,7 @@ const MyHobbyCard = ({ hobbyData, isDark, tokens, onAddPress, onLongPress }: MyH
         </Text>
         <Popover
           placement={PopoverPlacement.LEFT}
-          popoverStyle={{backgroundColor: "transparent"}}
+          popoverStyle={{ backgroundColor: 'transparent' }}
           from={
             <TouchableOpacity>
               <Ionicons name="information-circle" color={tokens.textPrimary} size={24} />
@@ -71,7 +71,7 @@ const MyHobbyCard = ({ hobbyData, isDark, tokens, onAddPress, onLongPress }: MyH
               borderWidth: 1,
               borderColor: tokens.border,
             }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 6 }}>
               <Text
                 style={{
                   color: tokens.textPrimary,
@@ -80,6 +80,15 @@ const MyHobbyCard = ({ hobbyData, isDark, tokens, onAddPress, onLongPress }: MyH
                   flexShrink: 1,
                 }}>
                 Long press a hobby to edit or delete it
+              </Text>
+              <Text
+                style={{
+                  color: tokens.textSecondary,
+                  fontSize: 10,
+                  lineHeight: 18,
+                  flexShrink: 1,
+                }}>
+                Streak Logic is not implemented yet 😅
               </Text>
             </View>
           </View>
