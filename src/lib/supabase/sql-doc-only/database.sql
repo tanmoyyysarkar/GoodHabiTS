@@ -12,7 +12,7 @@ CREATE TABLE public.hobbies (
   days_of_week ARRAY NOT NULL DEFAULT '{''Sun'',''Mon'',''Tue'',''Wed'',''Thu'',''Fri'',''Sat''}'::text[],
   is_active boolean NOT NULL DEFAULT true,
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
-  streak_score integer NOT NULL CHECK (streak_score::numeric > '-1'::integer::numeric),
+  streak_score integer NOT NULL DEFAULT 0 CHECK (streak_score::numeric > '-1'::integer::numeric),
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   category text NOT NULL DEFAULT 'Misc'::text,
   CONSTRAINT hobbies_pkey PRIMARY KEY (id),
@@ -36,6 +36,7 @@ CREATE TABLE public.user_profiles (
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   avatar_url text NOT NULL,
   full_name text NOT NULL DEFAULT ''::text,
+  streak_score integer NOT NULL DEFAULT 0,
   CONSTRAINT user_profiles_pkey PRIMARY KEY (id),
   CONSTRAINT user_profiles_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id)
 );

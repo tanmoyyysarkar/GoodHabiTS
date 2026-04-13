@@ -1,27 +1,21 @@
-import { fetchAllTimeHobbyStats } from '@/lib/supabase/profile/fetchAllTimeHobbyStats';
+import { AllTimeHobbyStats } from '@/lib/supabase/profile/fetchAllTimeHobbyStats';
 import { ThemeTokens } from '@/theme/tokens';
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import { Animated, LayoutAnimation, Pressable, Text, View } from 'react-native';
 
-interface HobbyBreakDownCardProps {
+interface HobbyBreakDownListItemProps {
   isDark: boolean;
-  tokens: ThemeTokens;
-}
-
-interface HobbyData {
-  hobby_id: string;
+  index: number;
   hobby_name: string;
   color: string;
   total_minutes: number;
 }
 
-interface HobbyBreakDownListItemProps {
+interface HobbyBreakDownCardProps {
   isDark: boolean;
-  index: number;
-    hobby_name: string;
-  color: string;
-  total_minutes: number;
+  tokens: ThemeTokens;
+  data: AllTimeHobbyStats[];
 }
 
 const HobbyBreakDownListItem = ({
@@ -52,37 +46,19 @@ const HobbyBreakDownListItem = ({
   );
 };
 
-const HobbyBreakDownCard = ({ isDark, tokens }: HobbyBreakDownCardProps) => {
-  const [hobbyBreakDownData, setHobbyBreakDownData] = useState<HobbyData[]>([]);
-  useEffect(() => {
-    const loadMetrics = async () => {
-      const { success, data, errorMessage } = await fetchAllTimeHobbyStats();
-      if (!success) {
-        console.log(errorMessage);
-        return;
-      }
-      setHobbyBreakDownData(data as HobbyData[]);
-    };
-    void loadMetrics();
-  });
-
+const HobbyBreakDownCard = ({ isDark, tokens, data }: HobbyBreakDownCardProps) => {
   const collapsedLastIndex = 2;
   const [lastIndex, setLastIndex] = useState(
-    hobbyBreakDownData.length > collapsedLastIndex
-      ? collapsedLastIndex
-      : hobbyBreakDownData.length - 1
+    data.length > collapsedLastIndex ? collapsedLastIndex : data.length - 1
   );
-  const isExpanded = lastIndex === hobbyBreakDownData.length - 1;
+  const isExpanded = lastIndex === data.length - 1;
   const arrowRotation = useRef(new Animated.Value(isExpanded ? 1 : 0)).current;
   const expandProgress = useRef(new Animated.Value(isExpanded ? 1 : 0)).current;
   const [renderExtraItems, setRenderExtraItems] = useState(isExpanded);
   const [extraContentHeight, setExtraContentHeight] = useState(0);
 
-  const baseItems = hobbyBreakDownData.slice(
-    0,
-    Math.min(collapsedLastIndex + 1, hobbyBreakDownData.length)
-  );
-  const extraItems = hobbyBreakDownData.slice(collapsedLastIndex + 1);
+  const baseItems = data.slice(0, Math.min(collapsedLastIndex + 1, data.length));
+  const extraItems = data.slice(collapsedLastIndex + 1);
 
   useEffect(() => {
     Animated.timing(arrowRotation, {
@@ -111,7 +87,7 @@ const HobbyBreakDownCard = ({ isDark, tokens }: HobbyBreakDownCardProps) => {
   const handleArrowPress = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 
-    if (lastIndex === collapsedLastIndex) setLastIndex(hobbyBreakDownData.length - 1);
+    if (lastIndex === collapsedLastIndex) setLastIndex(data.length - 1);
     else setLastIndex(collapsedLastIndex);
   };
 
@@ -177,7 +153,7 @@ const HobbyBreakDownCard = ({ isDark, tokens }: HobbyBreakDownCardProps) => {
           </View>
         </Animated.View>
       ) : null}
-      {hobbyBreakDownData.length > 3 ? (
+      {data.length > 3 ? (
         <Pressable onPress={handleArrowPress} className="flex w-full items-center justify-center">
           <Animated.View style={{ transform: [{ rotate }] }}>
             <Ionicons size={24} color={tokens.textPrimary} name="chevron-down-outline" />
