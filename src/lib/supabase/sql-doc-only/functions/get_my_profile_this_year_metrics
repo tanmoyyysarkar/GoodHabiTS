@@ -1,0 +1,40 @@
+create or replace function get_my_profile_this_year_metrics()
+returns table (
+  total_sessions bigint,
+  avg_session_minutes numeric,
+  most_active_day text,
+  total_hours numeric
+)
+language sql
+security definer
+as $$
+  with last_year_sessions as (
+    select *
+    from sessions
+    where user_id = auth.uid()
+      and session_date >= current_date - interval '1 year'
+  ),
+
+  day_counts as (
+    select
+      to_char(session_date, 'Day') as day_name,
+      count(*) as session_count
+    from last_year_sessions
+    group by day_name
+    order by session_count desc
+    limit 1
+  )
+
+  select
+    -- total sessions
+    (select count(*) from last_year_sessions),
+
+    -- average session minutes
+    (select coalesce(avg(minutes_logged), 0) from last_year_sessions),
+
+    -- most active day
+    (select trim(day_name) from day_counts),
+
+    -- total hours
+    (select coalesce(sum(minutes_logged), 0) / 60.0 from last_year_sessions);
+$$;

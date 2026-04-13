@@ -7,7 +7,6 @@ import StreakBox from '@/components/Home/StreakBox';
 import SummaryCard from '@/components/Home/SummaryCard';
 import MyHobbyCard from '@/components/Home/MyHobbyCards';
 import LogASessionButton from '@/components/Home/LogASessionButton';
-import ProfileModalContent from '@/components/Home/modalContent/ProfileModalContent';
 import AddHobbyModalContent from '@/components/Home/modalContent/AddHobbyModalContent';
 import LogSessionModalContent from '@/components/Home/modalContent/LogSessionModalContent';
 
@@ -20,8 +19,9 @@ import {
 } from '@/lib/supabase/home/fetchCurrentDaySessions';
 import fetchUserHobbies from '@/lib/supabase/home/fetchUserHobbies';
 import softDeleteHobby from '@/lib/supabase/home/softDeleteHobby';
+import { useRouter } from 'expo-router';
 
-type ModalType = 'profile' | 'addHobby' | 'logSession' | null;
+type ModalType = 'addHobby' | 'logSession' | null;
 
 export type FetchedHobbyRow = {
   id: string;
@@ -77,6 +77,7 @@ const HomeScreen = () => {
   };
 
   const { session } = useAuth();
+  const router = useRouter();
 
   //===============================FOR-HEADER===================================
   const fullName = session ? session.user.user_metadata.full_name : '';
@@ -207,7 +208,7 @@ const HomeScreen = () => {
             greeting={greeting}
             isDark={isDark}
             tokens={tokens}
-            onProfilePress={() => openModal('profile')}
+            onProfilePress={() => router.navigate('/profile')}
           />
           <StreakBox isDark={isDark} tokens={tokens} />
           <SummaryCard isDark={isDark} tokens={tokens} summaryData={currentDaySummaryData} />
@@ -233,9 +234,6 @@ const HomeScreen = () => {
         <View className="flex-1 items-center justify-end bg-black/35">
           <View
             className={`h-[92%] w-[100%] rounded-t-3xl ${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} border`}>
-            {activeModal === 'profile' && (
-              <ProfileModalContent isDark={isDark} onClose={closeModal} />
-            )}
             {activeModal === 'addHobby' && (
               <AddHobbyModalContent
                 onDeletePress={handleHobbyDelete}

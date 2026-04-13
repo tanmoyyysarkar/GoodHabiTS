@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useFonts } from 'expo-font';
 import { useThemeTokens } from '@/hooks/useThemeTokens';
-import 'global.css';
+import '../../global.css';
 
 import { AuthProvider } from '@/context/AuthContext';
 
@@ -41,6 +41,7 @@ export default function RootLayout() {
           <Stack
             screenOptions={{
               headerShown: false,
+              animation: 'simple_push',
               contentStyle: { backgroundColor: tokens.pageBg },
             }}
           />

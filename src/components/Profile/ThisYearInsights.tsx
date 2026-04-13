@@ -1,14 +1,10 @@
+import { YearInsightsDataType } from '@/lib/supabase/profile/fetchThisYearStats';
 import { ThemeTokens } from '@/theme/tokens';
 import { Text, View } from 'react-native';
 
-interface ThisYearInsightItem {
-  name: string;
-  value: string;
-}
-
 interface ThisYearInsightsProps {
   isDark: boolean;
-  data: ThisYearInsightItem[];
+  data: YearInsightsDataType[];
   tokens: ThemeTokens;
 }
 
