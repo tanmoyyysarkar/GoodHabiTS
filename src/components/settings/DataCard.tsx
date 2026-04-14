@@ -14,7 +14,7 @@ const DataCard = ({ isDark, tokens }: DataCardType) => {
       style={{
         backgroundColor: tokens.cardBg,
         borderColor: tokens.border,
-        borderWidth: 1,
+        borderWidth: 0.5,
       }}>
       <Pressable>
         <View
@@ -40,7 +40,9 @@ const DataCard = ({ isDark, tokens }: DataCardType) => {
           <Ionicons name="chevron-forward-outline" color={tokens.textPrimary} size={24} />
         </View>
       </Pressable>
-      <View style={{ height: 1, backgroundColor: tokens.border }} />
+
+      <View style={{ height: 0.5, backgroundColor: tokens.border }} />
+
       <Pressable>
         <View className="mx-3 flex-row items-center justify-between">
           <View className="flex-row  items-center gap-3">

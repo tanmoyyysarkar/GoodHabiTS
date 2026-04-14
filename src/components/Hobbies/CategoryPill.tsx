@@ -17,7 +17,8 @@ const CategoryPill = ({ isDark, category, handleCategoryPillPress }: CategoryPil
     <Pressable
       key={category.name}
       onPress={handleCategoryPillPress}
-      className={`h-10 items-center justify-center rounded-full border px-4 ${
+      style={{borderWidth: 0.5}}
+      className={`h-10 items-center justify-center rounded-full px-4 ${
         category.isSelected
           ? isDark
             ? 'border-border bg-white'

@@ -165,7 +165,8 @@ const DailySessionsLineChart = ({ isDark, tokens, data }: DailySessionsLineChart
   const timeDoneColor = isDark ? '#30b4a4' : '#009f8d';
   return (
     <View
-      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} rounded-2xl border p-4`}>
+      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} rounded-2xl  p-4`}
+      style={{ borderWidth: 0.5 }}>
       <View className="mb-2 ml-8 flex-col gap-2">
         <View className="flex-row items-center gap-2">
           <View className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: completionColor }} />

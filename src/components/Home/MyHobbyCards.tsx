@@ -16,14 +16,15 @@ const MyHobbyCard = ({ hobbyData, isDark, tokens, onAddPress, onLongPress }: MyH
   const hobbyCards = hobbyData.map((hobby) => (
     <Pressable key={hobby.id} onLongPress={() => onLongPress(hobby.id)}>
       <View
-        className={`${isDark ? ' bg-card-bg' : ' bg-card-bg-light'} flex h-28 w-[100px] items-center justify-center gap-1 rounded-2xl border`}
+        className={`${isDark ? ' bg-card-bg' : ' bg-card-bg-light'} flex h-28 w-[100px] items-center justify-center gap-1 rounded-2xl`}
         style={{
-          shadowColor: tokens.border,
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.25,
-          shadowRadius: 12,
-          elevation: 6,
+          borderWidth: 0.5,
           borderColor: hobby.color,
+          // shadowColor: tokens.border,
+          // shadowOffset: { width: 0, height: 8 },
+          // shadowOpacity: 0.25,
+          // shadowRadius: 12,
+          // elevation: 6,
         }}>
         <Text className="text-3xl">{hobby.emoji}</Text>
         <View className="w-full items-center px-1">
@@ -99,7 +100,9 @@ const MyHobbyCard = ({ hobbyData, isDark, tokens, onAddPress, onLongPress }: MyH
         <View className="w-[324px] flex-row flex-wrap content-start justify-start gap-3">
           <Pressable
             onPress={onAddPress}
-            className={`${isDark ? 'border-border bg-card-bg-elevated' : 'border-border-light bg-card-bg-elevated-light'} flex h-28 w-[100px] items-center justify-center gap-1 rounded-2xl border active:opacity-70`}>
+            className={`${isDark ? 'border-border bg-card-bg-elevated' : 'border-border-light bg-card-bg-elevated-light'} flex h-28 w-[100px] items-center justify-center gap-1 rounded-2xl active:opacity-70`}
+            style={{borderWidth: 0.5}}
+            >
             <Text
               className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold`}>
               +

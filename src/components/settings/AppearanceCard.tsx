@@ -24,7 +24,7 @@ const AppearanceCard = ({ isDark, tokens }: AppearanceCardType) => {
       style={{
         backgroundColor: tokens.cardBg,
         borderColor: tokens.border,
-        borderWidth: 1,
+        borderWidth: 0.5,
       }}>
       <Popover
         placement={PopoverPlacement.CENTER}
@@ -57,7 +57,8 @@ const AppearanceCard = ({ isDark, tokens }: AppearanceCardType) => {
         </View>
       </Popover>
 
-      <View style={{ height: 1, backgroundColor: tokens.border }} />
+      <View style={{ height: 0.5, backgroundColor: tokens.border }} />
+
       <Pressable>
         <View className="mx-3 flex-row items-center justify-between">
           <View className="flex-row  items-center gap-3">

@@ -1,6 +1,6 @@
 import { MoodVsSessionDataType } from '@/lib/supabase/insights/fetchMoodTrends';
 import { ThemeTokens } from '@/theme/tokens';
-import { useMemo} from 'react';
+import { useMemo } from 'react';
 import { Text, View, Dimensions } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 
@@ -55,10 +55,11 @@ const MoodVsSessionGraph = ({ isDark, tokens, data }: MoodVsSessionGraphProps) =
     We use useMemo so we don't recalculate this array on every single render
     unless the database data actually changes.
   */
-  const chartData = useMemo<MoodPoint[]>(() =>
-    data
-      .map((item) => ({ x: Number(item.minutes_logged), y: Number(item.feeling) }))
-      .filter((item) => Number.isFinite(item.x) && item.y >= MIN_MOOD),
+  const chartData = useMemo<MoodPoint[]>(
+    () =>
+      data
+        .map((item) => ({ x: Number(item.minutes_logged), y: Number(item.feeling) }))
+        .filter((item) => Number.isFinite(item.x) && item.y >= MIN_MOOD),
     [data]
   );
 
@@ -103,14 +104,15 @@ const MoodVsSessionGraph = ({ isDark, tokens, data }: MoodVsSessionGraphProps) =
 
   // Theming
   const accentColor = isDark ? '#00d0ff' : '#8563ff';
-  const chartCardClass = `${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} rounded-3xl border p-4`;
 
   /* -------------------------------------------------------------------------
     5. THE UI RENDER
     -------------------------------------------------------------------------
   */
   return (
-    <View className={chartCardClass}>
+    <View
+      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} rounded-3xl p-4`}
+      style={{ borderWidth: 0.5 }}>
       {chartData.length > 0 ? (
         <View>
           <Svg width={GRAPH_WIDTH} height={GRAPH_HEIGHT}>
@@ -135,8 +137,13 @@ const MoodVsSessionGraph = ({ isDark, tokens, data }: MoodVsSessionGraphProps) =
             over the left side of the SVG. This prevents the emojis from looking
             blurry or glitching on Android, which sometimes happens inside Svgs.
           */}
-          <View className="absolute left-0 top-0 bottom-0 w-10 justify-between py-[20px]"
-                style={{ height: GRAPH_HEIGHT, paddingTop: CHART_PADDING.top - 8, paddingBottom: CHART_PADDING.bottom - 8 }}>
+          <View
+            className="absolute bottom-0 left-0 top-0 w-10 justify-between py-[20px]"
+            style={{
+              height: GRAPH_HEIGHT,
+              paddingTop: CHART_PADDING.top - 8,
+              paddingBottom: CHART_PADDING.bottom - 8,
+            }}>
             {yLabels.map((val) => (
               <Text key={`emoji-${val}`} className="text-center text-lg">
                 {MOOD_EMOJIS[val]}
@@ -148,9 +155,14 @@ const MoodVsSessionGraph = ({ isDark, tokens, data }: MoodVsSessionGraphProps) =
             Placing these exactly under the graph, using margins to align them
             with the SVG padding boundaries.
           */}
-          <View className="flex-row justify-between" style={{ marginLeft: CHART_PADDING.left, marginRight: CHART_PADDING.right }}>
+          <View
+            className="flex-row justify-between"
+            style={{ marginLeft: CHART_PADDING.left, marginRight: CHART_PADDING.right }}>
             {xLabels.map((val) => (
-              <Text key={`x-${val}`} style={{ color: tokens.textSecondary }} className="font-jetbrains-mono text-[10px]">
+              <Text
+                key={`x-${val}`}
+                style={{ color: tokens.textSecondary }}
+                className="font-jetbrains-mono text-[10px]">
                 {val}m
               </Text>
             ))}
@@ -159,7 +171,9 @@ const MoodVsSessionGraph = ({ isDark, tokens, data }: MoodVsSessionGraphProps) =
       ) : (
         /* FALLBACK EMPTY STATE */
         <View className="h-40 items-center justify-center">
-          <Text style={{ color: tokens.textSecondary }} className="text-center font-jetbrains-mono-light text-xs">
+          <Text
+            style={{ color: tokens.textSecondary }}
+            className="text-center font-jetbrains-mono-light text-xs">
             Not enough data to map trends yet.
           </Text>
         </View>

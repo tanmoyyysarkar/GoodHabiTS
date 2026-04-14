@@ -22,12 +22,12 @@ const QuickProfileInsightsCard = ({
       <View
         className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-elevated-light'} flex h-20 w-32 items-center justify-center rounded-2xl`}
         style={{
-          borderWidth: 1,
-          shadowColor: tokens.border,
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.25,
-          shadowRadius: 12,
-          elevation: 6,
+          borderWidth: 0.5,
+          // shadowColor: tokens.border,
+          // shadowOffset: { width: 0, height: 8 },
+          // shadowOpacity: 0.25,
+          // shadowRadius: 12,
+          // elevation: 6,
         }}>
         <Text
           className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold text-3xl`}>
@@ -42,12 +42,12 @@ const QuickProfileInsightsCard = ({
       <View
         className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-elevated-light'} flex h-20 w-32 items-center justify-center rounded-2xl`}
         style={{
-          borderWidth: 1,
-          shadowColor: tokens.border,
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.25,
-          shadowRadius: 12,
-          elevation: 6,
+          borderWidth: 0.5,
+          // shadowColor: tokens.border,
+          // shadowOffset: { width: 0, height: 8 },
+          // shadowOpacity: 0.25,
+          // shadowRadius: 12,
+          // elevation: 6,
         }}>
         <Text
           className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold text-3xl`}>
@@ -62,12 +62,12 @@ const QuickProfileInsightsCard = ({
       <View
         className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-elevated-light'} flex h-20 w-32 items-center justify-center rounded-2xl`}
         style={{
-          borderWidth: 1,
-          shadowColor: tokens.border,
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.25,
-          shadowRadius: 12,
-          elevation: 6,
+          borderWidth: 0.5,
+          // shadowColor: tokens.border,
+          // shadowOffset: { width: 0, height: 8 },
+          // shadowOpacity: 0.25,
+          // shadowRadius: 12,
+          // elevation: 6,
         }}>
         <Text
           className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold text-3xl`}>

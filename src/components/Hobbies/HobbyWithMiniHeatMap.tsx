@@ -92,11 +92,11 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
       style={{
         borderWidth: 0.5,
         borderColor: data.color,
-        shadowColor: data.color,
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.25,
-        shadowRadius: 12,
-        elevation: 6,
+        // shadowColor: data.color,
+        // shadowOffset: { width: 0, height: 8 },
+        // shadowOpacity: 0.25,
+        // shadowRadius: 12,
+        // elevation: 6,
       }}>
       <View className="flex-row items-start justify-between">
         <View className="flex-row gap-4">

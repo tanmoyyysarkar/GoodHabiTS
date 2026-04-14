@@ -104,7 +104,9 @@ const HeatMap = ({ isDark, tokens, data }: HeatMapProps) => {
 
   return (
     <View
-      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} h-[260px] rounded-2xl border px-6 pb-2 pt-6`}>
+      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} h-[260px] rounded-2xl px-6 pb-2 pt-6`}
+      style={{borderWidth: 0.5}}
+      >
       <ScrollView
         ref={scrollViewRef}
         horizontal

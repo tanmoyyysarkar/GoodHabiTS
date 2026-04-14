@@ -46,7 +46,7 @@ export function TabBar({ state, descriptors, navigation, position }: MaterialTop
       style={{
         backgroundColor: theme.tabbarBg,
         borderColor: theme.border,
-        borderWidth: 1,
+        borderWidth: 0.5,
       }}>
       <RNAnimated.View
         // Active-tab highlight that slides behind icons/labels.

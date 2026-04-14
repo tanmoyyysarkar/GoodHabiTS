@@ -15,7 +15,7 @@ const NotificationCard = ({ isDark, tokens }: NotificationCardType) => {
       style={{
         backgroundColor: tokens.cardBg,
         borderColor: tokens.border,
-        borderWidth: 1,
+        borderWidth: 0.5,
       }}>
       <View
         style={{ borderColor: tokens.border }}
@@ -39,7 +39,7 @@ const NotificationCard = ({ isDark, tokens }: NotificationCardType) => {
         </View>
         <SliderButton tokens={tokens} onToggle={() => {}} />
       </View>
-      <View style={{ height: 1, backgroundColor: tokens.border }} />
+      <View style={{ height: 0.5, backgroundColor: tokens.border }} />
       <View className="mx-3 flex-row items-center justify-between">
         <View className="flex-row  items-center gap-3">
           <View
@@ -62,7 +62,7 @@ const NotificationCard = ({ isDark, tokens }: NotificationCardType) => {
         </View>
         <SliderButton tokens={tokens} onToggle={() => {}} />
       </View>
-      <View style={{ height: 1, backgroundColor: tokens.border }} />
+      <View style={{ height: 0.5, backgroundColor: tokens.border }} />
       <View className="mx-3 flex-row items-center justify-between">
         <View className="flex-row  items-center gap-3">
           <View className="flex h-12 w-12 items-center justify-center rounded-2xl bg-yellow-800">
