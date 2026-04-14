@@ -29,7 +29,8 @@ const HobbyBreakDownListItem = ({
   const minutes = Math.floor(total_minutes % 60);
   return (
     <View
-      className={`${isDark ? 'border-border' : 'border-border-light'} flex-row items-center justify-between border border-x-0 border-b-0 ${index === 0 ? 'border-t-0' : ''} py-4`}>
+      className={`${isDark ? 'border-border' : 'border-border-light'} flex-row items-center justify-between border-x-0 border-b-0 ${index === 0 ? 'border-t-0' : ''} py-4`}
+      style={{borderWidth: 0.5}}>
       <View className="flex-row items-center justify-center gap-4">
         <View className="h-4 w-4 rounded-full" style={{ backgroundColor: color }} />
         <Text
@@ -108,12 +109,12 @@ const HobbyBreakDownCard = ({ isDark, tokens, data }: HobbyBreakDownCardProps) =
     <View
       className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} rounded-2xl border p-2 px-4`}
       style={{
-        borderWidth: 1,
-        shadowColor: tokens.border,
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.25,
-        shadowRadius: 12,
-        elevation: 6,
+        borderWidth: 0.5,
+        // shadowColor: tokens.border,
+        // shadowOffset: { width: 0, height: 8 },
+        // shadowOpacity: 0.25,
+        // shadowRadius: 12,
+        // elevation: 6,
       }}>
       {baseItems.map((hobbyData, index) => (
         <HobbyBreakDownListItem

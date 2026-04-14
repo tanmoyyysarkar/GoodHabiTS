@@ -36,7 +36,9 @@ const CategoryBreakDown = ({ isDark, tokens, data }: CategoryBreakDownProps) => 
   const pieChartData = chartDataWithColors.map(({ value, color }) => ({ value, color }));
   return (
     <View
-      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} overflow-hidden rounded-2xl border pl-4 py-3`}>
+      className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} overflow-hidden rounded-2xl pl-4 py-3`}
+      style={{borderWidth: 0.5}}
+      >
       <View className="flex-row items-center justify-between">
         <PieChart
           data={pieChartData}

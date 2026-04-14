@@ -65,14 +65,15 @@ const SummaryCard = ({ isDark, tokens, summaryData }: SummaryCardProps) => {
   const statsCards = todayStatsData.map((data) => (
     <View
       style={{
-        shadowColor: tokens.border,
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.5,
-        shadowRadius: 12,
-        elevation: 3,
+        // shadowColor: tokens.border,
+        // shadowOffset: { width: 0, height: 8 },
+        // shadowOpacity: 0.5,
+        // shadowRadius: 12,
+        // elevation: 3,
+        borderWidth: 0.5
       }}
       key={data.name}
-      className={`${isDark ? 'border-border bg-card-bg-elevated' : 'border-border-light bg-card-bg-elevated-light'} flex h-20 w-[105px] items-center justify-center rounded-2xl border p-2 mb-2`}>
+      className={`${isDark ? 'border-border bg-card-bg-elevated' : 'border-border-light bg-card-bg-elevated-light'} flex h-20 w-[105px] items-center justify-center rounded-2xl p-2 mb-2`}>
       <Text className={`${isDark ? `text-white` : `text-black`} font-jetbrains-mono-bold text-2xl`}>
         {data.value}
       </Text>
@@ -171,12 +172,12 @@ const SummaryCard = ({ isDark, tokens, summaryData }: SummaryCardProps) => {
       <View
         className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} rounded-2xl border p-4`}
         style={{
-          borderWidth: 1,
-          shadowColor: tokens.border,
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.25,
-          shadowRadius: 12,
-          elevation: 6,
+          borderWidth: 0.5,
+          // shadowColor: tokens.border,
+          // shadowOffset: { width: 0, height: 8 },
+          // shadowOpacity: 0.25,
+          // shadowRadius: 12,
+          // elevation: 6,
         }}>
         <Text
           className={`${isDark ? `text-text-secondary` : `text-text-secondary-light`} pb-4 font-jetbrains-mono-semibold`}>

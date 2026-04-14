@@ -3,7 +3,7 @@
     "name": "GoodHabiTS",
     "slug": "good-habits",
     "scheme": "good-habits",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "web": {
       "favicon": "./assets/favicon.png"
     },
@@ -23,15 +23,17 @@
     ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#ffffff",
+      "dark": {
+        "image": "./assets/splash.png",
+        "backgroundColor": "#1F1F1F"
+      }
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },

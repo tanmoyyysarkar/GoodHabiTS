@@ -13,12 +13,12 @@ const ThisYearInsights = ({ isDark, data, tokens }: ThisYearInsightsProps) => {
     <View
       className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} w-full rounded-2xl border p-4 mb-6`}
       style={{
-        borderWidth: 1,
-        shadowColor: tokens.border,
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.25,
-        shadowRadius: 12,
-        elevation: 6,
+        borderWidth: 0.5,
+        // shadowColor: tokens.border,
+        // shadowOffset: { width: 0, height: 8 },
+        // shadowOpacity: 0.25,
+        // shadowRadius: 12,
+        // elevation: 6,
       }}>
       {data.map((item, index) => {
         const isLast = index === data.length - 1;
@@ -39,7 +39,7 @@ const ThisYearInsights = ({ isDark, data, tokens }: ThisYearInsightsProps) => {
               <View
                 className="w-full"
                 style={{
-                  borderBottomWidth: 1,
+                  borderBottomWidth: 0.5,
                   borderBottomColor: tokens.border,
                   opacity: isDark ? 0.95 : 0.85,
                 }}
