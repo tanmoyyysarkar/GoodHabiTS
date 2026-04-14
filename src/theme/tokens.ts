@@ -14,7 +14,7 @@ const colorPalette = {
   'tabbar-bg': '#292929',
 
   // ── Borders
-  'border': '#6b6b6b',
+  'border': '#bbbbbb',
 
   // ── Buttons & Accents
   'button-primary': '#b80000',

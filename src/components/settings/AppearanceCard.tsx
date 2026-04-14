@@ -1,6 +1,9 @@
 import { ThemeTokens } from '@/theme/tokens';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text, View } from 'react-native';
+import Popover, { PopoverPlacement } from 'react-native-popover-view';
+import ThemeSliderButton from './ThemeSliderButton';
+import { useSettings } from '@/context/SettingsContext';
 
 interface AppearanceCardType {
   isDark: boolean;
@@ -8,6 +11,13 @@ interface AppearanceCardType {
 }
 
 const AppearanceCard = ({ isDark, tokens }: AppearanceCardType) => {
+  const { colorSchemePreference } = useSettings();
+  const themeIcon =
+    colorSchemePreference === 'dark'
+      ? 'moon'
+      : colorSchemePreference === 'light'
+        ? 'sunny'
+        : 'desktop';
   return (
     <View
       className="w-full gap-3 rounded-2xl py-3"
@@ -16,23 +26,37 @@ const AppearanceCard = ({ isDark, tokens }: AppearanceCardType) => {
         borderColor: tokens.border,
         borderWidth: 1,
       }}>
-      <Pressable>
-        <View
-          style={{ borderColor: tokens.border }}
-          className="mx-3 flex-row items-center justify-between">
-          <View className="flex-row  items-center gap-3">
-            <View className="flex h-12 w-12 items-center justify-center">
-              <Ionicons name="moon" color={'white'} size={24} />
+      <Popover
+        placement={PopoverPlacement.CENTER}
+        popoverStyle={{ backgroundColor: 'transparent' }}
+        from={
+          <Pressable>
+            <View
+              style={{ borderColor: tokens.border }}
+              className="mx-3 flex-row items-center justify-between">
+              <View className="flex-row  items-center gap-3">
+                <View className="flex h-12 w-12 items-center justify-center">
+                  <Ionicons name={themeIcon} color={tokens.textPrimary} size={24} />
+                </View>
+                <Text
+                  style={{ color: tokens.textPrimary }}
+                  className="font-jetbrains-mono-light text-lg">
+                  Theme
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward-outline" color={tokens.textPrimary} size={24} />
             </View>
-            <Text
-              style={{ color: tokens.textPrimary }}
-              className="font-jetbrains-mono-light text-lg">
-              Theme
-            </Text>
-          </View>
-          <Ionicons name="chevron-forward-outline" color={tokens.textPrimary} size={24} />
+          </Pressable>
+        }>
+        <View
+          className="rounded-full"
+          style={{
+            maxWidth: 250,
+          }}>
+          <ThemeSliderButton tokens={tokens} />
         </View>
-      </Pressable>
+      </Popover>
+
       <View style={{ height: 1, backgroundColor: tokens.border }} />
       <Pressable>
         <View className="mx-3 flex-row items-center justify-between">
