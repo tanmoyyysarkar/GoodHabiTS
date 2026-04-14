@@ -4,7 +4,10 @@ import { useColorScheme } from 'nativewind';
 
 import { useThemeTokens } from '@/hooks/useThemeTokens';
 import { useAuth } from '@/context/AuthContext';
-import { getHobby30DaySummary, MonthlySummaryData } from '@/lib/supabase/hobbies/getHobby30DaySummary';
+import {
+  getHobby30DaySummary,
+  MonthlySummaryData,
+} from '@/lib/supabase/hobbies/getHobby30DaySummary';
 
 import HobbiesHeader from '@/components/Hobbies/HobbiesHeader';
 import SearchBox from '@/components/Hobbies/SearchBox';
@@ -108,6 +111,7 @@ const HobbiesScreen = () => {
       <ScrollView
         className="flex-1"
         contentContainerClassName="gap-8 px-6"
+        showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         <HobbiesHeader isDark={isDark} tokens={tokens} activeHobbies={3} totalTime={179} />
         <SearchBox

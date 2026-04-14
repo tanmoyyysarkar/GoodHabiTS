@@ -7,9 +7,22 @@ begin
   insert into public.user_profiles (id, full_name, avatar_url)
   values (
     new.id,
-    new.raw_user_meta_data->>'full_name',
-    new.raw_user_meta_data->>'avatar_url'
-  );
+    coalesce(
+      new.raw_user_meta_data->>'full_name',
+      new.raw_user_meta_data->>'name',
+      split_part(new.email, '@', 1),
+      ''
+    ),
+    coalesce(
+      new.raw_user_meta_data->>'avatar_url',
+      new.raw_user_meta_data->>'picture',
+      ''
+    )
+  )
+  on conflict (id) do update
+  set
+    full_name = excluded.full_name,
+    avatar_url = excluded.avatar_url;
   return new;
 end;
 $$;

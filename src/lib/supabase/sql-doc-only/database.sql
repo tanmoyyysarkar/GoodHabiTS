@@ -34,7 +34,7 @@ CREATE TABLE public.sessions (
 CREATE TABLE public.user_profiles (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   created_at timestamp with time zone NOT NULL DEFAULT now(),
-  avatar_url text NOT NULL,
+  avatar_url text NOT NULL DEFAULT ''::text,
   full_name text NOT NULL DEFAULT ''::text,
   streak_score integer NOT NULL DEFAULT 0,
   CONSTRAINT user_profiles_pkey PRIMARY KEY (id),

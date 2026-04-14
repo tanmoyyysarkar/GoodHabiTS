@@ -15,6 +15,7 @@ import {
   AuthTextField,
 } from '@/components/Auth';
 import { useAuth } from '@/context/AuthContext';
+import signInWithGoogle from '@/lib/supabase/auth/signInWithGoogle';
 
 const signupSchema = z
   .object({
@@ -61,6 +62,14 @@ const SignupScreen = () => {
     const password = data.password;
     const full_name = data.name;
     await signup(email, password, full_name);
+  };
+
+  const googleSignIn = async () => {
+    const { success, errorMessage } = await signInWithGoogle();
+    if (!success) {
+      console.log(errorMessage);
+      return;
+    }
   };
 
   return (
@@ -169,13 +178,7 @@ const SignupScreen = () => {
             <AuthDivider text="OR CONTINUE WITH" />
 
             <View className="flex-row gap-3">
-              <AuthSocialButton
-                icon="logo-google"
-                text="Google"
-                onPress={() => {
-                  // TODO: wire Google auth
-                }}
-              />
+              <AuthSocialButton icon="logo-google" text="Google" onPress={googleSignIn} />
               <AuthSocialButton
                 icon="logo-apple"
                 text="Apple"

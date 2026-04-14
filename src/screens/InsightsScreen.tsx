@@ -107,6 +107,7 @@ const InsightsScreen = () => {
         contentContainerClassName="pt-8 px-6 pb-24"
         nestedScrollEnabled
         directionalLockEnabled
+        showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         <Text style={{ color: tokens.textPrimary }} className="font-jetbrains-mono text-3xl">
           Insights
