@@ -44,11 +44,12 @@
     },
     "extra": {
       "router": {
-        "root": "./src/app"
+        "root": "./src/app/(tabs)/index.tsx"
       },
       "eas": {
-        "projectId": "3cb4039e-0e2b-4693-a9c1-8ce7e8cbadde"
+        "projectId": "d67474d7-69da-4f33-8812-ff22fb94c8c2"
       }
-    }
+    },
+    "owner": "tanmoyyysarkar"
   }
 }
