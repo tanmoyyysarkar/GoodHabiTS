@@ -115,6 +115,7 @@ const ProfileScreen = () => {
     <View className="flex-1" style={{ backgroundColor: tokens.pageBg }}>
       <ScrollView
         className="flex-1"
+        showsVerticalScrollIndicator={false}
         nestedScrollEnabled
         contentContainerClassName="items-center justify-start py-6 px-6 pb-24">
         <ProfileHeader

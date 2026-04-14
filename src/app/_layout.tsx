@@ -8,6 +8,10 @@ import '../../global.css';
 import { AuthProvider } from '@/context/AuthContext';
 import { SettingsProvider } from '@/context/SettingsContext';
 
+import * as WebBrowser from 'expo-web-browser';
+
+WebBrowser.maybeCompleteAuthSession();
+
 export default function RootLayout() {
   const tokens = useThemeTokens();
   const [fontsLoaded] = useFonts({

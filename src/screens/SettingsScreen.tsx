@@ -18,6 +18,7 @@ const SettingsScreen = () => {
   return (
     <View style={{ flex: 1, backgroundColor: tokens.pageBg }}>
       <ScrollView
+        showsVerticalScrollIndicator={false}
         className="flex-1"
         nestedScrollEnabled
         contentContainerClassName="justify-start py-6 px-6">

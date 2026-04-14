@@ -15,6 +15,7 @@ import {
   AuthTextField,
 } from '@/components/Auth';
 import { useAuth } from '@/context/AuthContext';
+import signInWithGoogle from '@/lib/supabase/auth/signInWithGoogle';
 
 const loginSchema = z.object({
   email: z.string().min(1, 'Email is required').pipe(z.email('Please enter a valid email')),
@@ -53,6 +54,14 @@ const LoginScreen = () => {
     const password = data.password;
     console.log('submitted credentials:', data);  //delete later
     await login(email, password);
+  };
+
+  const googleSignIn = async () => {
+    const { success, errorMessage } = await signInWithGoogle();
+    if (!success) {
+      console.log(errorMessage);
+      return;
+    }
   };
 
   return (
@@ -126,9 +135,7 @@ const LoginScreen = () => {
             <AuthSocialButton
               icon="logo-google"
               text="Google"
-              onPress={() => {
-                // TODO: wire Google auth
-              }}
+              onPress={signInWithGoogle}
             />
             <AuthSocialButton
               icon="logo-apple"
