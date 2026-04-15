@@ -10,11 +10,25 @@ import AppearanceCard from '@/components/settings/AppearanceCard';
 import DataCard from '@/components/settings/DataCard';
 import { Ionicons } from '@expo/vector-icons';
 import Popover, { PopoverPlacement } from 'react-native-popover-view';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
 
 const SettingsScreen = () => {
   const tokens = useThemeTokens();
   const { colorScheme } = useColorScheme();
   const isDark = colorScheme === 'dark';
+
+  const [notifPopoverVisible, setNotifPopoverVisible] = useState(false);
+
+  // Close all popovers when screen loses focus (back nav, tab switch, etc.)
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        setNotifPopoverVisible(false); // runs on blur/unmount
+      };
+    }, [])
+  );
+
   return (
     <View style={{ flex: 1, backgroundColor: tokens.pageBg }}>
       <ScrollView
@@ -29,14 +43,15 @@ const SettingsScreen = () => {
 
         <View className="flex-row items-center justify-between">
           <SettingsSubHeadingText text="NOTIFICATIONS" isDark={isDark} />
+          <TouchableOpacity onPress={() => setNotifPopoverVisible(true)}>
+            <Ionicons name="information-circle" color={tokens.textPrimary} size={24} />
+          </TouchableOpacity>
           <Popover
-            placement={PopoverPlacement.LEFT}
+            isVisible={notifPopoverVisible}
+            onRequestClose={() => setNotifPopoverVisible(false)}
+            placement={PopoverPlacement.CENTER}
             popoverStyle={{ backgroundColor: 'transparent' }}
-            from={
-              <TouchableOpacity>
-                <Ionicons name="information-circle" color={tokens.textPrimary} size={24} />
-              </TouchableOpacity>
-            }>
+          >
             <View
               className="px-3 py-2"
               style={{
