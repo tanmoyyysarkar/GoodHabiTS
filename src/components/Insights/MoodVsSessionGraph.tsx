@@ -174,7 +174,7 @@ const MoodVsSessionGraph = ({ isDark, tokens, data }: MoodVsSessionGraphProps) =
           <Text
             style={{ color: tokens.textSecondary }}
             className="text-center font-jetbrains-mono-light text-xs">
-            Not enough data to map trends yet.
+            Log your first session to view this.
           </Text>
         </View>
       )}

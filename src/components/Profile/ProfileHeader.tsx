@@ -1,7 +1,8 @@
 import { ThemeTokens } from '@/theme/tokens';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { View, Pressable, Text, Image } from 'react-native';
+import { View, Pressable, Text, Image, TouchableOpacity } from 'react-native';
+import Popover, { PopoverPlacement } from 'react-native-popover-view';
 
 interface ProfileHeaderProps {
   isDark: boolean;
@@ -43,13 +44,39 @@ const ProfileHeader = ({ isDark, link, name, tokens, avatarUrl, initials }: Prof
         className={`${isDark ? 'text-text-tertiary' : 'text-text-tertiary-light'} text-md font-jetbrains-mono-light`}>
         {link}
       </Text>
-      <Pressable
-        className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} rounded-full border px-3 py-2`}>
-        <Text
-          className={`text-md font-jetbrains-mono-bold ${isDark ? 'text-text-primary' : 'text-text-primary-light'}`}>
-          Share profile
-        </Text>
-      </Pressable>
+
+      <Popover
+        placement={PopoverPlacement.CENTER}
+        popoverStyle={{ backgroundColor: 'transparent' }}
+        from={
+          <TouchableOpacity
+            className={`${isDark ? 'border-border bg-card-bg' : 'border-border-light bg-card-bg-light'} rounded-full border px-3 py-2`}>
+            <Text
+              className={`text-md font-jetbrains-mono-bold ${isDark ? 'text-text-primary' : 'text-text-primary-light'}`}>
+              Share profile
+            </Text>
+          </TouchableOpacity>
+        }>
+        <View
+          className="px-3 py-2"
+          style={{
+            backgroundColor: tokens.cardBgElevated,
+            borderRadius: 14,
+            maxWidth: 220,
+            borderWidth: 1,
+            borderColor: tokens.border,
+          }}>
+          <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 6 }}>
+            <Text
+              className="p-3 font-jetbrains-mono-light text-lg"
+              style={{
+                color: tokens.textSecondary,
+              }}>
+              This feature will be available soon!
+            </Text>
+          </View>
+        </View>
+      </Popover>
     </View>
   );
 };
