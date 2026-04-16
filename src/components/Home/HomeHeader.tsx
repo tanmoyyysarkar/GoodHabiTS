@@ -1,5 +1,6 @@
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, Image } from 'react-native';
 import { ThemeTokens } from '@/theme/tokens';
+import { useAuth } from '@/context/AuthContext';
 
 interface HomeHeaderProps {
   greeting?: string;
@@ -18,6 +19,8 @@ const HomeHeader = ({
   tokens,
   onProfilePress,
 }: HomeHeaderProps) => {
+  const { session } = useAuth();
+  const avatarUrl = session?.user.user_metadata?.avatar_url;
   return (
     <View className="flex-row items-center justify-between">
       <View className="flex-1">
@@ -32,12 +35,20 @@ const HomeHeader = ({
       </View>
 
       {/* Avatar with accent color */}
-      <Pressable
-        onPress={onProfilePress}
-        className="flex h-14 w-14 items-center justify-center rounded-full active:opacity-70"
-        style={{ backgroundColor: tokens.buttonPrimary }}>
-        <Text className="font-jetbrains-mono-bold text-lg text-white">{avatar}</Text>
-      </Pressable>
+      {avatarUrl ? (
+        <Pressable
+          onPress={onProfilePress}
+          className="flex h-14 w-14 items-center justify-center rounded-full active:opacity-70">
+          <Image source={{ uri: avatarUrl }} style={{ width: 56, height: 56, borderRadius: 28 }} />
+        </Pressable>
+      ) : (
+        <Pressable
+          onPress={onProfilePress}
+          className="flex h-14 w-14 items-center justify-center rounded-full active:opacity-70"
+          style={{ backgroundColor: tokens.buttonPrimary }}>
+          <Text className="font-jetbrains-mono-bold text-lg text-white">{avatar}</Text>
+        </Pressable>
+      )}
     </View>
   );
 };

@@ -143,7 +143,6 @@ export const LogSessionMenu = ({
       console.log(errorMessage);
       return false;
     }
-    console.log(data);
     return true;
   };
 

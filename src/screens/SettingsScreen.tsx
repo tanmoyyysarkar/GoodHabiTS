@@ -70,6 +70,7 @@ const SettingsScreen = () => {
                     flexShrink: 1,
                   }}>
                   Notifications will be implemented soon!
+                  Currently only the Theme setting works for light and dark mode
                 </Text>
               </View>
             </View>

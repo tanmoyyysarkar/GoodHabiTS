@@ -38,11 +38,18 @@ const AppearanceCard = ({ isDark, tokens }: AppearanceCardType) => {
                 <View className="flex h-12 w-12 items-center justify-center">
                   <Ionicons name={themeIcon} color={tokens.textPrimary} size={24} />
                 </View>
-                <Text
-                  style={{ color: tokens.textPrimary }}
-                  className="font-jetbrains-mono-light text-lg">
-                  Theme
-                </Text>
+                <View>
+                  <Text
+                    style={{ color: tokens.textPrimary }}
+                    className="font-jetbrains-mono-light text-lg">
+                    Theme
+                  </Text>
+                  <Text
+                    style={{ color: tokens.textTertiary }}
+                    className="font-jetbrains-mono-light text-sm">
+                    {colorSchemePreference.toUpperCase()}
+                  </Text>
+                </View>
               </View>
               <Ionicons name="chevron-forward-outline" color={tokens.textPrimary} size={24} />
             </View>
