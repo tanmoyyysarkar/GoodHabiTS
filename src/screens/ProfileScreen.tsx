@@ -34,10 +34,12 @@ const ProfileScreen = () => {
   const isDark = colorScheme === 'dark';
   const { session } = useAuth();
 
-  const [profileData, setProfileData] = useState({
-    name: session?.user.user_metadata.full_name,
-    link: 'good-habits.app/to-be-implemented',
-  });
+  const fullName = session ? session.user.user_metadata.full_name : '';
+  const initials = fullName
+    .split(' ')
+    .map((word: string) => word[0])
+    .join('');
+  const avatarUrl = session ? session.user.user_metadata.avatar_url : '';
 
   const [profileHeaderStats, setProfileHeaderStats] = useState<ProfileHeaderStatsData[]>([]);
   const loadProfileHeaderStats = async () => {
@@ -81,6 +83,7 @@ const ProfileScreen = () => {
     total_minutes: 0,
   };
 
+  //TODO: implement proper milestones
   const [mileStoneData, setMileStoneData] = useState([
     {
       name: 'First log',
@@ -120,9 +123,11 @@ const ProfileScreen = () => {
         contentContainerClassName="items-center justify-start py-6 px-6 pb-24">
         <ProfileHeader
           isDark={isDark}
-          link={profileData.link}
-          name={profileData.name}
+          link={'good-habits.app/to-be-implemented'}
+          name={fullName}
+          avatarUrl={avatarUrl}
           tokens={tokens}
+          initials={initials}
         />
         <View className="my-4 w-full">
           <QuickProfileInsightsCard
@@ -161,7 +166,7 @@ const ProfileScreen = () => {
                       lineHeight: 18,
                       flexShrink: 1,
                     }}>
-                    Milestones feature will be implemented soon!
+                    These are just dummy cards. Milestones feature will be implemented soon!
                   </Text>
                 </View>
               </View>
