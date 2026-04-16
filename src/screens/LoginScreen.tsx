@@ -153,8 +153,9 @@ const LoginScreen = () => {
               icon="logo-apple"
               text="Apple"
               onPress={() => {
-                // TODO: wire Apple auth
+                // Apple auth not yet implemented
               }}
+              disabled={true}
             />
           </View>
         </AuthFormCard>
