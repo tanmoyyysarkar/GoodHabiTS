@@ -20,7 +20,6 @@ const HomeHeader = ({
   onProfilePress,
 }: HomeHeaderProps) => {
   const { session } = useAuth();
-  console.log(session?.user.user_metadata);
   const avatarUrl = session?.user.user_metadata?.avatar_url;
   return (
     <View className="flex-row items-center justify-between">
