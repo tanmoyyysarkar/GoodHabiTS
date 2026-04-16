@@ -2,6 +2,7 @@ import { useThemeTokens } from '@/hooks/useThemeTokens';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { View, ScrollView, Text } from 'react-native';
 import { z } from 'zod';
@@ -15,6 +16,7 @@ import {
   AuthTextField,
 } from '@/components/Auth';
 import { useAuth } from '@/context/AuthContext';
+import getReadableAuthError from '@/lib/supabase/auth/getReadableAuthError';
 import signInWithGoogle from '@/lib/supabase/auth/signInWithGoogle';
 
 const loginSchema = z.object({
@@ -48,18 +50,24 @@ const LoginScreen = () => {
   });
 
   const { login } = useAuth();
+  const [authError, setAuthError] = useState<string | null>(null);
 
   const onSubmit = async (data: LoginFormOutput) => {
+    setAuthError(null);
     const email = data.email;
     const password = data.password;
-    console.log('submitted credentials:', data);  //delete later
-    await login(email, password);
+    const result = await login(email, password);
+
+    if (!result.success) {
+      setAuthError(result.errorMessage ?? 'Unable to sign in right now. Please try again.');
+    }
   };
 
   const googleSignIn = async () => {
+    setAuthError(null);
     const { success, errorMessage } = await signInWithGoogle();
     if (!success) {
-      console.log(errorMessage);
+      setAuthError(getReadableAuthError(errorMessage));
       return;
     }
   };
@@ -122,6 +130,10 @@ const LoginScreen = () => {
             )}
           />
 
+          {!!authError && (
+            <Text className="font-jetbrains-mono text-sm text-red-500">{authError}</Text>
+          )}
+
           <AuthPrimaryButton
             text="Sign In"
             loadingText="Signing in..."
@@ -135,7 +147,7 @@ const LoginScreen = () => {
             <AuthSocialButton
               icon="logo-google"
               text="Google"
-              onPress={signInWithGoogle}
+              onPress={googleSignIn}
             />
             <AuthSocialButton
               icon="logo-apple"
