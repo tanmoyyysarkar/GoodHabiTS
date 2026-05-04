@@ -16,7 +16,7 @@ as $$
   from public.hobbies h
   left join public.sessions s
     on s.hobby_id = h.id
-  where h.user_id = auth.uid()
+  where h.user_id = auth.uid() and h.is_active = true
   group by h.id, h.name, h.color
   order by total_minutes desc;
 $$;
