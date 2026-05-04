@@ -13,9 +13,9 @@ const SliderButton = ({ tokens, onToggle }: SliderButtonProps) => {
 
   const TRACK_WIDTH = 56;
   const TRACK_HEIGHT = 32;
-  const THUMB_SIZE = 28;
+  const THUMB_SIZE = 26;
   const TRACK_PADDING = 2;
-  const THUMB_TRAVEL = TRACK_WIDTH - THUMB_SIZE - TRACK_PADDING * 2;
+  const THUMB_TRAVEL = TRACK_WIDTH - THUMB_SIZE - TRACK_PADDING * 2 - 2;
 
   const trackBackgroundColor = progress.interpolate({
     inputRange: [0, 1],
@@ -33,7 +33,7 @@ const SliderButton = ({ tokens, onToggle }: SliderButtonProps) => {
 
       Animated.timing(progress, {
         toValue: next ? 1 : 0,
-        duration: 200,
+        duration: 150,
         useNativeDriver: false,
       }).start();
 
