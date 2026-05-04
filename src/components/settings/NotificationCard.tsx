@@ -1,6 +1,5 @@
 import { ThemeTokens } from '@/theme/tokens';
-import { Ionicons } from '@expo/vector-icons';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import SliderButton from './SliderButton';
 
 interface NotificationCardType {

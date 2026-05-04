@@ -4,6 +4,7 @@ import { Pressable, Text, View } from 'react-native';
 import Popover, { PopoverPlacement } from 'react-native-popover-view';
 import ThemeSliderButton from './ThemeSliderButton';
 import { useSettings } from '@/context/SettingsContext';
+import { useState } from 'react';
 
 interface AppearanceCardType {
   isDark: boolean;
@@ -18,6 +19,8 @@ const AppearanceCard = ({ isDark, tokens }: AppearanceCardType) => {
       : colorSchemePreference === 'light'
         ? 'sunny'
         : 'desktop';
+
+  const [themeSliderVisible, setThemeSliderVisible] = useState(false);
   return (
     <View
       className="w-full gap-3 rounded-2xl py-3"
@@ -26,35 +29,35 @@ const AppearanceCard = ({ isDark, tokens }: AppearanceCardType) => {
         borderColor: tokens.border,
         borderWidth: 0.5,
       }}>
-      <Popover
-        placement={PopoverPlacement.CENTER}
-        popoverStyle={{ backgroundColor: 'transparent' }}
-        from={
-          <Pressable>
-            <View
-              style={{ borderColor: tokens.border }}
-              className="mx-3 flex-row items-center justify-between">
-              <View className="flex-row  items-center gap-3">
-                <View className="flex h-12 w-12 items-center justify-center">
-                  <Ionicons name={themeIcon} color={tokens.textPrimary} size={24} />
-                </View>
-                <View>
-                  <Text
-                    style={{ color: tokens.textPrimary }}
-                    className="font-jetbrains-mono-light text-lg">
-                    Theme
-                  </Text>
-                  <Text
-                    style={{ color: tokens.textTertiary }}
-                    className="font-jetbrains-mono-light text-sm">
-                    {colorSchemePreference.toUpperCase()}
-                  </Text>
-                </View>
-              </View>
-              <Ionicons name="chevron-forward-outline" color={tokens.textPrimary} size={24} />
+      <Pressable onPress={()=>setThemeSliderVisible(true)}>
+        <View
+          style={{ borderColor: tokens.border }}
+          className="mx-3 flex-row items-center justify-between">
+          <View className="flex-row  items-center gap-3">
+            <View className="flex h-12 w-12 items-center justify-center">
+              <Ionicons name={themeIcon} color={tokens.textPrimary} size={24} />
             </View>
-          </Pressable>
-        }>
+            <View>
+              <Text
+                style={{ color: tokens.textPrimary }}
+                className="font-jetbrains-mono-light text-lg">
+                Theme
+              </Text>
+              <Text
+                style={{ color: tokens.textTertiary }}
+                className="font-jetbrains-mono-light text-sm">
+                {colorSchemePreference.toUpperCase()}
+              </Text>
+            </View>
+          </View>
+          <Ionicons name="chevron-forward-outline" color={tokens.textPrimary} size={24} />
+        </View>
+      </Pressable>
+      <Popover
+        isVisible={themeSliderVisible}
+        placement={PopoverPlacement.CENTER}
+        onRequestClose={()=>setThemeSliderVisible(false)}
+        popoverStyle={{ backgroundColor: 'transparent' }}>
         <View
           className="rounded-full"
           style={{
