@@ -172,7 +172,7 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
             </View>
             <View className="flex items-center justify-between p-1">
               <ProgressRing
-                progress={ringProgress} //TODO: add logic
+                progress={ringProgress}
                 size={90}
                 strokeWidth={15}
                 mainColor={data.color}
@@ -184,7 +184,7 @@ const HobbyWithMiniHeatMap = ({ isDark, tokens, data }: HobbyWithMiniHeatMapProp
                   MONTHLY AVG
                 </Text>
                 <Text
-                  className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold text-xs`} //TODO: Add login
+                  className={`${isDark ? 'text-text-primary' : 'text-text-primary-light'} font-jetbrains-mono-bold text-xs`}
                 >
                   {monthlyAverageMins} min
                 </Text>
