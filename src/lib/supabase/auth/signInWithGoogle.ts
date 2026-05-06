@@ -8,7 +8,7 @@ const signInWithGoogle = async () => {
   try {
     const redirectTo = makeRedirectUri({
       scheme: 'good-habits',
-      path: 'auth/callback',
+      path: 'auth/google-callback',
     });
 
     const { data, error } = await supabase.auth.signInWithOAuth({

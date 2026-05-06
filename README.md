@@ -25,12 +25,12 @@
 - **Profile** – User profile with all-time stats, yearly insights, and milestones
 - **Theme System** – Light/dark mode with system preference detection, NativeWind-powered styling
 - **Data Persistence** – Supabase backend with automatic token refresh and AsyncStorage for local state
+- **Progress Rings** – Shows the progress of hobby completions
 
 ### 🟡 Partially Implemented
 - **Settings** – Theme toggle works perfectly; notifications, data export, and account deletion UIs present but not integrated
 - **Profile Picture** – Avatar URL displays but upload functionality not implemented
 - **Home Screen** – Fully functional except streak calculation logic (displays placeholder message)
-- **Progress Rings** – Visual component exists but calculation logic incomplete
 
 ### ❌ Not Yet Implemented
 - Streak score calculation
@@ -107,7 +107,7 @@ Ensure you have the following installed:
    ```
 
 3. **Set up environment variables**
-   
+
    Create a `.env.local` file in the project root:
    ```env
    EXPO_PUBLIC_SUPABASE_URL=your_supabase_project_url

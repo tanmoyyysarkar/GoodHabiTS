@@ -4,7 +4,7 @@ import signOut from '@/lib/supabase/auth/signOut';
 import signUp from '@/lib/supabase/auth/signUp';
 import getReadableAuthError from '@/lib/supabase/auth/getReadableAuthError';
 
-import { Session } from '@supabase/supabase-js';
+import { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { SplashScreen } from 'expo-router';
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 
@@ -16,6 +16,7 @@ type AuthActionResult = {
 interface AuthContextType {
   session: Session | null;
   loading: boolean;
+  authEvent: AuthChangeEvent | null;
   signup: (email: string, password: string, full_name: string) => Promise<AuthActionResult>;
   login: (email: string, password: string) => Promise<AuthActionResult>;
   logout: () => Promise<void>;
@@ -26,6 +27,7 @@ SplashScreen.preventAutoHideAsync();
 const AuthContext = createContext<AuthContextType>({
   session: null,
   loading: true,
+  authEvent: null,
   signup: (_email: string, _password: string, _full_name: string) => Promise.resolve({ success: true }),
   login: (_email: string, _password: string) => Promise.resolve({ success: true }),
   logout: () => Promise.resolve(),
@@ -34,6 +36,7 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [authEvent, setAuthEvent] = useState<AuthChangeEvent | null>(null);
 
   useEffect(() => {
     //check existing session on app startup
@@ -46,6 +49,13 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       setSession(session);
       setLoading(false);
     });
+
+    supabase.auth.onAuthStateChange((event, session)=>{
+      setAuthEvent(event);
+      setSession(session);
+      setLoading(false);
+    })
+
     //cleanup
     return () => AuthListener.subscription.unsubscribe();
   }, []);
@@ -96,7 +106,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   };
 
   return (
-    <AuthContext.Provider value={{ session, loading, signup, login, logout }}>
+    <AuthContext.Provider value={{ session, loading, authEvent , signup, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
